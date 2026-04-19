@@ -1,0 +1,114 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "prompt",
+    "action": "发送 Stage 1 提示词进行问题分析与建模",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "[{\"role\": \"system\", \"content\": \"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\\n你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\\n重点给出正确的数学模型表达式，不必过多解释。\\n该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规模表达式。\"}, {\"role\": \"user\", \"content\": \"Analyze this optimization problem:\\n\\n{user_question}\\n\\nProvide a complete mathematical model with:\\n1. Decision variables (clearly define each variable and its type)\\n2. Objective function (maximize/minimize)\\n3. All constraints (linear, integer, binary, etc.)\\n4. Variable domains and any special conditions\\n\\nOutput format:\\nDecision variables:\\nObjective:\\nConstraints:\\nModel type (LP, MIP, etc.):\"}]"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "发送 Stage 2 提示词进行 Gurobi 算法设计",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "[{\"role\": \"system\", \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。\\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"}, {\"role\": \"user\", \"content\": \"Problem: {user_question}\\n\\nMathematical model:\\n{stage1_modeling}\\n\\nDesign a Gurobi implementation strategy:\\n\\n1. Required imports (gurobipy, etc.)\\n2. How to create and set up the model\\n3. Variable definition strategy (names, types, bounds)\\n4. Objective function implementation\\n5. Constraint addition method\\n6. Model solving and result extraction\\n7. Error handling considerations\\n\\nProvide a clear implementation plan.\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "构建 Stage 3 提示词和消息",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成提示构建完成",
+    "key": "stage3_prompt = f'Generate Python code for this problem:\\n\\nProblem: {user_question}\\n\\nMathematical Model:\\n{stage1_modeling}\\n\\nImplementation Plan:\\n{stage2_design}\\n\\nRequirements:\\n- Use gurobipy library\\n- Include proper exception handling\\n- Model must be properly named and configured\\n- Print the optimal objective value if solution exists\\n- Print appropriate messages for infeasible/unbounded cases\\n- Code must be standalone and executable\\n- Add comments for key steps\\n\\nGenerate ONLY the Python code within ```python ``` markers.'; stage3_messages = [{'role': 'system', 'content': '根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。'}, {'role': 'user', 'content': stage3_prompt}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "调用 generate_or_code_solver 函数进行代码生成和执行",
+    "start_state": "代码生成提示构建完成",
+    "end_state": "进入代码生成求解器",
+    "key": "is_solve_success, result, messages = generate_or_code_solver(stage3_messages, model_name, max_attempts, stage1_modeling, stage2_design, user_question)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "在 generate_or_code_solver 中复制消息列表",
+    "start_state": "进入代码生成求解器",
+    "end_state": "消息复制完成",
+    "key": "messages = copy.deepcopy(messages_bak)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "查询 LLM 生成 Gurobi 代码",
+    "start_state": "消息复制完成",
+    "end_state": "代码生成请求已发送",
+    "key": "query_llm(messages, model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印生成的 Gurobi 代码",
+    "start_state": "代码生成请求已发送",
+    "end_state": "代码已打印",
+    "key": "try:\n    print('【Python Gurobi Code】:\\n', gurobi_code)\nexcept UnicodeEncodeError:\n    print('【Python Gurobi Code】:\\n', gurobi_code.encode('gbk', errors='ignore').decode('gbk'))"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码到文件",
+    "start_state": "代码已打印",
+    "end_state": "代码已保存",
+    "key": "save_generated_code(gurobi_code, prefix='agent')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "从生成内容中提取 Python 代码块",
+    "start_state": "代码已保存",
+    "end_state": "代码已提取",
+    "key": "code_match = re.search(r'```python\\n(.*?)```', gurobi_code, re.DOTALL)\nif code_match:\n    text = code_match.group(1).strip()\nelse:\n    text = gurobi_code.strip()"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "初始化尝试计数器",
+    "start_state": "代码已提取",
+    "end_state": "尝试初始化完成",
+    "key": "attempt = 0"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行提取的 Python 代码",
+    "start_state": "尝试初始化完成",
+    "end_state": "执行结果",
+    "key": "extract_and_execute_python_code(text)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "如果执行成功，追加消息并返回",
+    "start_state": "执行结果",
+    "end_state": "成功处理完成",
+    "key": "if success:\n    messages_bak.append({'role': 'assistant', 'content': gurobi_code})\n    return True, error_msg, messages_bak"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "在 or_llm_agent 中打印 Stage 结果",
+    "start_state": "成功处理完成",
+    "end_state": "结果已打印",
+    "key": "print(f'Stage result: {is_solve_success}, {result}')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查结果是否为数字字符串，假设为真，结束",
+    "start_state": "结果已打印",
+    "end_state": "代码生成完成",
+    "key": "if is_solve_success:\n    if not is_number_string(str(result)):\n        pass"
+  }
+]

@@ -1,0 +1,130 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "tool",
+    "action": "调用 query_llm 进行问题建模",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "query_llm([{\"role\": \"system\", \"content\": \"你是一个运筹优化专家。任务：分析给定的优化问题，构建精确的数学模型。需要明确指定决策变量、目标函数（最大化或最小化）以及所有约束条件。使用规范的数学表达式，避免冗长解释。确保模型可直接转化为Gurobi求解代码。\"}, {\"role\": \"user\", \"content\": f\"优化问题描述：\\n{user_problem}\"}], model_name)"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "tool",
+    "action": "调用 query_llm 进行算法设计",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "query_llm([{\"role\": \"system\", \"content\": \"基于下面的数学模型，设计Gurobi求解算法。明确说明变量类型（连续、整数、二进制）、约束添加方式、目标函数设置以及结果提取方法。输出清晰的设计方案，便于后续代码生成。\"}, {\"role\": \"user\", \"content\": f\"数学模型：\\n{modeling_prompt}\"}], model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "构建代码生成的消息列表",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码消息准备完成",
+    "key": "code_messages = [{\"role\": \"system\", \"content\": \"根据以下问题描述、数学模型和算法设计，编写完整的Gurobi Python求解代码。代码需包含：模型初始化、变量定义、约束添加、目标函数设置、模型求解以及结果输出。确保代码可直接运行。严格使用 ```python\\n{code}\\n``` 格式输出，不要额外解释。\"}, {\"role\": \"user\", \"content\": f\"问题描述：\\n{user_problem}\\n\\n数学模型：\\n{modeling_prompt}\\n\\n算法设计：\\n{algorithm_design}\\n\\n\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "深复制消息列表到 conversation",
+    "start_state": "代码消息准备完成",
+    "end_state": "消息复制完成",
+    "key": "conversation = copy.deepcopy(messages_base)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "调用 query_llm 生成初始求解代码",
+    "start_state": "消息复制完成",
+    "end_state": "求解代码生成完成",
+    "key": "solution_code = query_llm(conversation, model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码到文件",
+    "start_state": "求解代码生成完成",
+    "end_state": "代码保存完成",
+    "key": "save_generated_code(solution_code, prefix=\"opt_agent\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "将代码文本格式化为字符串",
+    "start_state": "代码保存完成",
+    "end_state": "code_text 设置完成",
+    "key": "code_text = f\"{solution_code}\""
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "初始化尝试计数器",
+    "start_state": "code_text 设置完成",
+    "end_state": "尝试循环开始",
+    "key": "attempt = 0"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行 Python 代码并提取结果",
+    "start_state": "尝试循环开始",
+    "end_state": "代码执行结果（失败）",
+    "key": "execute_success, error_detail = extract_and_execute_python_code(code_text)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "将错误信息添加到对话中",
+    "start_state": "代码执行结果（失败）",
+    "end_state": "准备修复",
+    "key": "conversation.append({\"role\": \"assistant\", \"content\": solution_code}); conversation.append({\"role\": \"user\", \"content\": f\"代码执行出错，错误详情:\\n{error_detail}\\n请分析错误原因并修正代码，返回完整可执行的修复版本。\"})"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "调用 query_llm 生成修复代码",
+    "start_state": "准备修复",
+    "end_state": "修复代码生成完成",
+    "key": "solution_code = query_llm(conversation, model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存修复的代码到文件",
+    "start_state": "修复代码生成完成",
+    "end_state": "修复代码保存完成",
+    "key": "save_generated_code(solution_code, prefix=\"opt_agent_fix\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "更新代码文本",
+    "start_state": "修复代码保存完成",
+    "end_state": "code_text 更新完成",
+    "key": "code_text = f\"{solution_code}\""
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "增加尝试计数",
+    "start_state": "code_text 更新完成",
+    "end_state": "下一轮尝试开始",
+    "key": "attempt += 1"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "再次执行 Python 代码并提取结果",
+    "start_state": "下一轮尝试开始",
+    "end_state": "代码执行结果（成功）",
+    "key": "execute_success, error_detail = extract_and_execute_python_code(code_text)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "将代码添加到消息列表并返回成功",
+    "start_state": "代码执行结果（成功）",
+    "end_state": "代码生成完成",
+    "key": "messages_base.append({\"role\": \"assistant\", \"content\": solution_code}); return True, error_detail, messages_base"
+  }
+]

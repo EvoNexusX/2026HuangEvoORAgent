@@ -1,0 +1,163 @@
+import matplotlib.pyplot as plt
+
+# ======================
+# Data
+# ======================
+generations = list(range(9))
+
+data = {
+    "01": [(71.5,None),(71.8,"Cross"),(73.5,"Cross"),(77.8,"Cross"),(79.2,"Cross"),
+           (80.1,"Cross"),(81.3,"Cross"),(81.9,"Cross"),(82.6,"Cross")],
+
+    "02": [(69.2,None),(71.5,"Elite"),(71.8,"Elite"),(74.1,"Cross"),(77.8,"Elite"),
+           (79.2,"Elite"),(80.1,"Elite"),(81.3,"Elite"),(80.5,"Cross")],
+
+    "03": [(65.1,None),(69.2,"Elite"),(71.5,"Elite"),(73.5,"Elite"),(75.1,"Cross"),
+           (77.8,"Elite"),(79.2,"Elite"),(80.1,"Elite"),(81.9,"Elite")],
+
+    "04": [(60.5,None),(68.5,"Cross"),(70.2,"Mut-L"),(71.8,"Elite"),(74.1,"Elite"),
+           (76.5,"Cross"),(78.2,"Cross"),(79.8,"Cross"),(81.3,"Elite")],
+
+    "05": [(56.4,None),(65.2,"Cross"),(69.8,"Cross"),(70.5,"Mut-L"),(72.5,"Mut-L"),
+           (74.8,"Mut-L"),(76.1,"Mut-L"),(77.5,"Mut-L"),(78.4,"Mut-L")],
+
+    "06": [(52.2,None),(61.8,"Mut-L"),(66.2,"Cross"),(68.5,"Cross"),(69.5,"Cross"),
+           (71.1,"Cross"),(72.4,"Cross"),(74.2,"Cross"),(75.2,"Cross")],
+
+    "07": [(49.3,None),(56.6,"Mut-S"),(62.6,"Mut-S"),(64.2,"Mut-S"),(66.2,"Mut-S"),
+           (70.2,"Mut-S"),(70.5,"Mut-S"),(71.2,"Mut-S"),(73.1,"Mut-S")],
+
+    "08": [(46.1,None),(53.1,"Mut-L"),(57.1,"Mut-L"),(60.1,"Cross"),(62.1,"Cross"),
+           (65.5,"Mut-L"),(68.4,"Cross"),(69.5,"Cross"),(71.8,"Cross")],
+
+    "09": [(43.8,None),(51.3,"Cross"),(54.2,"Mut-S"),(58.1,"Mut-L"),(60.8,"Mut-L"),
+           (63.4,"Cross"),(64.8,"Mut-L"),(66.8,"Mut-L"),(68.2,"Mut-L")],
+
+    "10": [(39.4,None),(50.2,"Mut-S"),(42.1,"Cross"),(45.2,"Mut-S"),(59.4,"Mut-S"),
+           (60.2,"Mut-S"),(61.2,"Mut-S"),(60.5,"Mut-S"),(65.3,"Mut-S")]
+}
+
+# ======================
+# Piecewise scaling
+# ======================
+def transform_y(y):
+    if y < 60:
+        return y * 0.5
+    else:
+        return 30 + (y - 60)*2
+
+# ======================
+# Colors
+# ======================
+colors = {
+    "Elite": "#4C72B0",
+    "Cross": "#DD8452",
+    "Mut-L": "#55A868",
+    "Mut-S": "#C44E52"
+}
+
+# ======================
+# Plot
+# ======================
+plt.figure(figsize=(8,12))
+
+for ind, traj in data.items():
+    for g in range(len(traj)):
+        score, op = traj[g]
+        y = transform_y(score)
+
+        # ---------- G0 ----------
+        if g == 0:
+            plt.scatter(g, y, s=85, color="black", zorder=5)
+
+        else:
+            prev_score = traj[g-1][0]
+            prev_y = transform_y(prev_score)
+
+            if op == "Elite":
+                # 点
+                plt.scatter(g, y, s=90,
+                            color=colors["Elite"],
+                            edgecolor="black",
+                            linewidth=0.4,
+                            zorder=5)
+
+                # ← 水平箭头（不变）
+                plt.annotate("",
+                             xy=(g-1, prev_y),
+                             xytext=(g, prev_y),
+                             arrowprops=dict(
+                                 arrowstyle="->",
+                                 color=colors["Elite"],
+                                 lw=1.8,
+                                 alpha=0.9
+                             ),
+                             zorder=3)
+
+            else:
+                plt.scatter(g, y, s=75,
+                            color=colors.get(op, "#999999"),
+                            alpha=0.9,
+                            zorder=4)
+
+        # ======================
+        # Label（仅这里做避让）
+        # ======================
+        y_text = y
+
+        if g > 0 and op == "Elite":
+            prev_score = traj[g-1][0]
+            prev_y = transform_y(prev_score)
+
+            # 如果接近箭头线 → 上移文字
+            if abs(y - prev_y) < 1.0:
+                y_text = y + 1.2
+
+        plt.text(g + 0.1, y_text,
+                 f"{score:.1f}",
+                 ha='left', va='center',
+                 fontsize=9)
+
+# ======================
+# Axis
+# ======================
+plt.xlabel("Generation", fontsize=13)
+plt.ylabel("Train WA (%)", fontsize=13)
+
+plt.xticks(range(9))
+
+yticks_real = [40, 50, 60, 70, 80]
+yticks_trans = [transform_y(y) for y in yticks_real]
+plt.yticks(yticks_trans, yticks_real)
+
+plt.grid(alpha=0.2)
+
+# ======================
+# Legend
+# ======================
+from matplotlib.lines import Line2D
+
+legend_elements = [
+    Line2D([0],[0], marker='o', color='w', label='Initialization (G0)',
+           markerfacecolor='black', markersize=7),
+
+    Line2D([0],[0], marker='o', color='w', label='Elitism',
+           markerfacecolor=colors["Elite"], markeredgecolor='black', markersize=7),
+
+    Line2D([0],[0], marker='o', color='w', label='Crossover',
+           markerfacecolor=colors["Cross"], markersize=7),
+
+    Line2D([0],[0], marker='o', color='w', label='Mut-L',
+           markerfacecolor=colors["Mut-L"], markersize=7),
+
+    Line2D([0],[0], marker='o', color='w', label='Mut-S',
+           markerfacecolor=colors["Mut-S"], markersize=7),
+
+    Line2D([0],[0], color=colors["Elite"], lw=2.0,
+           label='Elite Inheritance (←)')
+]
+
+plt.legend(handles=legend_elements, frameon=False, fontsize=10)
+
+plt.tight_layout()
+plt.show()

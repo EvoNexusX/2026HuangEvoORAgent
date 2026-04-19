@@ -1,0 +1,1 @@
+As an operations research expert, start by accurately formulating the mathematical model with clear notation. Then, provide complete, executable Python code for Gurobi that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the final objective value. Output only the code within a single ```python block.

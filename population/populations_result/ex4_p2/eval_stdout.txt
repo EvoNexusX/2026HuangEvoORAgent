@@ -1,0 +1,1234 @@
+=============== num 7 ==================
+An Italian transportation company needs to move some empty containers from its 6 warehouses (located in Verona, Perugia, Rome, Pescara, Taranto, and Lamezia) to major national ports (Genoa, Venice, Ancona, Naples, Bari). The container inventory at the warehouses is as follows:
+
+|  | Empty Containers |
+|:---:|:---:|
+| Verona | 10 |
+| Perugia | 12 |
+| Rome | 20 |
+| Pescara | 24 |
+| Taranto | 18 |
+| Lamezia | 40 |
+
+The demand at the ports is as follows:
+
+|  | Container Demand |
+|:---:|:---:|
+| Genoa | 20 |
+| Venice | 15 |
+| Ancona | 25 |
+| Naples | 33 |
+| Bari | 21 |
+
+The transport is carried out by a fleet of trucks. The cost to transport each container is proportional to the distance traveled by the trucks, with a rate of 30 euros per kilometer. Each truck can carry up to 2 containers. The distances are as follows:
+
+|  | Genoa | Venice | Ancona | Naples | Bari |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| Verona | $290 \mathrm{~km}$ | $115 \mathrm{~km}$ | $355 \mathrm{~km}$ | $715 \mathrm{~km}$ | $810 \mathrm{~km}$ |
+| Perugia | $380 \mathrm{~km}$ | $340 \mathrm{~km}$ | $165 \mathrm{~km}$ | $380 \mathrm{~km}$ | $610 \mathrm{~km}$ |
+| Rome | $505 \mathrm{~km}$ | $530 \mathrm{~km}$ | $285 \mathrm{~km}$ | $220 \mathrm{~km}$ | $450 \mathrm{~km}$ |
+| Pescara | $655 \mathrm{~km}$ | $450 \mathrm{~km}$ | $155 \mathrm{~km}$ | $240 \mathrm{~km}$ | $315 \mathrm{~km}$ |
+| Taranto | $1010 \mathrm{~km}$ | $840 \mathrm{~km}$ | $550 \mathrm{~km}$ | $305 \mathrm{~km}$ | $95 \mathrm{~km}$ |
+| Lamezia | $1072 \mathrm{~km}$ | $1097 \mathrm{~km}$ | $747 \mathrm{~km}$ | $372 \mathrm{~km}$ | $333 \mathrm{~km}$ |
+
+Write a mathematical program to find the minimum cost transportation policy and solve it using COPTPY.
+-------------
+Using Agent mode (three-stage: modeling + design + code generation)
+【Stage 1 - Problem Analysis & Modeling】:
+ **Decision variables:**  
+Let \( x_{ij} \) be the number of empty containers transported from warehouse \( i \) to port \( j \), where  
+\( i \in \{\text{Verona}, \text{Perugia}, \text{Rome}, \text{Pescara}, \text{Taranto}, \text{Lamezia}\} \),  
+\( j \in \{\text{Genoa}, \text{Venice}, \text{Ancona}, \text{Naples}, \text{Bari}\} \).  
+\( x_{ij} \) are non-negative integers.
+
+**Objective:**  
+Minimize the total transportation cost:  
+\[
+\min \sum_{i} \sum_{j} c_{ij} x_{ij}
+\]  
+where \( c_{ij} = 30 \times \text{distance}_{ij} \) (in euros).
+
+**Constraints:**  
+1. Supply constraints (for each warehouse \( i \)):  
+   \[
+   \sum_{j} x_{ij} \le s_i
+   \]  
+   where \( s_i \) is the supply at warehouse \( i \).
+
+2. Demand constraints (for each port \( j \)):  
+   \[
+   \sum_{i} x_{ij} = d_j
+   \]  
+   where \( d_j \) is the demand at port \( j \).
+
+3. Non-negativity and integrality:  
+   \[
+   x_{ij} \ge 0 \text{ and integer for all } i, j.
+   \]
+
+**Model type (LP, MIP, etc.):**  
+Integer Linear Programming (ILP) or Mixed Integer Programming (MIP) with all variables integer.
+【Stage 2 - Gurobi Algorithm Design】:
+ **Gurobi Algorithm Design**
+
+1. **Imports**
+   - `gurobipy` (as `gp`)
+   - `GRB` constants from `gurobipy`
+
+2. **Model Setup**
+   - Initialize model: `model = gp.Model("ContainerTransport")`
+   - Set MIP gap tolerance (e.g., `model.Params.MIPGap = 1e-6`) if needed
+
+3. **Variable Definition**
+   - Create a dictionary of integer variables `x[i][j]` for each warehouse-port pair
+   - Variable type: `GRB.INTEGER`
+   - Lower bound: 0 (default), no upper bound needed
+   - Variable names: `f"x_{warehouse}_{port}"`
+
+4. **Objective Function**
+   - Precompute cost matrix: `cost[i][j] = 30 * distance[i][j]`
+   - Set objective: `model.setObjective(gp.quicksum(cost[i][j] * x[i][j] for all i,j), GRB.MINIMIZE)`
+
+5. **Constraints**
+   - **Supply constraints**: For each warehouse i: `model.addConstr(gp.quicksum(x[i][j] for all j) <= supply[i])`
+   - **Demand constraints**: For each port j: `model.addConstr(gp.quicksum(x[i][j] for all i) == demand[j])`
+   - All constraints automatically capture integrality via variable definitions
+
+6. **Solving & Result Extraction**
+   - Execute `model.optimize()`
+   - Check status: `model.status == GRB.OPTIMAL`
+   - Extract objective value: `model.objVal`
+   - Retrieve solution: `x[i][j].x` for all variables
+   - Optionally print non-zero flows and total cost
+
+7. **Error Handling**
+   - Validate model status after optimization
+   - Include try-except blocks for optimization errors
+   - Check for infeasibility/unboundedness and handle appropriately
+
+**Implementation Notes**
+- Use Python dictionaries for indexing warehouses and ports (e.g., `warehouses = ["Verona", ...]`)
+- Distance matrix stored as nested dictionary or 2D list with consistent indexing
+- No need for truck capacity constraints as cost is linear per container (truck capacity implicitly handled by integer flows)
+【Python Gurobi Code】:
+ ```python
+import gurobipy as gp
+from gurobipy import GRB
+
+def solve_container_transport():
+    try:
+        # Data definition
+        warehouses = ["Verona", "Perugia", "Rome", "Pescara", "Taranto", "Lamezia"]
+        ports = ["Genoa", "Venice", "Ancona", "Naples", "Bari"]
+        
+        supply = {
+            "Verona": 10,
+            "Perugia": 12,
+            "Rome": 20,
+            "Pescara": 24,
+            "Taranto": 18,
+            "Lamezia": 40
+        }
+        
+        demand = {
+            "Genoa": 20,
+            "Venice": 15,
+            "Ancona": 25,
+            "Naples": 33,
+            "Bari": 21
+        }
+        
+        # Distance matrix in km (warehouse -> port)
+        distance = {
+            "Verona": {"Genoa": 290, "Venice": 115, "Ancona": 355, "Naples": 715, "Bari": 810},
+            "Perugia": {"Genoa": 380, "Venice": 340, "Ancona": 165, "Naples": 380, "Bari": 610},
+            "Rome": {"Genoa": 505, "Venice": 530, "Ancona": 285, "Naples": 220, "Bari": 450},
+            "Pescara": {"Genoa": 655, "Venice": 450, "Ancona": 155, "Naples": 240, "Bari": 315},
+            "Taranto": {"Genoa": 1010, "Venice": 840, "Ancona": 550, "Naples": 305, "Bari": 95},
+            "Lamezia": {"Genoa": 1072, "Venice": 1097, "Ancona": 747, "Naples": 372, "Bari": 333}
+        }
+        
+        # Calculate cost matrix (30 euros per km per container)
+        cost_per_km = 30
+        cost = {}
+        for i in warehouses:
+            cost[i] = {}
+            for j in ports:
+                cost[i][j] = cost_per_km * distance[i][j]
+        
+        # Create model
+        model = gp.Model("ContainerTransport")
+        
+        # Create decision variables
+        x = {}
+        for i in warehouses:
+            for j in ports:
+                x[i, j] = model.addVar(vtype=GRB.INTEGER, lb=0, name=f"x_{i}_{j}")
+        
+        # Set objective function: minimize total transportation cost
+        model.setObjective(
+            gp.quicksum(cost[i][j] * x[i, j] for i in warehouses for j in ports),
+            GRB.MINIMIZE
+        )
+        
+        # Add supply constraints
+        for i in warehouses:
+            model.addConstr(
+                gp.quicksum(x[i, j] for j in ports) <= supply[i],
+                name=f"supply_{i}"
+            )
+        
+        # Add demand constraints
+        for j in ports:
+            model.addConstr(
+                gp.quicksum(x[i, j] for i in warehouses) == demand[j],
+                name=f"demand_{j}"
+            )
+        
+        # Set optimization parameters
+        model.Params.OutputFlag = 1
+        model.Params.MIPGap = 1e-6
+        
+        # Solve the model
+        model.optimize()
+        
+        # Check optimization status and display results
+        if model.status == GRB.OPTIMAL:
+            print(f"Optimal solution found with total cost: {model.objVal:.2f} euros\n")
+            print("Transportation plan (non-zero flows):")
+            print("-" * 50)
+            total_containers = 0
+            for i in warehouses:
+                for j in ports:
+                    if x[i, j].x > 0.5:  # Non-zero flow (accounting for floating point)
+                        print(f"{i:10s} -> {j:10s}: {int(x[i, j].x):2d} containers")
+                        total_containers += int(x[i, j].x)
+            print("-" * 50)
+            print(f"Total containers transported: {total_containers}")
+            
+            # Verify constraints
+            print("\nConstraint verification:")
+            print("Supply utilization:")
+            for i in warehouses:
+                used = sum(int(x[i, j].x) for j in ports)
+                print(f"  {i:10s}: {used:2d}/{supply[i]}")
+            
+            print("\nDemand satisfaction:")
+            for j in ports:
+                received = sum(int(x[i, j].x) for i in warehouses)
+                print(f"  {j:10s}: {received:2d}/{demand[j]}")
+                
+        elif model.status == GRB.INFEASIBLE:
+            print("Model is infeasible.")
+            # Compute and print IIS if needed
+            model.computeIIS()
+            print("Irreducible Inconsistent Subsystem (IIS):")
+            for c in model.getConstrs():
+                if c.IISConstr:
+                    print(f"  Constraint: {c.constrName}")
+        elif model.status == GRB.UNBOUNDED:
+            print("Model is unbounded.")
+        elif model.status == GRB.INF_OR_UNBD:
+            print("Model is infeasible or unbounded.")
+        else:
+            print(f"Optimization ended with status: {model.status}")
+            
+    except gp.GurobiError as e:
+        print(f"Gurobi error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
+if __name__ == "__main__":
+    solve_container_transport()
+```
+No Python code blocks found.
+
+Attempt 1 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+No Python code blocks found.
+
+Attempt 2 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+No Python code blocks found.
+
+Attempt 3 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Reached maximum number of attempts (3), could not execute code successfully.
+Stage result: False, None
+!![Max attempt debug error warning]!!
+【Python Gurobi Code】:
+ 【Python Gurobi Code】:
+ ```python
+import gurobipy as gp
+from gurobipy import GRB
+
+def solve_transportation_problem():
+    try:
+        # Data
+        warehouses = ["Verona", "Perugia", "Rome", "Pescara", "Taranto", "Lamezia"]
+        ports = ["Genoa", "Venice", "Ancona", "Naples", "Bari"]
+        
+        supply = {
+            "Verona": 10,
+            "Perugia": 12,
+            "Rome": 20,
+            "Pescara": 24,
+            "Taranto": 18,
+            "Lamezia": 40
+        }
+        
+        demand = {
+            "Genoa": 20,
+            "Venice": 15,
+            "Ancona": 25,
+            "Naples": 33,
+            "Bari": 21
+        }
+        
+        # Distance matrix in km
+        distances = {
+            "Verona": {"Genoa": 290, "Venice": 115, "Ancona": 355, "Naples": 715, "Bari": 810},
+            "Perugia": {"Genoa": 380, "Venice": 340, "Ancona": 165, "Naples": 380, "Bari": 610},
+            "Rome": {"Genoa": 505, "Venice": 530, "Ancona": 285, "Naples": 220, "Bari": 450},
+            "Pescara": {"Genoa": 655, "Venice": 450, "Ancona": 155, "Naples": 240, "Bari": 315},
+            "Taranto": {"Genoa": 1010, "Venice": 840, "Ancona": 550, "Naples": 305, "Bari": 95},
+            "Lamezia": {"Genoa": 1072, "Venice": 1097, "Ancona": 747, "Naples": 372, "Bari": 333}
+        }
+        
+        # Cost per km
+        cost_per_km = 30
+        
+        # Create model
+        model = gp.Model("ContainerTransportation")
+        
+        # Create decision variables
+        x = {}
+        for i in warehouses:
+            for j in ports:
+                var_name = f"x_{i}_{j}"
+                x[i, j] = model.addVar(vtype=GRB.INTEGER, lb=0, name=var_name)
+        
+        # Set objective function
+        model.setObjective(
+            gp.quicksum(
+                cost_per_km * distances[i][j] * x[i, j] 
+                for i in warehouses 
+                for j in ports
+            ),
+            GRB.MINIMIZE
+        )
+        
+        # Add supply constraints
+        for i in warehouses:
+            model.addConstr(
+                gp.quicksum(x[i, j] for j in ports) <= supply[i],
+                name=f"supply_{i}"
+            )
+        
+        # Add demand constraints
+        for j in ports:
+            model.addConstr(
+                gp.quicksum(x[i, j] for i in warehouses) == demand[j],
+                name=f"demand_{j}"
+            )
+        
+        # Optimize model
+        model.optimize()
+        
+        # Check and display solution status
+        if model.status == GRB.OPTIMAL:
+            print(f"Optimal solution found!")
+            print(f"Total transportation cost: {model.objVal:,.2f}")
+            print("\nOptimal transportation plan:")
+            print("-" * 50)
+            
+            total_containers = 0
+            for i in warehouses:
+                for j in ports:
+                    if x[i, j].x > 0:
+                        cost = cost_per_km * distances[i][j] * x[i, j].x
+                        print(f"{i:10} -> {j:10}: {int(x[i, j].x):2d} containers "
+                              f"(distance: {distances[i][j]:4d} km, cost: {cost:,.2f})")
+                        total_containers += x[i, j].x
+            
+            print("-" * 50)
+            print(f"Total containers transported: {total_containers}")
+            
+            # Check supply and demand satisfaction
+            print("\nSupply utilization:")
+            for i in warehouses:
+                used = sum(x[i, j].x for j in ports)
+                print(f"{i:10}: {used}/{supply[i]} containers used")
+            
+            print("\nDemand satisfaction:")
+            for j in ports:
+                received = sum(x[i, j].x for i in warehouses)
+                print(f"{j:10}: {received}/{demand[j]} containers received")
+                
+        elif model.status == GRB.INFEASIBLE:
+            print("Model is infeasible!")
+            model.computeIIS()
+            model.write("model_iis.ilp")
+            print("Irreducible Inconsistent Subsystem written to model_iis.ilp")
+            
+        elif model.status == GRB.UNBOUNDED:
+            print("Model is unbounded!")
+            
+        elif model.status == GRB.INF_OR_UNBD:
+            print("Model is infeasible or unbounded!")
+            
+        else:
+            print(f"Optimization ended with status {model.status}")
+            
+    except gp.GurobiError as e:
+        print(f"Gurobi error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
+if __name__ == "__main__":
+    solve_transportation_problem()
+```
+No Python code blocks found.
+
+Attempt 1 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+No Python code blocks found.
+
+Attempt 2 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Reached maximum number of attempts (2), could not execute code successfully.
+Failed to execute code.
+------------------
+solve: False, llm: None, ground truth: 904590.0
+[Final] run pass: False, solve correct: False
+
+
+=============== num 8 ==================
+Now, we need to determine 4 out of 5 workers to complete one of the four tasks respectively. Due to each worker's different technical specialties, the time required for them to complete each task varies. The hours required by each worker to complete each task are shown in Table 5-2.
+
+Table 5-2
+| Worker | $A$ | $B$ | $C$ | $D$ |
+|--------|-----|-----|-----|-----|
+| I      | 9   | 4   | 3   | 7   |
+| II     | 4   | 6   | 5   | 6   |
+| III    | 5   | 4   | 7   | 5   |
+| IV     | 7   | 5   | 2   | 3   |
+| V      | 10  | 6   | 7   | 4   |
+
+Try to find a job assignment plan that minimizes the total working hours.
+-------------
+Using Agent mode (three-stage: modeling + design + code generation)
+【Stage 1 - Problem Analysis & Modeling】:
+ **决策变量**：
+- \( x_{ij} \in \{0,1\} \), 其中 \( i \in \{1,2,3,4,5\} \) 表示工人编号（分别对应I, II, III, IV, V），\( j \in \{A,B,C,D\} \) 表示任务编号。
+- \( x_{ij} = 1 \) 表示工人 \( i \) 被分配执行任务 \( j \)，否则为 0。
+
+**目标**：
+- 最小化总工作时间：  
+  \[
+  \min \sum_{i=1}^{5} \sum_{j \in \{A,B,C,D\}} c_{ij} x_{ij}
+  \]
+  其中 \( c_{ij} \) 是表5-2中工人 \( i \) 完成任务 \( j \) 所需的时间（小时）。
+
+**约束**：
+1. 每项任务必须由恰好一个工人完成：
+   \[
+   \sum_{i=1}^{5} x_{ij} = 1, \quad \forall j \in \{A,B,C,D\}
+   \]
+2. 每个工人最多完成一项任务：
+   \[
+   \sum_{j \in \{A,B,C,D\}} x_{ij} \leq 1, \quad \forall i \in \{1,2,3,4,5\}
+   \]
+
+**模型类型**：0-1整数规划（二进制线性规划，属于MIP）。
+【Stage 2 - Gurobi Algorithm Design】:
+ ## Gurobi算法设计方案
+
+### 1. 导入模块
+```python
+import gurobipy as gp
+from gurobipy import GRB
+```
+
+### 2. 模型设置
+- 创建模型实例，命名为"WorkerAssignment"
+- 可选：关闭日志输出（根据需求设置）
+
+### 3. 变量定义策略
+- 定义索引集合：
+  - `workers`: [1,2,3,4,5]（对应工人I到V）
+  - `tasks`: ['A','B','C','D']
+- 创建二进制变量`x[i,j]`：
+  - 类型：GRB.BINARY
+  - 命名格式：f"x_{i}_{j}"
+- 使用`model.addVars()`批量创建变量
+
+### 4. 目标函数实现
+- 定义工时系数矩阵`c`（按表5-2组织为字典或二维数组）
+- 目标函数：最小化总工时
+  ```python
+  model.setObjective(gp.quicksum(c[i][j] * x[i,j] for i in workers for j in tasks), GRB.MINIMIZE)
+  ```
+
+### 5. 约束添加方法
+- 任务约束（每项任务必须由恰好一个工人完成）：
+  ```python
+  for j in tasks:
+      model.addConstr(gp.quicksum(x[i,j] for i in workers) == 1)
+  ```
+- 工人约束（每个工人最多完成一项任务）：
+  ```python
+  for i in workers:
+      model.addConstr(gp.quicksum(x[i,j] for j in tasks) <= 1)
+  ```
+
+### 6. 模型求解与结果提取
+- 调用`model.optimize()`
+- 检查求解状态：
+  ```python
+  if model.status == GRB.OPTIMAL:
+      # 提取结果
+      total_hours = model.objVal
+      for j in tasks:
+          for i in workers:
+              if x[i,j].x > 0.5:
+                  print(f"Task {j} -> Worker {i}")
+      # 识别未分配工人
+      for i in workers:
+          if sum(x[i,j].x for j in tasks) < 0.5:
+              print(f"Worker {i} is unassigned")
+  ```
+
+### 7. 错误处理考虑
+- 检查模型状态是否为`GRB.OPTIMAL`
+- 处理不可行或无界情况
+- 捕获Gurobi异常并输出错误信息
+- 最终调用`model.dispose()`释放资源
+【Python Gurobi Code】:
+ ```python
+import gurobipy as gp
+from gurobipy import GRB
+
+def solve_worker_assignment():
+    try:
+        # Create model
+        model = gp.Model("WorkerAssignment")
+        
+        # Data
+        workers = [1, 2, 3, 4, 5]  # I, II, III, IV, V
+        tasks = ['A', 'B', 'C', 'D']
+        
+        # Cost matrix: workers x tasks
+        cost = {
+            1: {'A': 9, 'B': 4, 'C': 3, 'D': 7},
+            2: {'A': 4, 'B': 6, 'C': 5, 'D': 6},
+            3: {'A': 5, 'B': 4, 'C': 7, 'D': 5},
+            4: {'A': 7, 'B': 5, 'C': 2, 'D': 3},
+            5: {'A': 10, 'B': 6, 'C': 7, 'D': 4}
+        }
+        
+        # Create binary variables
+        x = model.addVars(
+            workers, 
+            tasks, 
+            vtype=GRB.BINARY, 
+            name="x"
+        )
+        
+        # Set objective: minimize total working hours
+        model.setObjective(
+            gp.quicksum(
+                cost[i][j] * x[i, j] 
+                for i in workers 
+                for j in tasks
+            ), 
+            GRB.MINIMIZE
+        )
+        
+        # Constraints
+        
+        # Each task must be assigned to exactly one worker
+        for j in tasks:
+            model.addConstr(
+                gp.quicksum(x[i, j] for i in workers) == 1,
+                name=f"task_{j}_assigned"
+            )
+        
+        # Each worker can do at most one task
+        for i in workers:
+            model.addConstr(
+                gp.quicksum(x[i, j] for j in tasks) <= 1,
+                name=f"worker_{i}_limit"
+            )
+        
+        # Optimize model
+        model.optimize()
+        
+        # Check solution status
+        if model.status == GRB.OPTIMAL:
+            print(f"Optimal solution found with total hours: {model.objVal:.0f}\n")
+            
+            # Print assignment details
+            print("Optimal Assignment:")
+            assigned_workers = []
+            for j in tasks:
+                for i in workers:
+                    if x[i, j].x > 0.5:
+                        worker_name = ['I', 'II', 'III', 'IV', 'V'][i-1]
+                        print(f"  Task {j} → Worker {worker_name} (Hours: {cost[i][j]})")
+                        assigned_workers.append(i)
+            
+            # Find unassigned worker
+            for i in workers:
+                if i not in assigned_workers:
+                    worker_name = ['I', 'II', 'III', 'IV', 'V'][i-1]
+                    print(f"  Worker {worker_name} is unassigned")
+                    
+        elif model.status == GRB.INFEASIBLE:
+            print("Model is infeasible")
+            # Compute IIS to identify conflicting constraints
+            model.computeIIS()
+            print("Conflicting constraints:")
+            for c in model.getConstrs():
+                if c.IISConstr:
+                    print(f"  {c.constrName}")
+                    
+        elif model.status == GRB.UNBOUNDED:
+            print("Model is unbounded")
+            
+        elif model.status == GRB.INF_OR_UNBD:
+            print("Model is infeasible or unbounded")
+            
+        else:
+            print(f"No optimal solution found. Status code: {model.status}")
+            
+    except gp.GurobiError as e:
+        print(f"Gurobi error: {e}")
+        
+    except Exception as e:
+        print(f"General error: {e}")
+        
+    finally:
+        # Properly dispose of model
+        if 'model' in locals():
+            model.dispose()
+
+if __name__ == "__main__":
+    solve_worker_assignment()
+```
+No Python code blocks found.
+
+Attempt 1 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+No Python code blocks found.
+
+Attempt 2 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+No Python code blocks found.
+
+Attempt 3 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Reached maximum number of attempts (3), could not execute code successfully.
+Stage result: False, None
+!![Max attempt debug error warning]!!
+【Python Gurobi Code】:
+ ```python
+import gurobipy as gp
+from gurobipy import GRB
+
+def main():
+    try:
+        # 1. 模型初始化
+        model = gp.Model("WorkerAssignment")
+        
+        # 2. 数据定义
+        workers = [1, 2, 3, 4, 5]  # I, II, III, IV, V
+        tasks = ['A', 'B', 'C', 'D']
+        
+        # 工时矩阵: workers[行] -> tasks[列]
+        hours = {
+            1: {'A': 9, 'B': 4, 'C': 3, 'D': 7},   # Worker I
+            2: {'A': 4, 'B': 6, 'C': 5, 'D': 6},   # Worker II
+            3: {'A': 5, 'B': 4, 'C': 7, 'D': 5},   # Worker III
+            4: {'A': 7, 'B': 5, 'C': 2, 'D': 3},   # Worker IV
+            5: {'A': 10, 'B': 6, 'C': 7, 'D': 4}   # Worker V
+        }
+        
+        # 3. 决策变量: x[i,j] = 1 表示工人i被分配到任务j
+        x = model.addVars(workers, tasks, vtype=GRB.BINARY, name="x")
+        
+        # 4. 目标函数: 最小化总工时
+        model.setObjective(
+            gp.quicksum(hours[i][j] * x[i,j] for i in workers for j in tasks),
+            GRB.MINIMIZE
+        )
+        
+        # 5. 约束条件
+        # 每个任务必须由恰好一个工人完成
+        for j in tasks:
+            model.addConstr(gp.quicksum(x[i,j] for i in workers) == 1, f"task_{j}")
+        
+        # 每个工人最多完成一项任务
+        for i in workers:
+            model.addConstr(gp.quicksum(x[i,j] for j in tasks) <= 1, f"worker_{i}")
+        
+        # 6. 求解模型
+        model.optimize()
+        
+        # 7. 结果处理
+        if model.status == GRB.OPTIMAL:
+            print(f"最优总工时: {model.objVal:.0f} 小时")
+            print("\n最优分配方案:")
+            assigned_workers = set()
+            for j in tasks:
+                for i in workers:
+                    if x[i,j].x > 0.5:
+                        # 转换工人编号为罗马数字
+                        worker_names = ['I', 'II', 'III', 'IV', 'V']
+                        print(f"  任务 {j} → 工人 {worker_names[i-1]} (工时: {hours[i][j]})")
+                        assigned_workers.add(i)
+            
+            # 找出未分配的工人
+            unassigned = [i for i in workers if i not in assigned_workers]
+            if unassigned:
+                worker_names = ['I', 'II', 'III', 'IV', 'V']
+                print(f"\n未分配的工人: 工人 {worker_names[unassigned[0]-1]}")
+                
+        elif model.status == GRB.INFEASIBLE:
+            print("模型无可行解")
+        elif model.status == GRB.UNBOUNDED:
+            print("模型无界")
+        elif model.status == GRB.INF_OR_UNBD:
+            print("模型不可行或无界")
+        else:
+            print(f"求解终止，状态码: {model.status}")
+            
+    except gp.GurobiError as e:
+        print(f"Gurobi错误: {e}")
+    except Exception as e:
+        print(f"程序错误: {e}")
+    finally:
+        # 8. 释放资源
+        if 'model' in locals():
+            model.dispose()
+
+if __name__ == "__main__":
+    main()
+```
+No Python code blocks found.
+
+Attempt 1 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+No Python code blocks found.
+
+Attempt 2 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Reached maximum number of attempts (2), could not execute code successfully.
+Failed to execute code.
+------------------
+solve: False, llm: None, ground truth: 14
+[Final] run pass: False, solve correct: False
+
+
+=============== num 9 ==================
+Haus Toys can manufacture and sell toy trucks, toy airplanes, toy boats, and toy trains. The profit for each truck sold is $5, each airplane $10, each boat $8, and each train $7. How many types of toys should Haus Toys manufacture to maximize profits?
+
+There are 890 units of wood available. Each truck requires 12 units, each airplane 20 units, each boat 15 units, and each train 10 units.
+
+There are 500 units of steel available. Each airplane requires 3 units, each boat 5 units, each train 4 units, and each truck 6 units.
+
+If Haus Toys manufactures trucks, they will not manufacture trains.
+
+However, if they manufacture boats, they will also manufacture airplanes.
+
+The number of toy boats manufactured cannot exceed the number of toy trains manufactured.
+-------------
+Using Agent mode (three-stage: modeling + design + code generation)
+【Stage 1 - Problem Analysis & Modeling】:
+ **Decision variables:**  
+- \( x_t \in \mathbb{Z}^+ \): number of toy trucks produced  
+- \( x_a \in \mathbb{Z}^+ \): number of toy airplanes produced  
+- \( x_b \in \mathbb{Z}^+ \): number of toy boats produced  
+- \( x_r \in \mathbb{Z}^+ \): number of toy trains produced  
+- \( y_t \in \{0,1\} \): binary variable, 1 if toy trucks are produced (\( x_t > 0 \)), 0 otherwise  
+- \( y_a \in \{0,1\} \): binary variable, 1 if toy airplanes are produced (\( x_a > 0 \)), 0 otherwise  
+- \( y_b \in \{0,1\} \): binary variable, 1 if toy boats are produced (\( x_b > 0 \)), 0 otherwise  
+- \( y_r \in \{0,1\} \): binary variable, 1 if toy trains are produced (\( x_r > 0 \)), 0 otherwise  
+
+**Objective:**  
+Maximize \( 5x_t + 10x_a + 8x_b + 7x_r \)  
+
+**Constraints:**  
+1. Resource constraints:  
+   - \( 12x_t + 20x_a + 15x_b + 10x_r \leq 890 \) (wood availability)  
+   - \( 6x_t + 3x_a + 5x_b + 4x_r \leq 500 \) (steel availability)  
+
+2. Logical constraints:  
+   - \( y_t + y_r \leq 1 \) (if trucks are produced, no trains are produced)  
+   - \( y_b \leq y_a \) (if boats are produced, airplanes are also produced)  
+   - \( x_b \leq x_r \) (number of boats cannot exceed number of trains)  
+
+3. Linking constraints (enforce consistency between production quantities and binary indicators):  
+   - \( x_t \leq 74 y_t \) and \( x_t \geq y_t \)  
+   - \( x_a \leq 44 y_a \) and \( x_a \geq y_a \)  
+   - \( x_b \leq 59 y_b \) and \( x_b \geq y_b \)  
+   - \( x_r \leq 89 y_r \) and \( x_r \geq y_r \)  
+
+(Note: The constants 74, 44, 59, 89 are upper bounds derived from resource constraints:  
+   - \( 74 = \min(\lfloor 890/12 \rfloor, \lfloor 500/6 \rfloor) \) for trucks,  
+   - \( 44 = \min(\lfloor 890/20 \rfloor, \lfloor 500/3 \rfloor) \) for airplanes,  
+   - \( 59 = \min(\lfloor 890/15 \rfloor, \lfloor 500/5 \rfloor) \) for boats,  
+   - \( 89 = \min(\lfloor 890/10 \rfloor, \lfloor 500/4 \rfloor) \) for trains.)  
+
+**Model type:** Mixed-Integer Linear Program (MILP)
+【Stage 2 - Gurobi Algorithm Design】:
+ 根据给定的建模方案，设计以下Gurobi求解算法实现方案：
+
+## 1. 导入库
+```python
+import gurobipy as gp
+from gurobipy import GRB
+```
+
+## 2. 模型创建与设置
+```python
+def solve_haus_toys_problem():
+    # 创建模型
+    model = gp.Model("HausToysProduction")
+    
+    # 设置优化参数（可选）
+    model.setParam('OutputFlag', 1)  # 控制求解过程输出
+    model.setParam('MIPGap', 0.01)   # 设置MIP最优间隙为1%
+```
+
+## 3. 变量定义策略
+```python
+    # 定义整数生产变量
+    x_t = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_t")  # 卡车数量
+    x_a = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_a")  # 飞机数量
+    x_b = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_b")  # 船只数量
+    x_r = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_r")  # 火车数量
+    
+    # 定义二进制指示变量
+    y_t = model.addVar(vtype=GRB.BINARY, name="y_t")
+    y_a = model.addVar(vtype=GRB.BINARY, name="y_a")
+    y_b = model.addVar(vtype=GRB.BINARY, name="y_b")
+    y_r = model.addVar(vtype=GRB.BINARY, name="y_r")
+```
+
+## 4. 目标函数实现
+```python
+    # 设置目标函数：最大化利润
+    profit = 5*x_t + 10*x_a + 8*x_b + 7*x_r
+    model.setObjective(profit, GRB.MAXIMIZE)
+```
+
+## 5. 约束添加方法
+```python
+    # 1. 资源约束
+    model.addConstr(12*x_t + 20*x_a + 15*x_b + 10*x_r <= 890, "wood_availability")
+    model.addConstr(6*x_t + 3*x_a + 5*x_b + 4*x_r <= 500, "steel_availability")
+    
+    # 2. 逻辑约束
+    model.addConstr(y_t + y_r <= 1, "truck_train_exclusive")
+    model.addConstr(y_b <= y_a, "boat_implies_airplane")
+    model.addConstr(x_b <= x_r, "boats_not_exceed_trains")
+    
+    # 3. 连接约束（生产量与指示变量的关联）
+    # 上界来自建模中的计算
+    model.addConstr(x_t <= 74 * y_t, "link_truck_upper")
+    model.addConstr(x_t >= y_t, "link_truck_lower")
+    
+    model.addConstr(x_a <= 44 * y_a, "link_airplane_upper")
+    model.addConstr(x_a >= y_a, "link_airplane_lower")
+    
+    model.addConstr(x_b <= 59 * y_b, "link_boat_upper")
+    model.addConstr(x_b >= y_b, "link_boat_lower")
+    
+    model.addConstr(x_r <= 89 * y_r, "link_train_upper")
+    model.addConstr(x_r >= y_r, "link_train_lower")
+```
+
+## 6. 模型求解与结果提取
+```python
+    # 求解模型
+    model.optimize()
+    
+    # 检查求解状态
+    if model.status == GRB.OPTIMAL:
+        print(f"最优解找到，最大利润: ${model.objVal:.2f}")
+        
+        # 提取结果
+        results = {
+            'trucks': x_t.x,
+            'airplanes': x_a.x,
+            'boats': x_b.x,
+            'trains': x_r.x,
+            'profit': model.objVal,
+            'wood_used': 12*x_t.x + 20*x_a.x + 15*x_b.x + 10*x_r.x,
+            'steel_used': 6*x_t.x + 3*x_a.x + 5*x_b.x + 4*x_r.x
+        }
+        
+        print("\n生产计划：")
+        print(f"  卡车: {results['trucks']} 辆")
+        print(f"  飞机: {results['airplanes']} 架")
+        print(f"  船只: {results['boats']} 艘")
+        print(f"  火车: {results['trains']} 列")
+        print(f"\n资源使用情况：")
+        print(f"  木材: {results['wood_used']} / 890 单位")
+        print(f"  钢材: {results['steel_used']} / 500 单位")
+        
+        return results
+    else:
+        print("未找到最优解")
+        return None
+```
+
+## 7. 错误处理考虑
+```python
+def solve_with_error_handling():
+    try:
+        # 创建Gurobi环境并进行配置
+        with gp.Env(empty=True) as env:
+            env.setParam('LogToConsole', 1)
+            env.start()
+            
+            # 调用主求解函数
+            return solve_haus_toys_problem()
+            
+    except gp.GurobiError as e:
+        print(f"Gurobi错误: {e.message}")
+        return None
+    except Exception as e:
+        print(f"未知错误: {str(e)}")
+        return None
+```
+
+## 8. 主程序入口
+```python
+if __name__ == "__main__":
+    # 执行求解
+    solution = solve_with_error_handling()
+    
+    if solution:
+        print(f"\n求解完成，总利润: ${solution['profit']}")
+```
+
+## 算法设计要点
+
+1. **变量关联处理**：使用大M法连接连续变量和二进制变量，确保当y=0时x=0，当y=1时x≥1
+
+2. **整数规划处理**：所有生产变量定义为整数，二进制变量用于逻辑约束
+
+3. **资源边界计算**：连接约束中的上界常数(74, 44, 59, 89)已在建模阶段预先计算
+
+4. **模型验证**：求解后验证资源使用量和约束满足情况
+
+5. **扩展性考虑**：代码结构允许轻松修改资源限制、利润参数或添加新约束
+【Python Gurobi Code】:
+ ```python
+import gurobipy as gp
+from gurobipy import GRB
+
+def solve_haus_toys_problem():
+    """
+    Solve the Haus Toys production planning problem using MILP.
+    Returns the solution dictionary if optimal solution found, None otherwise.
+    """
+    try:
+        # Create model with environment context
+        with gp.Env(empty=True) as env:
+            env.setParam('LogToConsole', 1)
+            env.start()
+            
+            model = gp.Model("HausToysProduction", env=env)
+            
+            # Create decision variables
+            x_t = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_t")  # trucks
+            x_a = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_a")  # airplanes
+            x_b = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_b")  # boats
+            x_r = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_r")  # trains
+            
+            y_t = model.addVar(vtype=GRB.BINARY, name="y_t")
+            y_a = model.addVar(vtype=GRB.BINARY, name="y_a")
+            y_b = model.addVar(vtype=GRB.BINARY, name="y_b")
+            y_r = model.addVar(vtype=GRB.BINARY, name="y_r")
+            
+            # Set objective function: maximize profit
+            profit = 5*x_t + 10*x_a + 8*x_b + 7*x_r
+            model.setObjective(profit, GRB.MAXIMIZE)
+            
+            # Resource constraints
+            model.addConstr(12*x_t + 20*x_a + 15*x_b + 10*x_r <= 890, "wood_availability")
+            model.addConstr(6*x_t + 3*x_a + 5*x_b + 4*x_r <= 500, "steel_availability")
+            
+            # Logical constraints
+            model.addConstr(y_t + y_r <= 1, "truck_train_exclusive")
+            model.addConstr(y_b <= y_a, "boat_implies_airplane")
+            model.addConstr(x_b <= x_r, "boats_not_exceed_trains")
+            
+            # Linking constraints (using precomputed upper bounds)
+            model.addConstr(x_t <= 74 * y_t, "link_truck_upper")
+            model.addConstr(x_t >= y_t, "link_truck_lower")
+            model.addConstr(x_a <= 44 * y_a, "link_airplane_upper")
+            model.addConstr(x_a >= y_a, "link_airplane_lower")
+            model.addConstr(x_b <= 59 * y_b, "link_boat_upper")
+            model.addConstr(x_b >= y_b, "link_boat_lower")
+            model.addConstr(x_r <= 89 * y_r, "link_train_upper")
+            model.addConstr(x_r >= y_r, "link_train_lower")
+            
+            # Optimize the model
+            model.optimize()
+            
+            # Process and display results based on solution status
+            if model.status == GRB.OPTIMAL:
+                print(f"Optimal solution found!")
+                print(f"Maximum profit: ${model.objVal:.2f}")
+                print("\nProduction quantities:")
+                print(f"  Toy trucks: {x_t.x}")
+                print(f"  Toy airplanes: {x_a.x}")
+                print(f"  Toy boats: {x_b.x}")
+                print(f"  Toy trains: {x_r.x}")
+                print(f"\nIndicator variables (1 if produced, 0 otherwise):")
+                print(f"  Trucks: {y_t.x}, Airplanes: {y_a.x}, Boats: {y_b.x}, Trains: {y_r.x}")
+                
+                # Calculate resource usage
+                wood_used = 12*x_t.x + 20*x_a.x + 15*x_b.x + 10*x_r.x
+                steel_used = 6*x_t.x + 3*x_a.x + 5*x_b.x + 4*x_r.x
+                print(f"\nResource usage:")
+                print(f"  Wood: {wood_used:.0f} / 890 units ({wood_used/890*100:.1f}%)")
+                print(f"  Steel: {steel_used:.0f} / 500 units ({steel_used/500*100:.1f}%)")
+                
+                return {
+                    'trucks': x_t.x, 'airplanes': x_a.x, 'boats': x_b.x, 'trains': x_r.x,
+                    'profit': model.objVal, 'wood_used': wood_used, 'steel_used': steel_used
+                }
+                
+            elif model.status == GRB.INFEASIBLE:
+                print("Model is infeasible. Check constraints.")
+                model.computeIIS()
+                model.write("haus_toys_iis.ilp")
+                print("IIS written to file 'haus_toys_iis.ilp'")
+                
+            elif model.status == GRB.UNBOUNDED:
+                print("Model is unbounded.")
+                
+            elif model.status == GRB.INF_OR_UNBD:
+                print("Model is infeasible or unbounded.")
+                
+            else:
+                print(f"Optimization terminated with status {model.status}")
+                
+            return None
+            
+    except gp.GurobiError as e:
+        print(f"Gurobi error: {e}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return None
+
+if __name__ == "__main__":
+    solution = solve_haus_toys_problem()
+    if solution:
+        print(f"\nSolution verified. Total profit: ${solution['profit']:.2f}")
+```
+No Python code blocks found.
+
+Attempt 1 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+No Python code blocks found.
+
+Attempt 2 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+No Python code blocks found.
+
+Attempt 3 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Reached maximum number of attempts (3), could not execute code successfully.
+Stage result: False, None
+!![Max attempt debug error warning]!!
+【Python Gurobi Code】:
+ ```python
+import gurobipy as gp
+from gurobipy import GRB
+
+def solve_haus_toys():
+    """
+    Solves the Haus Toys production optimization problem using Gurobi.
+    Returns the optimal solution if found, otherwise handles infeasible/unbounded cases.
+    """
+    try:
+        # Create model
+        model = gp.Model("HausToysProduction")
+        
+        # Create variables
+        # Production quantities (integer)
+        x_t = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_t")  # trucks
+        x_a = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_a")  # airplanes
+        x_b = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_b")  # boats
+        x_r = model.addVar(vtype=GRB.INTEGER, lb=0, name="x_r")  # trains
+        
+        # Binary indicator variables
+        y_t = model.addVar(vtype=GRB.BINARY, name="y_t")
+        y_a = model.addVar(vtype=GRB.BINARY, name="y_a")
+        y_b = model.addVar(vtype=GRB.BINARY, name="y_b")
+        y_r = model.addVar(vtype=GRB.BINARY, name="y_r")
+        
+        # Set objective: maximize profit
+        profit = 5*x_t + 10*x_a + 8*x_b + 7*x_r
+        model.setObjective(profit, GRB.MAXIMIZE)
+        
+        # Add constraints
+        
+        # 1. Resource constraints
+        model.addConstr(12*x_t + 20*x_a + 15*x_b + 10*x_r <= 890, "wood_availability")
+        model.addConstr(6*x_t + 3*x_a + 5*x_b + 4*x_r <= 500, "steel_availability")
+        
+        # 2. Logical constraints
+        model.addConstr(y_t + y_r <= 1, "truck_train_exclusive")
+        model.addConstr(y_b <= y_a, "boat_implies_airplane")
+        model.addConstr(x_b <= x_r, "boats_not_exceed_trains")
+        
+        # 3. Linking constraints (connect production variables with binary indicators)
+        # Upper bounds calculated from resource constraints
+        model.addConstr(x_t <= 74 * y_t, "link_truck_upper")
+        model.addConstr(x_t >= y_t, "link_truck_lower")
+        
+        model.addConstr(x_a <= 44 * y_a, "link_airplane_upper")
+        model.addConstr(x_a >= y_a, "link_airplane_lower")
+        
+        model.addConstr(x_b <= 59 * y_b, "link_boat_upper")
+        model.addConstr(x_b >= y_b, "link_boat_lower")
+        
+        model.addConstr(x_r <= 89 * y_r, "link_train_upper")
+        model.addConstr(x_r >= y_r, "link_train_lower")
+        
+        # Solve the model
+        model.optimize()
+        
+        # Check and display solution status
+        if model.status == GRB.OPTIMAL:
+            print(f"Optimal solution found with maximum profit: ${model.objVal:.2f}\n")
+            
+            # Display production plan
+            print("Production Plan:")
+            print(f"  Toy Trucks: {x_t.x:.0f} units")
+            print(f"  Toy Airplanes: {x_a.x:.0f} units")
+            print(f"  Toy Boats: {x_b.x:.0f} units")
+            print(f"  Toy Trains: {x_r.x:.0f} units")
+            
+            # Display resource usage
+            wood_used = 12*x_t.x + 20*x_a.x + 15*x_b.x + 10*x_r.x
+            steel_used = 6*x_t.x + 3*x_a.x + 5*x_b.x + 4*x_r.x
+            print(f"\nResource Usage:")
+            print(f"  Wood: {wood_used:.0f} / 890 units ({wood_used/890*100:.1f}%)")
+            print(f"  Steel: {steel_used:.0f} / 500 units ({steel_used/500*100:.1f}%)")
+            
+            return {
+                'trucks': x_t.x,
+                'airplanes': x_a.x,
+                'boats': x_b.x,
+                'trains': x_r.x,
+                'profit': model.objVal,
+                'wood_used': wood_used,
+                'steel_used': steel_used
+            }
+            
+        elif model.status == GRB.INFEASIBLE:
+            print("Model is infeasible. No solution satisfies all constraints.")
+            model.computeIIS()
+            model.write("haus_toys_iis.ilp")
+            print("Irreducible Inconsistent Subsystem (IIS) written to 'haus_toys_iis.ilp'")
+            
+        elif model.status == GRB.UNBOUNDED:
+            print("Model is unbounded. Objective can be increased indefinitely.")
+            
+        elif model.status == GRB.INF_OR_UNBD:
+            print("Model is infeasible or unbounded. Try setting DualReductions=0.")
+            
+        elif model.status == GRB.TIME_LIMIT:
+            print("Time limit reached. Best solution found:")
+            if model.solCount > 0:
+                print(f"  Best profit found: ${model.objVal:.2f}")
+            else:
+                print("  No feasible solution found within time limit.")
+                
+        else:
+            print(f"Optimization ended with status: {model.status}")
+            
+        return None
+        
+    except gp.GurobiError as e:
+        print(f"Gurobi error encountered: {e}")
+        return None
+        
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return None
+
+if __name__ == "__main__":
+    solve_haus_toys()
+```
+No Python code blocks found.
+
+Attempt 1 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+No Python code blocks found.
+
+Attempt 2 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Reached maximum number of attempts (2), could not execute code successfully.
+Failed to execute code.
+------------------
+solve: False, llm: None, ground truth: 623.0
+[Final] run pass: False, solve correct: False
+
+
+[Total 3] run pass: 0, solve correct: 0
+[Total fails 3] error datas: ['7', '8', '9']

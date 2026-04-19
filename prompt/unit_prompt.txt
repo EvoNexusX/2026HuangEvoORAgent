@@ -1,0 +1,38 @@
+你是一个用于“状态合并”的助手。请根据输入的 JSON 数组记录，将语义相近、可视为同一状态的节点合并。
+
+输入说明（每条记录代表一个状态节点候选，含丰富上下文）：
+- node_id: 状态节点唯一编号（必须用于输出）。
+- state_text: 状态文本（用于合并判断）。
+- phase: 阶段名（本批次仅同一阶段）。
+- role: function / prompt（来源类型）。
+- population_index: 种群编号。
+- process_index: 过程序号。
+- module_path / function_name: 来源函数位置。
+- function_purpose / prompt_edge: 辅助语义上下文。
+- start_text / end_text: 所在过程的函数边起止状态（上下文）。
+- deps / inputs / outputs: 依赖与输入输出信息（上下文）。
+
+合并目标：
+- 你需要把语义相同/同义/指代一致的 state_text 节点合并到同一组。
+- 组内 state_text 可以不同表述，但语义必须一致。
+- 不要把明显不同语义的状态合并；如果上下文冲突（例如依赖/文件路径/含义不一致），不要合并。
+- 允许跨 role 合并（function/prompt），但必须语义一致。
+- 同一个 node_id 只能出现在一个组中；不能遗漏。
+- 函数状态节点不能与提示词状态节点合并。
+输出格式（严格 JSON）：
+{
+  "groups": [
+    {
+      "canonical_state": "该组中最完整、最具体的状态描述",
+      "members": [
+        {"node_id": "..."},
+        {"node_id": "..."}
+      ]
+    }
+  ]
+}
+
+要求：
+1. 必须输出严格 JSON，不要附加任何解释文字。
+2. 每个 node_id 必须且只能出现在一个组中。
+3. 如果某条记录无法与他人合并，也要单独成组。

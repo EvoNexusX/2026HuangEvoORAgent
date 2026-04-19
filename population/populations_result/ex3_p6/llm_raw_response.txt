@@ -1,0 +1,477 @@
+import re
+import subprocess
+import sys
+import tempfile
+import os
+import json
+import traceback
+from datetime import datetime
+from itertools import zip_longest
+from typing import List, Dict, Tuple, Optional, Any
+
+import openai
+import anthropic
+from dotenv import load_dotenv
+
+
+WORKSPACE_ROOT = os.path.dirname(os.path.abspath(__file__))
+LOG_DIR = os.path.join(WORKSPACE_ROOT, "log")
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_FILE = os.path.join(LOG_DIR, f"llm_chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+
+RESULT_DIR = os.path.join(WORKSPACE_ROOT, "result")
+os.makedirs(RESULT_DIR, exist_ok=True)
+TRACE_FILE = os.path.join(RESULT_DIR, f"thought_chain_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl")
+CODE_SAVE_COUNTER = 0
+CURRENT_QUESTION_ID = None
+
+
+def is_number_string(s: str) -> bool:
+    pattern = r"^[-+]?\d+(\.\d+)?$"
+    return re.match(pattern, s) is not None
+
+
+def convert_to_number(s: str) -> Optional[float]:
+    try:
+        if s.isdigit() or (s.startswith('-') and s[1:].isdigit()):
+            return int(s)
+        num = float(s)
+        return num
+    except (ValueError, TypeError):
+        return None
+
+
+def extract_best_objective(output_text: str) -> Optional[float]:
+    if "Model is infeasible" in output_text or "INFEASIBLE" in output_text.upper():
+        return None
+
+    match = re.search(r'Best objective\s+([\d.e+-]+)', output_text)
+    if not match:
+        match = re.search(r'Optimal objective\s+([\d.e+-]+)', output_text)
+
+    if not match:
+        match = re.search(r'Optimal cost\s+([\d.e+-]+)', output_text)
+
+    if not match:
+        match = re.search(r'Objective\s+:\s+([\d.e+-]+)', output_text)
+
+    if not match:
+        match = re.search(r'Objective\s+=\s+([\d.e+-]+)', output_text)
+
+    if match:
+        try:
+            return float(match.group(1))
+        except ValueError:
+            return None
+
+    return None
+
+
+def extract_and_execute_python_code(text_content: str, previous_error: str = "") -> Tuple[bool, str]:
+    python_code_blocks = re.findall(r'```python\s*([\s\S]*?)```', text_content)
+
+    if not python_code_blocks:
+        python_code_blocks = re.findall(r'```\s*([\s\S]*?)```', text_content)
+
+    if not python_code_blocks:
+        print("No executable code blocks found.")
+        return False, "No executable code blocks found"
+
+    for code_block in python_code_blocks:
+        code_block = code_block.strip()
+        if not code_block:
+            print("Found an empty code block, skipped.")
+            continue
+
+        print("Found Python code block, starting execution...")
+        try:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as tmp_file:
+                tmp_file.write(code_block)
+                temp_file_path = tmp_file.name
+
+            result = subprocess.run([sys.executable, temp_file_path], capture_output=True, text=True, check=False, timeout=30)
+
+            if result.returncode == 0:
+                print("Python code executed successfully")
+                if result.stdout:
+                    print("Output:", result.stdout[:200])
+                best_obj = extract_best_objective(result.stdout)
+                if best_obj is not None:
+                    print(f"Optimal solution value: {best_obj}")
+                    return True, str(best_obj)
+                else:
+                    return True, "None"
+            else:
+                error_msg = result.stderr[:500]
+                print(f"Execution error: {error_msg}")
+                return False, error_msg
+
+        except subprocess.TimeoutExpired:
+            print("Code execution timed out after 30 seconds")
+            return False, "Execution timeout"
+        except Exception as e:
+            error_msg = str(e)[:500]
+            print(f"Execution exception: {error_msg}")
+            return False, error_msg
+        finally:
+            if 'temp_file_path' in locals() and os.path.exists(temp_file_path):
+                os.remove(temp_file_path)
+            print("-" * 30)
+
+    return False, "No valid code blocks executed"
+
+
+def eval_model_result(success: bool, result: Any, ground_truth: Any, err_rate: float = 0.01) -> Tuple[bool, bool]:
+    pass_flag = False
+    correct_flag = False
+    if success:
+        pass_flag = True
+        if result == 'None':
+            if ground_truth is None or ground_truth == 'None' or str(ground_truth).lower() == 'none':
+                correct_flag = True
+        elif ground_truth is not None and ground_truth != 'None':
+            result_num = convert_to_number(str(result))
+            ground_truth_num = convert_to_number(str(ground_truth))
+            if result_num is not None and ground_truth_num is not None:
+                if ground_truth_num == 0:
+                    if abs(result_num) < 1e-6:
+                        correct_flag = True
+                else:
+                    deviation = abs(result_num - ground_truth_num) / abs(ground_truth_num)
+                    if deviation <= err_rate:
+                        correct_flag = True
+    return pass_flag, correct_flag
+
+
+def log_llm_chat(messages: List[Dict], model_name: str, response_text: str) -> None:
+    try:
+        record = {
+            "timestamp": datetime.now().isoformat(timespec="seconds"),
+            "model": model_name,
+            "messages": messages,
+            "response": response_text
+        }
+        if os.path.exists(LOG_FILE):
+            with open(LOG_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = []
+        data.append(record)
+        with open(LOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Warning: failed to write chat log: {e}")
+
+
+def save_generated_code(text_content: str, prefix: str = "solve") -> None:
+    try:
+        global CODE_SAVE_COUNTER
+        CODE_SAVE_COUNTER += 1
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        code_blocks = re.findall(r'```python\s*([\s\S]*?)```', text_content)
+        if not code_blocks:
+            code_blocks = re.findall(r'```\s*([\s\S]*?)```', text_content)
+        if code_blocks:
+            code = "\n\n".join(block.strip() for block in code_blocks if block.strip())
+            if not code:
+                code = text_content
+            extension = "py"
+        else:
+            code = text_content
+            extension = "txt"
+        if CURRENT_QUESTION_ID is None:
+            qid_part = "unknown"
+        else:
+            qid_part = str(CURRENT_QUESTION_ID)
+        filename = f"{prefix}_q{qid_part}_{CODE_SAVE_COUNTER:04d}_{timestamp}.{extension}"
+        file_path = os.path.join(RESULT_DIR, filename)
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(code)
+    except Exception as e:
+        print(f"Warning: failed to save generated code: {e}")
+
+
+def query_llm(messages: List[Dict], model_name: str = "deepseek-reasoner", temperature: float = 0.3) -> str:
+    if not hasattr(query_llm, "_openai_client") or not hasattr(query_llm, "_anthropic_client"):
+        load_dotenv()
+
+        openai_api_data = dict(
+            api_key=os.getenv("DEEPSEEK_API_KEY", "sk-258f5399788043a59f3a69205b720e0f"),
+            base_url=os.getenv("OPENAI_API_BASE", "https://api.deepseek.com")
+        )
+        anthropic_api_data = dict(
+            api_key=os.getenv("CLAUDE_API_KEY")
+        )
+
+        query_llm._openai_client = openai.OpenAI(
+            api_key=openai_api_data["api_key"],
+            base_url=openai_api_data["base_url"] if openai_api_data["base_url"] else None
+        )
+        query_llm._anthropic_client = anthropic.Anthropic(
+            api_key=anthropic_api_data["api_key"]
+        )
+
+    openai_client = query_llm._openai_client
+    anthropic_client = query_llm._anthropic_client
+
+    if model_name.lower().startswith("claude"):
+        system_message = next((m["content"] for m in messages if m["role"] == "system"), "")
+        user_messages = [m["content"] for m in messages if m["role"] == "user"]
+        assistant_messages = [m["content"] for m in messages if m["role"] == "assistant"]
+
+        conversation = system_message + "\n\n"
+        for user_msg, asst_msg in zip_longest(user_messages, assistant_messages, fillvalue=None):
+            if user_msg:
+                conversation += f"Human: {user_msg}\n\n"
+            if asst_msg:
+                conversation += f"Assistant: {asst_msg}\n\n"
+
+        if len(user_messages) > len(assistant_messages):
+            conversation += f"Human: {user_messages[-1]}\n\n"
+
+        response = anthropic_client.messages.create(
+            model=model_name,
+            max_tokens=8192,
+            temperature=temperature,
+            messages=[{"role": "user", "content": conversation}]
+        )
+        response_text = response.content[0].text
+        log_llm_chat(messages, model_name, response_text)
+        return response_text
+
+    response = openai_client.chat.completions.create(
+        model=model_name,
+        messages=messages,
+        temperature=temperature
+    )
+    response_text = response.choices[0].message.content
+    log_llm_chat(messages, model_name, response_text)
+    return response_text
+
+
+def load_dataset() -> Dict:
+    dataset = {}
+    data_path = r"c:\Users\Bryt\Desktop\end\new_agent\dataset\IndustryOR_test.json"
+
+    with open(data_path, 'r', encoding='utf-8') as f:
+        first_line = f.readline().strip()
+        f.seek(0)
+
+        if first_line.startswith('{"en_question"') or first_line.startswith('{"cn_question"'):
+            for line_num, line in enumerate(f, 1):
+                line = line.strip()
+                if line:
+                    try:
+                        item = json.loads(line)
+                        dataset_item = {
+                            'question': item.get('en_question', item.get('cn_question', '')),
+                            'answer': item.get('en_answer', item.get('cn_answer', '')),
+                            'difficulty': item.get('difficulty', 'Unknown'),
+                            'id': item.get('id', line_num - 1)
+                        }
+                        dataset[str(dataset_item['id'])] = dataset_item
+                    except json.JSONDecodeError:
+                        print(f"Warning: Could not parse line {line_num}: {line}")
+                        continue
+        else:
+            dataset = json.load(f)
+
+    return dataset
+
+
+class OROptimizationAgent:
+    def __init__(self, model_name: str = "deepseek-reasoner", temperature: float = 0.3):
+        self.model_name = model_name
+        self.temperature = temperature
+        self.max_retries = 4
+        
+    def stage1_analysis(self, question: str) -> str:
+        system_prompt = """You are an operations research specialist. Analyze the optimization problem thoroughly and provide a mathematical formulation."""
+
+        user_prompt = f"""Analyze this optimization problem:
+
+{question}
+
+Provide a complete mathematical model with:
+1. Decision variables (clearly define each variable and its type)
+2. Objective function (maximize/minimize)
+3. All constraints (linear, integer, binary, etc.)
+4. Variable domains and any special conditions
+
+Output format:
+Decision variables:
+Objective:
+Constraints:
+Model type (LP, MIP, etc.):"""
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+
+        return query_llm(messages, self.model_name, self.temperature)
+
+    def stage2_algorithm(self, question: str, stage1_output: str, previous_error: str = "") -> str:
+        system_prompt = """You are a Gurobi modeling expert. Design a detailed solution approach for the optimization problem."""
+
+        error_context = ""
+        if previous_error:
+            error_context = f"\nPrevious execution error that should be avoided:\n{previous_error}\n"
+
+        user_prompt = f"""Problem: {question}
+
+Mathematical model:
+{stage1_output}
+
+{error_context}
+Design a Gurobi implementation strategy:
+
+1. Required imports (gurobipy, etc.)
+2. How to create and set up the model
+3. Variable definition strategy (names, types, bounds)
+4. Objective function implementation
+5. Constraint addition method
+6. Model solving and result extraction
+7. Error handling considerations
+
+Provide a clear implementation plan."""
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+
+        return query_llm(messages, self.model_name, self.temperature)
+
+    def stage3_code(self, question: str, stage1_output: str, stage2_output: str, previous_error: str = "") -> str:
+        system_prompt = """You are a Python/Gurobi developer. Generate complete, executable, and robust optimization code."""
+
+        error_guidance = ""
+        if previous_error:
+            error_guidance = f"\nImportant: Avoid this previous error: {previous_error}\n"
+
+        user_prompt = f"""Generate Python code for this problem:
+
+Problem: {question}
+
+Mathematical Model:
+{stage1_output}
+
+Implementation Plan:
+{stage2_output}
+
+{error_guidance}
+Requirements:
+- Use gurobipy library
+- Include proper exception handling
+- Model must be properly named and configured
+- Print the optimal objective value if solution exists
+- Print appropriate messages for infeasible/unbounded cases
+- Code must be standalone and executable
+- Add comments for key steps
+
+Generate ONLY the Python code within ```python ``` markers."""
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+
+        return query_llm(messages, self.model_name, self.temperature)
+
+    def solve_with_adaptive_retry(self, question: str) -> Tuple[bool, str]:
+        global CURRENT_QUESTION_ID
+
+        print(f"\n{'='*60}")
+        print("Stage 1: Problem Analysis")
+        print('='*60)
+        stage1_output = self.stage1_analysis(question)
+
+        last_error = ""
+        for attempt in range(self.max_retries):
+            print(f"\nAttempt {attempt + 1}/{self.max_retries}")
+
+            print(f"\n{'='*60}")
+            print(f"Stage 2: Solution Design (Attempt {attempt + 1})")
+            print('='*60)
+            stage2_output = self.stage2_algorithm(question, stage1_output, last_error)
+
+            print(f"\n{'='*60}")
+            print(f"Stage 3: Code Generation (Attempt {attempt + 1})")
+            print('='*60)
+            stage3_output = self.stage3_code(question, stage1_output, stage2_output, last_error)
+
+            save_generated_code(stage3_output, prefix=f"solve_attempt_{attempt+1}")
+
+            print(f"\n{'='*60}")
+            print(f"Executing Code (Attempt {attempt + 1})")
+            print('='*60)
+            success, result = extract_and_execute_python_code(stage3_output, last_error)
+
+            if success:
+                return True, result
+
+            last_error = result
+            print(f"Attempt {attempt + 1} failed: {result[:100]}")
+
+            if attempt < self.max_retries - 1:
+                print(f"Retrying with error feedback...")
+
+        return False, f"Failed after {self.max_retries} attempts. Last error: {last_error}"
+
+    def solve_problem(self, question: str) -> Tuple[bool, str]:
+        return self.solve_with_adaptive_retry(question)
+
+
+def or_llm_agent(question: str, ground_truth: Any = None) -> Tuple[bool, bool]:
+    agent = OROptimizationAgent()
+    success, result = agent.solve_problem(question)
+    pass_flag, correct_flag = eval_model_result(success, result, ground_truth)
+    return pass_flag, correct_flag
+
+
+def run_eval(use_agent: bool = True) -> None:
+    global CURRENT_QUESTION_ID
+
+    dataset = load_dataset()
+    print(f"Loaded dataset with {len(dataset)} problems")
+
+    pass_count = 0
+    correct_count = 0
+    error_datas = []
+
+    for qid, data in dataset.items():
+        CURRENT_QUESTION_ID = qid
+        question = data['question']
+        ground_truth = data['answer']
+
+        print(f"\n{'#'*80}")
+        print(f"Processing ID: {qid}")
+        print(f"Question preview: {question[:120]}...")
+        print(f"Expected answer: {ground_truth}")
+        print('#'*80)
+
+        try:
+            if use_agent:
+                pass_flag, correct_flag = or_llm_agent(question, ground_truth)
+            else:
+                pass_flag, correct_flag = False, False
+
+            if pass_flag:
+                pass_count += 1
+            if correct_flag:
+                correct_count += 1
+
+            print(f"Result: pass={pass_flag}, correct={correct_flag}")
+
+        except Exception as e:
+            print(f"Error processing {qid}: {e}")
+            traceback.print_exc()
+            error_datas.append(qid)
+
+    print(f"[Total {len(dataset)}] run pass: {pass_count}, solve correct: {correct_count}")
+    print(f"[Total fails {len(error_datas)}] error datas: {error_datas}")
+
+
+if __name__ == "__main__":
+    run_eval(use_agent=True)

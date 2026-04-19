@@ -1,0 +1,34 @@
+[
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "导入Gurobi库",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "库导入完成",
+    "key": "import gurobipy as gp\nfrom gurobipy import GRB"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "创建Gurobi模型",
+    "start_state": "库导入完成",
+    "end_state": "模型创建完成",
+    "key": "model = gp.Model()"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "定义变量、约束和目标函数（代码内容占位）",
+    "start_state": "模型创建完成",
+    "end_state": "模型内容定义完成",
+    "key": "# ... 代码内容 ..."
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查求解状态并输出结果",
+    "start_state": "模型内容定义完成",
+    "end_state": "代码生成完成",
+    "key": "if model.status == GRB.OPTIMAL:\n    print(f\"最优目标值: {model.objVal}\")\nelse:\n    print(f\"求解状态: {model.status}\")"
+  }
+]

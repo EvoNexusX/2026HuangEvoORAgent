@@ -1,0 +1,1292 @@
+[
+  {
+    "timestamp": "2026-04-14T13:10:12",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first construct a precise mathematical model. Then, output only complete, executable Python Gurobi code within a fenced python block. Ensure the code defines all variables, the objective function, constraints, checks solve status, and prints the final objective value.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:10:21",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop a correct mathematical formulation. Then, provide the complete, executable Python code for the Gurobi optimizer. Include the objective, variables, constraints, solve status check, and a final objective value printout. Deliver only the final code within a fenced python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:10:28",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:10:58",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>Act as an operations research expert: first formulate a mathematical model, then output complete, executable Gurobi Python code in a fenced ```python``` block, including the objective, variables, constraints, solve status check, and final objective print.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:11:07",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first construct a correct mathematical model, then generate complete, executable Python Gurobi code. The final output must be solely the code within a fenced python block, including the objective, all variables and constraints, a solve status check, and a final objective value print.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:11:15",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. First, develop a precise mathematical formulation. Then, output complete, executable Python code using Gurobi within a single code block. The final code must define the objective, all variables, constraints, include a solve command, check the status, and print the objective value.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:11:45",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first construct a precise mathematical model. Then, output only complete, executable Python Gurobi code within a fenced python block. Ensure the code defines all variables, the objective function, constraints, checks solve status, and prints the final objective value.\n\nParent B:\nAs an operations research expert, first construct a correct mathematical model, then generate complete, executable Python Gurobi code. The final output must be solely the code within a fenced python block, including the objective, all variables and constraints, a solve status check, and a final objective value print.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. First, formulate a precise mathematical model with clear notation. Then, output only complete, executable Python code for the Gurobi optimizer within a fenced python block. Ensure the code defines all decision variables, the objective function, constraints, checks the solve status, and prints the final objective value.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:12:28",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first construct a precise mathematical model. Then, output only complete, executable Python Gurobi code within a fenced python block. Ensure the code defines all variables, the objective function, constraints, checks solve status, and prints the final objective value.\n\nParent B:\nRole: OR optimization engineer. Task: infer decision variables, objective, and constraints from the problem statement; generate complete Python Gurobi solver code with clear variable naming and exact result output. Return only executable code.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>Act as an operations research optimizer. For any given problem, deduce the mathematical formulation with clear variables and constraints, then output only complete, executable Python Gurobi code. Ensure the code defines all decision variables, the objective function, all constraints, checks the solve status, and prints the final objective value. Provide the code solely within a ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:12:40",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first construct a precise mathematical model. Then, output only complete, executable Python Gurobi code within a fenced python block. Ensure the code defines all variables, the objective function, constraints, checks solve status, and prints the final objective value.\n\nParent B:\nRole: OR optimization engineer. Task: infer decision variables, objective, and constraints from the problem statement; generate complete Python Gurobi solver code with clear variable naming and exact result output. Return only executable code.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research specialist. For any optimization problem provided, first devise an optimization model with clear notation. Then, generate a complete, executable Python script for the Gurobi solver with well-named variables and parameters. The script must define all variables, the objective, constraints, check solve status, and output the optimal objective value. Provide only the final, runnable code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:13:10",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nParent B:\nAct as an operations research expert: first formulate a mathematical model, then output complete, executable Gurobi Python code in a fenced ```python``` block, including the objective, variables, constraints, solve status check, and final objective print.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. Begin by formulating an accurate mathematical model with standard notation. Then, generate a fully executable Gurobi Python script in a single ```python block. The script must define the objective function, decision variables, all constraints, verify the solve status, and output the optimal objective value.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:13:21",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a correct mathematical formulation. Then, provide the complete, executable Python code for the Gurobi optimizer. Include the objective, variables, constraints, solve status check, and a final objective value printout. Deliver only the final code within a fenced python block.\n\nParent B:\nAs an operations research expert, first construct a precise mathematical model. Then, output only complete, executable Python Gurobi code within a fenced python block. Ensure the code defines all variables, the objective function, constraints, checks solve status, and prints the final objective value.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:13:59",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a correct mathematical formulation. Then, provide the complete, executable Python code for the Gurobi optimizer. Include the objective, variables, constraints, solve status check, and a final objective value printout. Deliver only the final code within a fenced python block.\n\nParent B:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. First, create an accurate mathematical model with well-defined notation. Then, produce fully executable Python code for the Gurobi optimizer that specifies the objective function, decision variables, constraints, includes a solve status verification, and outputs the objective value. Deliver solely the final code enclosed in a ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:14:12",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. First, develop a precise mathematical formulation. Then, output complete, executable Python code using Gurobi within a single code block. The final code must define the objective, all variables, constraints, include a solve command, check the status, and print the objective value.\n\nParent B:\nRole: OR optimization engineer. Task: infer decision variables, objective, and constraints from the problem statement; generate complete Python Gurobi solver code with clear variable naming and exact result output. Return only executable code.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. First, construct a correct mathematical model with clear variables, objective, and constraints derived from the problem description. Then, produce complete, executable Python code for the Gurobi solver in a single code block, including variable definition, all constraints, solving, status checking, and exact objective value output. Return only the final code.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:14:27",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou solve optimization tasks with Gurobi. Think in this order: data parse -> variable design -> objective -> constraints -> optimize -> report objective value. Output only final Python code in one code block.\n\nParent B:\nAs an operations research expert, first construct a correct mathematical model, then generate complete, executable Python Gurobi code. The final output must be solely the code within a fenced python block, including the objective, all variables and constraints, a solve status check, and a final objective value print.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:14:41",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nParent B:\nAs an operations research expert, first construct a correct mathematical model, then generate complete, executable Python Gurobi code. The final output must be solely the code within a fenced python block, including the objective, all variables and constraints, a solve status check, and a final objective value print.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. First formulate a correct mathematical model with clear notation, then produce complete, executable Python code for the Gurobi optimizer. Output only the code within a ```python block, ensuring it defines the objective, decision variables, all constraints, checks the solve status, and prints the final objective value.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:14:53",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nRole: OR optimization engineer. Task: infer decision variables, objective, and constraints from the problem statement; generate complete Python Gurobi solver code with clear variable naming and exact result output. Return only executable code.\n\nParent B:\nYou are an operations research expert. First, develop a precise mathematical formulation. Then, output complete, executable Python code using Gurobi within a single code block. The final code must define the objective, all variables, constraints, include a solve command, check the status, and print the objective value.\n\nCurrent Best Reference:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. First, develop a precise mathematical formulation. Then, produce complete, executable Python code for the Gurobi solver that defines all decision variables, the objective function, every constraint, solves the model, checks its status, and prints the exact objective value. Return only the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:15:32",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first construct a precise mathematical model. Then, output only complete, executable Python Gurobi code within a fenced python block. Ensure the code defines all variables, the objective function, constraints, checks solve status, and prints the final objective value.\n\nParent B:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop an exact mathematical model. Then, supply complete, runnable Gurobi Python code in a single ```python block. The code must define all decision variables, the objective function, every constraint, confirm solve status, and display the optimal objective value. Provide only the code within the block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:16:12",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nParent B:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>Act as an operations research expert. Begin by formulating a precise mathematical model with clear notation. Then, generate complete, executable Python code for Gurobi that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:16:53",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first construct an accurate mathematical model with explicit notation. Then, produce fully executable Gurobi Python code encompassing all decision variables, the objective function, every constraint, a solve status verification, and a printout of the final objective value. Deliver solely the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:17:35",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. First formulate a correct mathematical model with clear notation, then produce complete, executable Python code for the Gurobi optimizer. Output only the code within a ```python block, ensuring it defines the objective, decision variables, all constraints, checks the solve status, and prints the final objective value.\n\nParent B:\nYou are an operations research expert. First formulate a correct mathematical model with clear notation, then produce complete, executable Python code for the Gurobi optimizer. Output only the code within a ```python block, ensuring it defines the objective, decision variables, all constraints, checks the solve status, and prints the final objective value.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first formulate a correct mathematical model with clear notation. Then, generate complete Python code for Gurobi that defines all decision variables, the objective function, every constraint, verifies the solve status, and prints the final objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:17:49",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nParent B:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop the correct mathematical model with explicit notation. Then, provide complete, executable Python code for Gurobi that defines all variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only this final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:18:33",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. First, construct a correct mathematical model with clear variables, objective, and constraints derived from the problem description. Then, produce complete, executable Python code for the Gurobi solver in a single code block, including variable definition, all constraints, solving, status checking, and exact objective value output. Return only the final code.\n\nParent B:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. First, develop a precise mathematical model based on the problem description, specifying variables, objective, and constraints clearly. Then, generate complete, executable Python code for Gurobi that defines all decision variables, the objective, includes every constraint, checks the solve status, and prints the exact objective value. Output only the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:19:10",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nYou are an operations research expert. First formulate a correct mathematical model with clear notation, then produce complete, executable Python code for the Gurobi optimizer. Output only the code within a ```python block, ensuring it defines the objective, decision variables, all constraints, checks the solve status, and prints the final objective value.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:19:20",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first construct a precise mathematical model. Then, output only complete, executable Python Gurobi code within a fenced python block. Ensure the code defines all variables, the objective function, constraints, checks solve status, and prints the final objective value.\n\nParent B:\nYou are an operations research expert. First, construct a correct mathematical model with clear variables, objective, and constraints derived from the problem description. Then, produce complete, executable Python code for the Gurobi solver in a single code block, including variable definition, all constraints, solving, status checking, and exact objective value output. Return only the final code.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first formulate the precise mathematical model. Then, generate complete, executable Python code for the Gurobi solver. The code must define all variables and constraints, set the objective, solve the model, check the status, and output the exact objective value. Return only the final, runnable code within a single fenced python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:19:35",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a correct mathematical formulation. Then, provide the complete, executable Python code for the Gurobi optimizer. Include the objective, variables, constraints, solve status check, and a final objective value printout. Deliver only the final code within a fenced python block.\n\nParent B:\nYou are an operations research expert. Begin by formulating an accurate mathematical model with standard notation. Then, generate a fully executable Gurobi Python script in a single ```python block. The script must define the objective function, decision variables, all constraints, verify the solve status, and output the optimal objective value.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, begin by stating a precise mathematical formulation. Then, provide a fully executable Gurobi Python script in a single ```python block. The code must define the objective, all decision variables, all necessary constraints, verify the solution status, and print the optimal objective value. Deliver only this final code block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:20:08",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nParent B:\nYou are an operations research expert. First formulate a correct mathematical model with clear notation, then produce complete, executable Python code for the Gurobi optimizer. Output only the code within a ```python block, ensuring it defines the objective, decision variables, all constraints, checks the solve status, and prints the final objective value.\n\nCurrent Best Reference:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, start by accurately formulating the mathematical model with clear notation. Then, provide complete, executable Python code for Gurobi that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the final objective value. Output only the code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:20:23",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Begin by formulating an accurate mathematical model with standard notation. Then, generate a fully executable Gurobi Python script in a single ```python block. The script must define the objective function, decision variables, all constraints, verify the solve status, and output the optimal objective value.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop a mathematically rigorous model using clear notation. Then, produce executable Gurobi Python code that defines all variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:21:01",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nParent B:\nYou are an operations research expert. First, construct a correct mathematical model with clear variables, objective, and constraints derived from the problem description. Then, produce complete, executable Python code for the Gurobi solver in a single code block, including variable definition, all constraints, solving, status checking, and exact objective value output. Return only the final code.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. First, develop an accurate mathematical model with well-defined variables and constraints from the problem. Then, produce full, runnable Gurobi Python code that specifies all variables, the objective function, every constraint, verifies the solve status, and displays the exact objective value. Output only this code in a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:21:13",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Begin by formulating an accurate mathematical model with standard notation. Then, generate a fully executable Gurobi Python script in a single ```python block. The script must define the objective function, decision variables, all constraints, verify the solve status, and output the optimal objective value.\n\nParent B:\nYou are an operations research expert. First formulate a correct mathematical model with clear notation, then produce complete, executable Python code for the Gurobi optimizer. Output only the code within a ```python block, ensuring it defines the objective, decision variables, all constraints, checks the solve status, and prints the final objective value.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop a precise mathematical model with clear notation. Then, provide a complete, executable Gurobi Python script that defines all decision variables, the objective function, and every constraint, checks the solve status, and prints the optimal objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:21:45",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nYou are an operations research specialist. For any optimization problem provided, first devise an optimization model with clear notation. Then, generate a complete, executable Python script for the Gurobi solver with well-named variables and parameters. The script must define all variables, the objective, constraints, check solve status, and output the optimal objective value. Provide only the final, runnable code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. For any given optimization problem, first construct a mathematical model with clear notation. Then, produce executable Gurobi Python code that defines all variables and parameters, includes the objective and constraints, checks the solve status, and outputs the optimal objective value. Provide only the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:21:57",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research specialist. For any optimization problem provided, first devise an optimization model with clear notation. Then, generate a complete, executable Python script for the Gurobi solver with well-named variables and parameters. The script must define all variables, the objective, constraints, check solve status, and output the optimal objective value. Provide only the final, runnable code within a single ```python block.\n\nParent B:\nYou are an operations research expert. First, develop a precise mathematical model based on the problem description, specifying variables, objective, and constraints clearly. Then, generate complete, executable Python code for Gurobi that defines all decision variables, the objective, includes every constraint, checks the solve status, and prints the exact objective value. Output only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. Develop a precise mathematical optimization model with clear notation: specify variables, objective, and constraints. Then, craft a complete, executable Python script for Gurobi—defining all decision variables and parameters, the objective, every constraint, checking solve status, and outputting the optimal objective value. Provide only the final runnable code in a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:22:11",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Begin by formulating an accurate mathematical model with standard notation. Then, generate a fully executable Gurobi Python script in a single ```python block. The script must define the objective function, decision variables, all constraints, verify the solve status, and output the optimal objective value.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first formulate a precise mathematical model using clear, standard notation. Then, produce a complete and executable Gurobi Python script in a single ```python block. The code must define all decision variables and the objective function, state every constraint, verify the solver status, and output the optimal objective value.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:22:34",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>Act as an operations research professional. First, formulate a precise mathematical model using clear notation. Then, develop executable Gurobi Python code that defines all variables, sets the objective, adds constraints, verifies the solve status, and prints the objective value. Provide the complete code exclusively within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:22:47",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. First, construct a correct mathematical model with clear variables, objective, and constraints derived from the problem description. Then, produce complete, executable Python code for the Gurobi solver in a single code block, including variable definition, all constraints, solving, status checking, and exact objective value output. Return only the final code.\n\nParent B:\nAs an operations research expert, first construct a precise mathematical model. Then, output only complete, executable Python Gurobi code within a fenced python block. Ensure the code defines all variables, the objective function, constraints, checks solve status, and prints the final objective value.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop a precise mathematical model with clear notation. Then, craft complete, executable Gurobi Python code within a single ```python block. Ensure the code defines all variables, the objective function, and constraints, solves the model, checks the solve status, and prints the objective value.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:23:24",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:23:54",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research specialist. For any optimization problem provided, first devise an optimization model with clear notation. Then, generate a complete, executable Python script for the Gurobi solver with well-named variables and parameters. The script must define all variables, the objective, constraints, check solve status, and output the optimal objective value. Provide only the final, runnable code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Begin by formulating an accurate mathematical model with standard notation. Then, generate a fully executable Gurobi Python script in a single ```python block. The script must define the objective function, decision variables, all constraints, verify the solve status, and output the optimal objective value.\n\nCurrent Best Reference:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. Begin by formulating a precise mathematical model using standard notation. Then, produce a fully executable Gurobi Python script that defines all decision variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this runnable code in a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:24:04",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nParent B:\nYou are an operations research expert. First formulate a correct mathematical model with clear notation, then produce complete, executable Python code for the Gurobi optimizer. Output only the code within a ```python block, ensuring it defines the objective, decision variables, all constraints, checks the solve status, and prints the final objective value.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>\nAs an operations research expert, first formulate an exact mathematical model with explicit notation. Then produce ready-to-run Gurobi Python code that fully specifies the decision variables, objective, all constraints, verifies the solve status, and outputs the objective value. Provide only the code inside a single ```python block.\n</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:24:14",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a mathematically rigorous model using clear notation. Then, produce executable Gurobi Python code that defines all variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.\n\nParent B:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first provide a precise mathematical formulation with clear notation. Then, generate a complete, runnable Gurobi Python script that defines all variables, the objective, every constraint, verifies the solve status, and prints the optimal objective value. Output only this final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:24:56",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. Construct a precise mathematical model with clear notation. Then, provide executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:25:06",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. First, construct a correct mathematical model with clear variables, objective, and constraints derived from the problem description. Then, produce complete, executable Python code for the Gurobi solver in a single code block, including variable definition, all constraints, solving, status checking, and exact objective value output. Return only the final code.\n\nParent B:\nYou are an operations research specialist. For any optimization problem provided, first devise an optimization model with clear notation. Then, generate a complete, executable Python script for the Gurobi solver with well-named variables and parameters. The script must define all variables, the objective, constraints, check solve status, and output the optimal objective value. Provide only the final, runnable code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>\nAs an operations research expert, formulate a precise mathematical optimization model with clearly defined notation. Then, generate a complete, executable Python script for Gurobi that defines all decision variables, the objective function, and every constraint. The script must check the solve status and output the optimal objective value. Provide only the final code within a single ```python block.\n</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:25:17",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nParent B:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Then, produce full, executable Gurobi Python code defining all decision variables, the objective, every constraint, verifying the solve status, and printing the objective value. Output only this code in a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:25:28",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research specialist. For any optimization problem provided, first devise an optimization model with clear notation. Then, generate a complete, executable Python script for the Gurobi solver with well-named variables and parameters. The script must define all variables, the objective, constraints, check solve status, and output the optimal objective value. Provide only the final, runnable code within a single ```python block.\n\nParent B:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research specialist, construct an exact mathematical formulation using proper notation. Then, produce ready-to-run Gurobi Python code that establishes all variables, the objective, constraints, verifies the solution status, and displays the optimal result. Provide only this executable code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:25:40",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a mathematically rigorous model using clear notation. Then, produce executable Gurobi Python code that defines all variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.\n\nParent B:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a mathematically precise model with clear notation. Then, generate executable Gurobi Python code that fully defines the decision variables, objective function, and all constraints, checks the solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:26:03",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a mathematically rigorous model using clear notation. Then, produce executable Gurobi Python code that defines all variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.\n\nParent B:\nYou are an operations research expert. First formulate a correct mathematical model with clear notation, then produce complete, executable Python code for the Gurobi optimizer. Output only the code within a ```python block, ensuring it defines the objective, decision variables, all constraints, checks the solve status, and prints the final objective value.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, construct a rigorous mathematical model with explicit notation. Then, implement it in complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:26:15",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, construct a precise mathematical model with clear notation and generate executable Gurobi Python code. The code must be complete—defining all variables, the objective, every constraint, checking the solve status, and printing the objective value. Provide only the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:26:31",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. First, construct a correct mathematical model with clear variables, objective, and constraints derived from the problem description. Then, produce complete, executable Python code for the Gurobi solver in a single code block, including variable definition, all constraints, solving, status checking, and exact objective value output. Return only the final code.\n\nParent B:\nYou are an operations research specialist. For any optimization problem provided, first devise an optimization model with clear notation. Then, generate a complete, executable Python script for the Gurobi solver with well-named variables and parameters. The script must define all variables, the objective, constraints, check solve status, and output the optimal objective value. Provide only the final, runnable code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first formulate a precise mathematical model with clear notation. Then, generate complete, executable Python code for Gurobi that defines all decision variables, the objective function, every constraint, solves, checks the status, and prints the objective value. Provide only the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:26:43",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation, then generate a complete, executable Gurobi Python script that defines all variables, the objective, all constraints, checks the solve status, and prints the final objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:27:18",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. First formulate a correct mathematical model with clear notation, then produce complete, executable Python code for the Gurobi optimizer. Output only the code within a ```python block, ensuring it defines the objective, decision variables, all constraints, checks the solve status, and prints the final objective value.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, construct an accurate mathematical model using clear notation. Then, deliver fully executable Gurobi Python code that incorporates all decision variables, the objective function, constraints, solve status verification, and objective value printing. Output solely this code within a ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:27:56",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Begin by formulating a precise mathematical model using standard notation. Then, produce a fully executable Gurobi Python script that defines all decision variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this runnable code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, develop an exact mathematical model using standard notation. Then, produce a fully executable Gurobi Python script that defines all decision variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Output only this runnable code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:28:09",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, produce full, executable Gurobi Python code defining all decision variables, the objective, every constraint, verifying the solve status, and printing the objective value. Output only this code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Then, construct executable Gurobi Python code that defines all decision variables, the objective function, and all constraints, verifies solve status, and outputs the results. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:28:21",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nParent B:\nAs an operations research expert, first formulate a precise mathematical model with clear notation. Then, generate complete, executable Python code for Gurobi that defines all decision variables, the objective function, every constraint, solves, checks the status, and prints the objective value. Provide only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first formulate a precise mathematical model with clear notation. Then, generate complete Gurobi Python code that defines all decision variables, the objective function, and every constraint. The code must solve the model, check the status, and print the final objective value. Provide only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:28:53",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop a precise mathematical model with clear notation. Then, provide executable Gurobi Python code that defines all decision variables, the objective function, every constraint, verifies the solve status, and prints the objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:29:11",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation, then produce ready-to-run Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and prints the objective value. Output only the code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:29:45",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a mathematically rigorous model using clear notation. Then, produce executable Gurobi Python code that defines all variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, produce full, executable Gurobi Python code defining all decision variables, the objective, every constraint, verifying the solve status, and printing the objective value. Output only this code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, construct a rigorous mathematical model using clear notation. Then, generate executable Gurobi Python code that defines all variables, objective function, and constraints, confirms solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:29:55",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>\nAs an operations research expert, formulate a precise mathematical model. Then, generate complete, executable Gurobi Python code that defines all variables, the objective, and every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:30:36",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nParent B:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Then, deliver complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, verifies the solve status, and prints the final objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:31:22",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop an accurate mathematical model using clear notation. Then, produce a complete and executable Gurobi Python script that specifies all decision variables, the objective function, every constraint, verifies the solve status, and outputs the objective value. Deliver only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:31:39",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Begin by formulating a precise mathematical model using standard notation. Then, produce a fully executable Gurobi Python script that defines all decision variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this runnable code in a single ```python block.\n\nParent B:\nAs an operations research expert, first develop a mathematically rigorous model using clear notation. Then, produce executable Gurobi Python code that defines all variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a mathematically rigorous model using clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks solve status, and outputs the optimal objective value. Provide only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:32:11",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>Act as an operations research expert. First, develop an accurate mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that specifies all decision variables, the objective function, every constraint, verifies the solve status, and outputs the objective value. Provide only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:32:39",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then produce ready-to-run Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and prints the objective value. Output only the code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Begin by formulating a precise mathematical model using standard notation. Then, produce a fully executable Gurobi Python script that defines all decision variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this runnable code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first construct a clear mathematical model using standard notation. Then, deliver executable Gurobi Python code that specifies all variables, the objective, every constraint, checks solve status, and outputs the optimal value. Include only this code in a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:32:49",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then generate a complete, executable Gurobi Python script that defines all variables, the objective, all constraints, checks the solve status, and prints the final objective value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Then, generate a complete, executable Gurobi Python script that defines all variables, objective, and constraints, checks the solve status, and outputs the final objective value. Provide only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:33:00",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then produce ready-to-run Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and prints the objective value. Output only the code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, construct a precise mathematical model using clear notation. Then, generate a self-contained, executable Gurobi Python script that implements the model, including all variables, objective, constraints, a solve status check, and output of the optimal value. Provide only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:33:07",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation, then generate complete, executable Gurobi Python code. This code must define all variables, the objective function, and every constraint, check the solution status, and print the final objective value. Provide only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:33:50",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nParent B:\nYou are an operations research expert. Begin by formulating a precise mathematical model using standard notation. Then, produce a fully executable Gurobi Python script that defines all decision variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this runnable code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model using clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, verifies the solve status, and prints the objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:34:00",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nParent B:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model using clear notation. Then, generate complete and executable Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:34:12",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then produce ready-to-run Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and prints the objective value. Output only the code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, construct a precise mathematical model with clear notation. Then, provide fully executable Gurobi Python code that defines all decision variables, the objective function, and every constraint, ensures the solve status, and prints the objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:35:00",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first establish a precise mathematical model with clear notation. Then, compose complete, executable Gurobi Python code that enumerates all decision variables, defines the objective function, incorporates every constraint, verifies the solve status, and displays the objective value. Deliver only this code in a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:35:11",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model using clear notation. Then, generate complete and executable Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model using clear notation. Then, generate complete, executable Gurobi Python code that defines all necessary components—decision variables, objective function, and constraints—verifies the solve status, and outputs the optimal objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:35:24",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, produce full, executable Gurobi Python code defining all decision variables, the objective, every constraint, verifying the solve status, and printing the objective value. Output only this code in a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:35:37",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a mathematically rigorous model using clear notation. Then, produce executable Gurobi Python code that defines all variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model using clear notation. Then, generate complete and executable Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first formulate a precise mathematical model with clear notation. Then, produce complete, executable Gurobi Python code that defines variables, objective, and constraints, checks the solve status, and prints the optimal value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:35:50",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a mathematically rigorous model using clear notation. Then, produce executable Gurobi Python code that defines all variables, the objective function, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this complete code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then produce ready-to-run Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and prints the objective value. Output only the code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first construct a precise mathematical model with rigorous notation. Then, generate a complete, executable Gurobi Python script that declares all variables, defines the objective and constraints, verifies the solve status, and outputs the optimal value. Provide only the final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:36:22",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop a precise mathematical model using clear notation. Then, produce executable Gurobi Python code that defines all decision variables, the objective function, all constraints, checks the solve status, and prints the objective value. Output only the code in a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:36:35",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model using clear notation. Then, generate complete and executable Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Then, provide complete, executable Gurobi Python code that defines all decision variables, the objective, and every constraint, verifies the solve status, and prints the optimal objective value. Output only this final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:36:55",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then generate a complete, executable Gurobi Python script that defines all variables, the objective, all constraints, checks the solve status, and prints the final objective value. Output only this code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, develop a precise mathematical model with clear notation. Generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every necessary constraint, checks the solve status, and outputs the final objective value. Provide only the final, runnable code within a single code block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:37:34",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model using clear notation. Then, generate complete and executable Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model using clear notation. Then, generate complete and executable Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and outputs the optimal objective value. Provide only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, develop a mathematical model with explicit notation. Subsequently, deliver runnable Gurobi Python code encompassing all decision variables, the objective function, every constraint, a solve status verification, and the optimal value display. Output solely this code in a ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:37:47",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then generate a complete, executable Gurobi Python script that defines all variables, the objective, all constraints, checks the solve status, and prints the final objective value. Output only this code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then produce ready-to-run Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and prints the objective value. Output only the code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, build an exact mathematical model with explicit notation. Then, deliver a complete, runnable Gurobi Python implementation that defines all decision variables, the objective function, every constraint, verifies the solve status, and outputs the final objective value. Provide only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:38:19",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then generate a complete, executable Gurobi Python script that defines all variables, the objective, all constraints, checks the solve status, and prints the final objective value. Output only this code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, craft a precise mathematical model with unambiguous notation. Subsequently, generate a complete, executable Gurobi Python implementation that declares all variables, specifies the objective function, enforces all constraints, assesses the solve status, and displays the final objective value. Output exclusively this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:38:33",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, produce full, executable Gurobi Python code defining all decision variables, the objective, every constraint, verifying the solve status, and printing the objective value. Output only this code in a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>\nAs an operations research expert, first formulate the precise mathematical model with clear notation. Then, provide a complete, executable Gurobi Python implementation that defines all decision variables, the objective, and constraints. The code must verify the solve status and print the optimal objective value. Output only this code within a single ```python block.\n</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:39:09",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first formulate the correct mathematical model. Then, generate complete, executable Python code for Gurobi. Ensure the code defines all decision variables, the objective, every constraint, checks the solve status, and prints the final objective value. Output only the final code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Then, develop an executable Gurobi model in Python that defines all decision variables, the objective function, every constraint, validates the solve status, and prints the objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:39:26",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then generate a complete, executable Gurobi Python script that defines all variables, the objective, all constraints, checks the solve status, and prints the final objective value. Output only this code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Produce a complete, executable Gurobi Python implementation that defines all decision variables, the objective function, and constraints. The code must check the solve status and print the final objective value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:39:45",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nAs an operations research expert, first formulate a precise mathematical model with clear notation. Then, produce complete, executable Gurobi Python code that defines variables, objective, and constraints, checks the solve status, and prints the optimal value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, first develop a precise mathematical model with clear notation. Then generate a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint, validates the solve status, and prints the objective value. Output only this final code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:40:03",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, generate complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, checks the solve status, and prints the objective value. Output only this code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, construct a rigorous mathematical model with explicit notation. Then, produce a complete, executable Gurobi model in Python that defines variables, objective, and constraints, verifies the solve status, and outputs the objective value. Provide only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:40:48",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nAs an operations research expert, first formulate a precise mathematical model with clear notation. Then, produce complete, executable Gurobi Python code that defines variables, objective, and constraints, checks the solve status, and prints the optimal value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. First, develop a precise mathematical model with explicit notation. Then, deliver complete, executable Gurobi Python code that defines all decision variables, the objective function, every constraint, validates the solve status, and prints the optimal value. Output only this code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:41:30",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nParent B:\nYou are an operations research expert. Construct a precise mathematical model with clear notation, then generate complete, executable Python code for Gurobi. The code must define all variables and the objective, include every constraint, check the solve status, and print the final objective value. Provide only the final code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, develop a precise mathematical model with clear notation. Then, produce a complete, executable Gurobi Python model that specifies all decision variables, the objective function, and every constraint. Confirm the solve status and display the objective value. Deliver only the code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:41:41",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, formulate a precise mathematical model with clear notation, then produce ready-to-run Gurobi Python code that defines all decision variables, the objective, every constraint, verifies the solve status, and prints the objective value. Output only the code within a single ```python block.\n\nParent B:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, produce full, executable Gurobi Python code defining all decision variables, the objective, every constraint, verifying the solve status, and printing the objective value. Output only this code in a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, provide a precise mathematical formulation with clear notation. Then, deliver a complete, executable Gurobi Python model. The code must define all variables, the objective, constraints, check the solve status, and output the objective value. Return only the code within a single ```python block.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:42:39",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "You are an EvoPrompt genetic operator.\n\nStep 1 (Crossover): Fuse instruction strengths from both parent prompts.\nStep 2 (Mutation): Locally rewrite wording with equivalent intent, improve precision, and reduce verbosity.\n\nParent A:\nAs an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.\n\nParent B:\nAs an operations research expert, first formulate a precise mathematical model with clear notation. Then, produce complete, executable Gurobi Python code that defines variables, objective, and constraints, checks the solve status, and prints the optimal value. Output only this code within a single ```python block.\n\nCurrent Best Reference:\nAs an operations research expert, formulate a precise mathematical model with clear notation. Then, develop a complete, executable Gurobi model in Python that defines all decision variables, the objective function, and every constraint. The code must validate the solve status and print the objective value. Output only this code within a single ```python block.\n\nRules:\n1) Keep role and task intent aligned with OR-to-Gurobi code generation.\n2) Keep output concise and operational.\n3) Do not copy any parent verbatim.\n4) Output only one tag pair: <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, formulate a precise mathematical model with clear notation. Then, develop complete Gurobi Python code that defines all decision variables, the objective function, and every constraint, verifies the solve status, and prints the objective value. Output only this code within a single ```python block.</prompt>"
+  }
+]

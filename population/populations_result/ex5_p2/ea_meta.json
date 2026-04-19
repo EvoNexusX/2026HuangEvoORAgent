@@ -1,0 +1,6 @@
+{
+  "strategy": "crossover",
+  "parent": "ALL",
+  "generation": 5,
+  "population_index": 2
+}

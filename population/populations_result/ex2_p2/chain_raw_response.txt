@@ -1,0 +1,50 @@
+[
+    {
+        "phase": "问题分析与建模",
+        "type": "prompt",
+        "action": "发送问题分析与建模提示词给 LLM",
+        "start_state": "优化智能体开始搭建",
+        "end_state": "问题分析与建模完成",
+        "key": "阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\n你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\n重点给出正确的数学模型表达式，不必过多解释。\n该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规模表达式。"
+    },
+    {
+        "phase": "Gurobi算法设计",
+        "type": "prompt",
+        "action": "发送 Gurobi 算法设计提示词给 LLM",
+        "start_state": "问题分析与建模完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\n请基于以下建模方案设计Gurobi求解算法。\n重点给出正确的Gurobi算法设计方案，不必过多解释。\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。"
+    },
+    {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "发送代码生成提示词给 LLM",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "代码生成响应已接收",
+        "key": "You are a Python programming expert specializing in Gurobi optimization. \nYour task is to generate complete, executable Python code for optimization problems."
+    },
+    {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存生成的代码到文件",
+        "start_state": "代码生成响应已接收",
+        "end_state": "代码已保存",
+        "key": "save_generated_code(text_content: str, prefix: str) -> None: 保存生成内容到 result/；优先提取 python 代码块为 .py，否则存为 .txt。"
+    },
+    {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "提取并执行 Python 代码块",
+        "start_state": "代码已保存",
+        "end_state": "代码执行结果可用",
+        "key": "extract_and_execute_python_code(text_content: str) -> (bool, str): 提取文本中的 ```python ... ``` 代码块并执行；解析最优目标值。"
+    },
+    {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "检查执行结果是否是数字字符串",
+        "start_state": "代码执行结果可用",
+        "end_state": "代码生成完成",
+        "key": "is_number_string(s: str) -> bool: Determine if a string is a numeric string, including integers and decimals."
+    }
+]

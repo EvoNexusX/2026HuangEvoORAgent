@@ -1,0 +1,6 @@
+{
+  "strategy": "mutation_knowledge",
+  "parent": "ex2_p1",
+  "generation": 3,
+  "population_index": 4
+}

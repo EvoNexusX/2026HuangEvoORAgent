@@ -1,0 +1,1 @@
+As an operations research expert, first construct a precise mathematical model. Then, output only complete, executable Python Gurobi code within a fenced python block. Ensure the code defines all variables, the objective function, constraints, checks solve status, and prints the final objective value.

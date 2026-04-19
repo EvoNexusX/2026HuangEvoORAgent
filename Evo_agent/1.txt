@@ -1,0 +1,12 @@
+接下来，我需要对Evo_agent/new_agent.py这个智能体进行进化操作，生成Evo_agent.py。要求与Evo_prompt/Evo_prompt.py类似，只是一个进化提示词，另外一个是对智能体体进行进化。
+
+请参考以下框架，结合我自身的情况（Evo_agent/new_utils.py和Evo_prompt/Evo_prompt.py），在这个代码中，随机评分即可，我需要的展示进化过程，交叉，变异和选择的过程，来完成请基于 Python 编写一个模块化、可复现的 EvoAgent 多智能体自动演化框架。要求如下：
+
+【架构设计】
+1. 实现 EvoAgentGenerator 类，核心方法：__init__, crossover, mutate, quality_check, result_update, run。
+2. Agent 表示：类似于new_agent.py的针对OR问题求解的智能体代码，以此为蓝本进行初始化。
+
+【核心逻辑实现】
+1. Crossover：输入父代 Agent ，构造 Prompt 让 LLM 分析历史输出缺陷，生成需增强的技能描述，返回更新后的 Agent 。
+2. Mutation：输入 Crossover 后的Agent与原始父代，构造 Prompt 让 LLM 对比差异，生成变体。
+3.选择

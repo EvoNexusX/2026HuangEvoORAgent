@@ -1,0 +1,6 @@
+{
+  "strategy": "elite_keep",
+  "parent": "ex2_p4",
+  "generation": 3,
+  "population_index": 1
+}

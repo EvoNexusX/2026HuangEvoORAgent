@@ -1,0 +1,266 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "code",
+    "action": "定义阶段1提示词消息列表",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "优化智能体开始搭建",
+    "key": "stage1_messages = [\n    {\n        \"role\": \"system\",\n        \"content\": \"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\\n你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\\n重点给出正确的数学模型表达式，不必过多解释。\\n该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规模表达式。\"\n    },\n    {\n        \"role\": \"user\",\n        \"content\": f\"用户问题如下：\\n{user_question}\"\n    }\n]"
+  },
+  {
+    "phase": "问题分析与建模",
+    "type": "tool",
+    "action": "调用LLM进行问题分析与建模",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "query_llm(stage1_messages, model_name)"
+  },
+  {
+    "phase": "问题分析与建模",
+    "type": "code",
+    "action": "打印阶段1响应",
+    "start_state": "问题分析与建模完成",
+    "end_state": "问题分析与建模完成",
+    "key": "print(\"【Stage 1 - Problem Analysis & Modeling】:\\n\", stage1_modeling)"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "code",
+    "action": "定义阶段2提示词消息列表",
+    "start_state": "问题分析与建模完成",
+    "end_state": "问题分析与建模完成",
+    "key": "stage2_messages = [\n    {\n        \"role\": \"system\",\n        \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。\\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"\n    },\n    {\n        \"role\": \"user\",\n        \"content\": f\"问题分析与建模\\n{stage1_modeling}\"\n    }\n]"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "tool",
+    "action": "调用LLM进行Gurobi算法设计",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "query_llm(stage2_messages, model_name)"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "code",
+    "action": "打印阶段2响应",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "print(\"【Stage 2 - Gurobi Algorithm Design】:\\n\", stage2_design)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "定义代码生成初始提示词消息列表",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "initial_messages = [\n    {\n        \"role\": \"system\",\n        \"content\": \"请根据提供的优化问题、数学模型和算法设计，编写完整的Gurobi Python求解代码。\\n代码必须独立可运行，包含必要的import语句、模型构建、求解和结果输出部分。\\n确保代码能处理可能的数值问题，并在最后打印或返回最优目标值。\\n严格按照以下格式输出代码：```python\\n<你的代码>\\n```\"\n    },\n    {\n        \"role\": \"user\",\n        \"content\": f\"原始问题：\\n{user_question}\\n\\n数学模型：\\n{stage1_modeling}\\n\\n算法设计：\\n{stage2_design}\\n\\n\"\n    }\n]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "复制初始消息列表",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "messages = copy.deepcopy(initial_messages)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "调用LLM生成初始代码",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成完成",
+    "key": "query_llm(messages, model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印生成的代码响应",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "print(\"【Stage 3 - Code Generation】:\\n\", code_response)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "store_generated_code(code_response, prefix='agent')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "准备代码文本 for execution",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "full_text = f\"{code_response}\""
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "在 generate_or_code_solver 中复制消息列表",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "messages = copy.deepcopy(messages_bak)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "调用LLM生成Gurobi代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "query_llm(messages, model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印生成的Gurobi代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "print(\"【Python Gurobi Code】:\\n\", gurobi_code)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存Gurobi代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "store_generated_code(gurobi_code, prefix=\"agent\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "准备代码文本 for execution",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "text = f\"{gurobi_code}\""
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "初始化尝试计数器",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "attempt = 0"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行Python代码尝试0",
+    "start_state": "代码生成完成",
+    "end_state": "代码执行结果状态",
+    "key": "execute_python_extract(text)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查执行结果",
+    "start_state": "代码执行结果状态",
+    "end_state": "代码执行失败",
+    "key": "if not success:"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印尝试失败信息",
+    "start_state": "代码执行失败",
+    "end_state": "代码执行失败",
+    "key": "print(f\"\\nAttempt {attempt + 1} failed, requesting LLM to fix code...\\n\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "更新消息列表 with assistant response",
+    "start_state": "代码执行失败",
+    "end_state": "代码执行失败",
+    "key": "messages.append({\"role\": \"assistant\", \"content\": gurobi_code})"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "更新消息列表 with user error message",
+    "start_state": "代码执行失败",
+    "end_state": "代码执行失败",
+    "key": "messages.append({\"role\": \"user\", \"content\": f\"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\",})"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "调用LLM修复代码",
+    "start_state": "代码执行失败",
+    "end_state": "代码修复完成",
+    "key": "gurobi_code = query_llm(messages, model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存修复后的代码",
+    "start_state": "代码修复完成",
+    "end_state": "代码修复完成",
+    "key": "store_generated_code(gurobi_code, prefix=\"agent_fix\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "更新代码文本",
+    "start_state": "代码修复完成",
+    "end_state": "代码修复完成",
+    "key": "text = f\"{gurobi_code}\""
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印接收修复代码信息",
+    "start_state": "代码修复完成",
+    "end_state": "代码修复完成",
+    "key": "print(\"\\nReceived fixed code, preparing to execute again...\\n\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "增加尝试计数器",
+    "start_state": "代码修复完成",
+    "end_state": "代码修复完成",
+    "key": "attempt += 1"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行Python代码尝试1",
+    "start_state": "代码修复完成",
+    "end_state": "代码执行成功",
+    "key": "execute_python_extract(text)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查执行结果成功",
+    "start_state": "代码执行成功",
+    "end_state": "代码执行成功",
+    "key": "if success:"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "更新原始消息列表",
+    "start_state": "代码执行成功",
+    "end_state": "代码执行成功",
+    "key": "messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "从 generate_or_code_solver 返回",
+    "start_state": "代码执行成功",
+    "end_state": "代码生成完成",
+    "key": "return True, error_msg, messages_bak"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印阶段结果",
+    "start_state": "代码生成完成",
+    "end_state": "代码生成完成",
+    "key": "print(f\"Stage result: {is_solve_success}, {result}\")"
+  }
+]

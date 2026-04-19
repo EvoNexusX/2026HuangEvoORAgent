@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "format_ok": true,
+  "metrics": {
+    "total": 3,
+    "run_pass": 3,
+    "solve_correct": 1,
+    "total_fails": 2,
+    "error_datas": "['7', '9']"
+  }
+}

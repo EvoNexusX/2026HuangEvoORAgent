@@ -1,0 +1,716 @@
+=============== num 7 ==================
+An Italian transportation company needs to move some empty containers from its 6 warehouses (located in Verona, Perugia, Rome, Pescara, Taranto, and Lamezia) to major national ports (Genoa, Venice, Ancona, Naples, Bari). The container inventory at the warehouses is as follows:
+
+|  | Empty Containers |
+|:---:|:---:|
+| Verona | 10 |
+| Perugia | 12 |
+| Rome | 20 |
+| Pescara | 24 |
+| Taranto | 18 |
+| Lamezia | 40 |
+
+The demand at the ports is as follows:
+
+|  | Container Demand |
+|:---:|:---:|
+| Genoa | 20 |
+| Venice | 15 |
+| Ancona | 25 |
+| Naples | 33 |
+| Bari | 21 |
+
+The transport is carried out by a fleet of trucks. The cost to transport each container is proportional to the distance traveled by the trucks, with a rate of 30 euros per kilometer. Each truck can carry up to 2 containers. The distances are as follows:
+
+|  | Genoa | Venice | Ancona | Naples | Bari |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| Verona | $290 \mathrm{~km}$ | $115 \mathrm{~km}$ | $355 \mathrm{~km}$ | $715 \mathrm{~km}$ | $810 \mathrm{~km}$ |
+| Perugia | $380 \mathrm{~km}$ | $340 \mathrm{~km}$ | $165 \mathrm{~km}$ | $380 \mathrm{~km}$ | $610 \mathrm{~km}$ |
+| Rome | $505 \mathrm{~km}$ | $530 \mathrm{~km}$ | $285 \mathrm{~km}$ | $220 \mathrm{~km}$ | $450 \mathrm{~km}$ |
+| Pescara | $655 \mathrm{~km}$ | $450 \mathrm{~km}$ | $155 \mathrm{~km}$ | $240 \mathrm{~km}$ | $315 \mathrm{~km}$ |
+| Taranto | $1010 \mathrm{~km}$ | $840 \mathrm{~km}$ | $550 \mathrm{~km}$ | $305 \mathrm{~km}$ | $95 \mathrm{~km}$ |
+| Lamezia | $1072 \mathrm{~km}$ | $1097 \mathrm{~km}$ | $747 \mathrm{~km}$ | $372 \mathrm{~km}$ | $333 \mathrm{~km}$ |
+
+Write a mathematical program to find the minimum cost transportation policy and solve it using COPTPY.
+-------------
+Using Agent mode (three-stage: modeling + design + code generation)
+【Stage 1 - Problem Analysis & Modeling】:
+ **数学模型**
+
+**集合**  
+- $I$：仓库集合，$I = \{\text{Verona}, \text{Perugia}, \text{Rome}, \text{Pescara}, \text{Taranto}, \text{Lamezia}\}$  
+- $J$：港口集合，$J = \{\text{Genoa}, \text{Venice}, \text{Ancona}, \text{Naples}, \text{Bari}\}$  
+
+**参数**  
+- $s_i$：仓库 $i$ 的空集装箱供应量，$i \in I$  
+  $s = [10, 12, 20, 24, 18, 40]$  
+- $d_j$：港口 $j$ 的空集装箱需求量，$j \in J$  
+  $d = [20, 15, 25, 33, 21]$  
+- $\text{dist}_{ij}$：从仓库 $i$ 到港口 $j$ 的距离（公里），具体数值由距离表给出  
+- $c = 30$：每公里每集装箱的运输成本（欧元）  
+
+**决策变量**  
+- $x_{ij} \geq 0$：从仓库 $i$ 运往港口 $j$ 的集装箱数量，$i \in I$，$j \in J$  
+
+**目标函数**  
+最小化总运输成本：  
+$$
+\min \sum_{i \in I} \sum_{j \in J} (c \cdot \text{dist}_{ij}) \cdot x_{ij}
+$$
+
+**约束条件**  
+1. 供应约束（每个仓库运出的集装箱数量不超过其供应量）：  
+   $$
+   \sum_{j \in J} x_{ij} \leq s_i, \quad \forall i \in I
+   $$
+2. 需求约束（每个港口运入的集装箱数量等于其需求量）：  
+   $$
+   \sum_{i \in I} x_{ij} = d_j, \quad \forall j \in J
+   $$
+3. 非负约束：  
+   $$
+   x_{ij} \geq 0, \quad \forall i \in I, \forall j \in J
+   $$
+【Stage 2 - Gurobi Algorithm Design】:
+ **Gurobi算法设计方案**
+
+```python
+from gurobipy import Model, GRB
+
+# 1. 初始化模型
+model = Model("EmptyContainerTransportation")
+
+# 2. 定义集合与参数
+warehouses = ['Verona', 'Perugia', 'Rome', 'Pescara', 'Taranto', 'Lamezia']
+ports = ['Genoa', 'Venice', 'Ancona', 'Naples', 'Bari']
+
+supply = {'Verona': 10, 'Perugia': 12, 'Rome': 20, 'Pescara': 24, 'Taranto': 18, 'Lamezia': 40}
+demand = {'Genoa': 20, 'Venice': 15, 'Ancona': 25, 'Naples': 33, 'Bari': 21}
+
+cost_per_km = 30
+
+# 距离矩阵（单位：公里）示例，实际应根据给定距离表填充
+distance = {
+    ('Verona', 'Genoa'): 250, ('Verona', 'Venice'): 120, ('Verona', 'Ancona'): 300,
+    ('Verona', 'Naples'): 600, ('Verona', 'Bari'): 700,
+    ('Perugia', 'Genoa'): 350, ('Perugia', 'Venice'): 280, ('Perugia', 'Ancona'): 150,
+    ('Perugia', 'Naples'): 350, ('Perugia', 'Bari'): 450,
+    ('Rome', 'Genoa'): 500, ('Rome', 'Venice'): 525, ('Rome', 'Ancona'): 300,
+    ('Rome', 'Naples'): 225, ('Rome', 'Bari'): 450,
+    ('Pescara', 'Genoa'): 450, ('Pescara', 'Venice'): 400, ('Pescara', 'Ancona'): 150,
+    ('Pescara', 'Naples'): 250, ('Pescara', 'Bari'): 300,
+    ('Taranto', 'Genoa'): 900, ('Taranto', 'Venice'): 850, ('Taranto', 'Ancona'): 600,
+    ('Taranto', 'Naples'): 350, ('Taranto', 'Bari'): 100,
+    ('Lamezia', 'Genoa'): 800, ('Lamezia', 'Venice'): 750, ('Lamezia', 'Ancona'): 500,
+    ('Lamezia', 'Naples'): 300, ('Lamezia', 'Bari'): 350
+}
+
+# 3. 添加决策变量
+x = model.addVars(warehouses, ports, name="x")
+
+# 4. 设置目标函数
+model.setObjective(
+    sum(cost_per_km * distance[i, j] * x[i, j] for i in warehouses for j in ports),
+    GRB.MINIMIZE
+)
+
+# 5. 添加约束条件
+# 供应约束
+model.addConstrs(
+    (sum(x[i, j] for j in ports) <= supply[i] for i in warehouses),
+    name="supply"
+)
+# 需求约束
+model.addConstrs(
+    (sum(x[i, j] for i in warehouses) == demand[j] for j in ports),
+    name="demand"
+)
+
+# 6. 求解模型
+model.optimize()
+
+# 7. 结果输出
+if model.status == GRB.OPTIMAL:
+    print(f'最优总成本: {model.objVal:.2f} 欧元')
+    for i in warehouses:
+        for j in ports:
+            if x[i, j].x > 1e-6:
+                print(f'{i} -> {j}: {x[i, j].x:.1f}')
+else:
+    print("未找到最优解")
+```
+
+**关键设计说明：**
+1. 使用字典存储距离数据，键为 (仓库, 港口) 元组，便于快速检索。
+2. 决策变量通过 `addVars` 批量创建，默认下界为 0，符合非负约束。
+3. 目标函数直接按数学模型中的公式构建，使用 `sum` 函数和生成器表达式以提高效率。
+4. 约束条件使用生成器表达式添加，保持代码简洁。
+5. 结果输出时检查变量值是否大于一个极小值（`1e-6`），避免输出数值误差导致的零值。
+【Python Gurobi Code】:
+ ```python
+from gurobipy import Model, GRB
+
+model = Model("EmptyContainerTransportation")
+
+warehouses = ['Verona', 'Perugia', 'Rome', 'Pescara', 'Taranto', 'Lamezia']
+ports = ['Genoa', 'Venice', 'Ancona', 'Naples', 'Bari']
+
+supply = {'Verona': 10, 'Perugia': 12, 'Rome': 20, 'Pescara': 24, 'Taranto': 18, 'Lamezia': 40}
+demand = {'Genoa': 20, 'Venice': 15, 'Ancona': 25, 'Naples': 33, 'Bari': 21}
+
+cost_per_km = 30
+
+distance = {
+    ('Verona', 'Genoa'): 290, ('Verona', 'Venice'): 115, ('Verona', 'Ancona'): 355,
+    ('Verona', 'Naples'): 715, ('Verona', 'Bari'): 810,
+    ('Perugia', 'Genoa'): 380, ('Perugia', 'Venice'): 340, ('Perugia', 'Ancona'): 165,
+    ('Perugia', 'Naples'): 380, ('Perugia', 'Bari'): 610,
+    ('Rome', 'Genoa'): 505, ('Rome', 'Venice'): 530, ('Rome', 'Ancona'): 285,
+    ('Rome', 'Naples'): 220, ('Rome', 'Bari'): 450,
+    ('Pescara', 'Genoa'): 655, ('Pescara', 'Venice'): 450, ('Pescara', 'Ancona'): 155,
+    ('Pescara', 'Naples'): 240, ('Pescara', 'Bari'): 315,
+    ('Taranto', 'Genoa'): 1010, ('Taranto', 'Venice'): 840, ('Taranto', 'Ancona'): 550,
+    ('Taranto', 'Naples'): 305, ('Taranto', 'Bari'): 95,
+    ('Lamezia', 'Genoa'): 1072, ('Lamezia', 'Venice'): 1097, ('Lamezia', 'Ancona'): 747,
+    ('Lamezia', 'Naples'): 372, ('Lamezia', 'Bari'): 333
+}
+
+x = model.addVars(warehouses, ports, name="x")
+
+model.setObjective(
+    sum(cost_per_km * distance[i, j] * x[i, j] for i in warehouses for j in ports),
+    GRB.MINIMIZE
+)
+
+model.addConstrs(
+    (sum(x[i, j] for j in ports) <= supply[i] for i in warehouses),
+    name="supply"
+)
+
+model.addConstrs(
+    (sum(x[i, j] for i in warehouses) == demand[j] for j in ports),
+    name="demand"
+)
+
+model.optimize()
+
+if model.status == GRB.OPTIMAL:
+    print(f'最优总成本: {model.objVal:.2f} 欧元')
+    for i in warehouses:
+        for j in ports:
+            if x[i, j].x > 1e-6:
+                print(f'{i} -> {j}: {x[i, j].x:.1f}')
+else:
+    print("未找到最优解")
+```
+Found Python code block, starting execution...
+Python code execution error, error message:
+
+SyntaxError: Non-UTF-8 code starting with '\xd7' in file C:\Users\Bryt\AppData\Local\Temp\tmp7o280uzh.py on line 48, but no encoding declared; see https://peps.python.org/pep-0263/ for details
+
+------------------------------
+
+Attempt 1 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Found Python code block, starting execution...
+Python code execution error, error message:
+
+  File "C:\Users\Bryt\AppData\Local\Temp\tmpz5c6lt6b.py", line 49
+    print('\ufffd\ufffd\ufffd\ufffd\ufffd\u0733\u0271\ufffd: {:.2f} \u0177\u052a'.format(model.objVal))
+          ^^^^^^^^^^^
+SyntaxError: (unicode error) 'utf-8' codec can't decode byte 0xd7 in position 0: invalid continuation byte
+
+------------------------------
+
+Attempt 2 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Found Python code block, starting execution...
+Python code executed successfully, output:
+
+Restricted license - for non-production use only - expires 2027-11-29
+Gurobi Optimizer version 13.0.1 build v13.0.1rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: 13th Gen Intel(R) Core(TM) i5-13490F, instruction set [SSE2|AVX|AVX2]
+Thread count: 10 physical cores, 16 logical processors, using up to 16 threads
+
+Optimize a model with 11 rows, 30 columns and 60 nonzeros (Min)
+Model fingerprint: 0xe0613189
+Model has 30 linear objective coefficients
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [3e+03, 3e+04]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [1e+01, 4e+01]
+
+Presolve time: 0.00s
+Presolved: 11 rows, 30 columns, 60 nonzeros
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    6.1965000e+05   4.200000e+01   0.000000e+00      0s
+      10    9.0459000e+05   0.000000e+00   0.000000e+00      0s
+
+Solved in 10 iterations and 0.01 seconds (0.00 work units)
+Optimal objective  9.045900000e+05
+Minimum total cost: 904590.00 euros
+Verona -> Venice: 10.0
+Perugia -> Genoa: 7.0
+Perugia -> Venice: 5.0
+Rome -> Genoa: 13.0
+Rome -> Ancona: 1.0
+Rome -> Naples: 6.0
+Pescara -> Ancona: 24.0
+Taranto -> Bari: 18.0
+Lamezia -> Naples: 27.0
+Lamezia -> Bari: 3.0
+
+
+Optimal solution value (Best objective): 904590.0
+------------------------------
+Stage result: True, 904590.0
+Successfully executed code, optimal solution value: 904590.0
+------------------
+solve: True, llm: 904590.0, ground truth: 904590.0
+[Final] run pass: True, solve correct: True
+
+
+=============== num 8 ==================
+Now, we need to determine 4 out of 5 workers to complete one of the four tasks respectively. Due to each worker's different technical specialties, the time required for them to complete each task varies. The hours required by each worker to complete each task are shown in Table 5-2.
+
+Table 5-2
+| Worker | $A$ | $B$ | $C$ | $D$ |
+|--------|-----|-----|-----|-----|
+| I      | 9   | 4   | 3   | 7   |
+| II     | 4   | 6   | 5   | 6   |
+| III    | 5   | 4   | 7   | 5   |
+| IV     | 7   | 5   | 2   | 3   |
+| V      | 10  | 6   | 7   | 4   |
+
+Try to find a job assignment plan that minimizes the total working hours.
+-------------
+Using Agent mode (three-stage: modeling + design + code generation)
+【Stage 1 - Problem Analysis & Modeling】:
+ 针对给定的工人任务分配问题，建立如下0-1整数线性规划模型：
+
+**集合定义**  
+- 工人集合：$I = \{\text{I}, \text{II}, \text{III}, \text{IV}, \text{V}\}$  
+- 任务集合：$J = \{A, B, C, D\}$  
+
+**参数**  
+$c_{ij}$：工人 $i \in I$ 完成任务 $j \in J$ 所需的时间，由题表给出。  
+
+**决策变量**  
+$x_{ij} \in \{0, 1\}$：若工人 $i$ 被分配给任务 $j$，则 $x_{ij} = 1$；否则为 $0$。  
+
+**目标函数**  
+最小化总工作时间：  
+$$
+\min \sum_{i \in I} \sum_{j \in J} c_{ij} x_{ij}
+$$
+
+**约束条件**  
+1. 每个任务必须分配给恰好一个工人：  
+   $$
+   \sum_{i \in I} x_{ij} = 1, \quad \forall j \in J
+   $$
+2. 每个工人最多被分配一个任务：  
+   $$
+   \sum_{j \in J} x_{ij} \leq 1, \quad \forall i \in I
+   $$
+【Stage 2 - Gurobi Algorithm Design】:
+ 针对工人任务分配问题的0-1整数线性规划模型，设计Gurobi求解算法如下：
+
+1. **导入库并初始化模型**
+   - 导入gurobipy模块，创建新的模型对象。
+
+2. **定义集合与参数**
+   - 工人集合：`I = ['I', 'II', 'III', 'IV', 'V']`
+   - 任务集合：`J = ['A', 'B', 'C', 'D']`
+   - 工作时间参数`c[i][j]`以字典或嵌套字典形式存储，键为`(i, j)`。
+
+3. **创建决策变量**
+   - 为每个工人i和任务j创建0-1变量：`x[i, j] = model.addVar(vtype=GRB.BINARY, name=f"x_{i}_{j}")`
+
+4. **设置目标函数**
+   - 最小化总工作时间：`model.setObjective(sum(c[i, j] * x[i, j] for i in I for j in J), GRB.MINIMIZE)`
+
+5. **添加约束条件**
+   - 每个任务必须分配给恰好一个工人：对每个任务j，添加约束`sum(x[i, j] for i in I) == 1`
+   - 每个工人最多被分配一个任务：对每个工人i，添加约束`sum(x[i, j] for j in J) <= 1`
+
+6. **求解模型**
+   - 调用`model.optimize()`求解。
+
+7. **结果提取与输出**
+   - 检查模型状态，若为最优则输出最优目标值及分配方案：遍历变量，打印`x[i, j].X`为1的分配。
+【Python Gurobi Code】:
+ ```python
+import gurobipy as gp
+from gurobipy import GRB
+
+# 创建模型
+model = gp.Model("WorkerAssignment")
+
+# 集合定义
+I = ['I', 'II', 'III', 'IV', 'V']  # 工人集合
+J = ['A', 'B', 'C', 'D']            # 任务集合
+
+# 参数数据：工作时间表
+c = {
+    ('I', 'A'): 9, ('I', 'B'): 4, ('I', 'C'): 3, ('I', 'D'): 7,
+    ('II', 'A'): 4, ('II', 'B'): 6, ('II', 'C'): 5, ('II', 'D'): 6,
+    ('III', 'A'): 5, ('III', 'B'): 4, ('III', 'C'): 7, ('III', 'D'): 5,
+    ('IV', 'A'): 7, ('IV', 'B'): 5, ('IV', 'C'): 2, ('IV', 'D'): 3,
+    ('V', 'A'): 10, ('V', 'B'): 6, ('V', 'C'): 7, ('V', 'D'): 4
+}
+
+# 创建决策变量
+x = {}
+for i in I:
+    for j in J:
+        x[i, j] = model.addVar(vtype=GRB.BINARY, name=f"x_{i}_{j}")
+
+# 设置目标函数：最小化总工作时间
+model.setObjective(
+    gp.quicksum(c[i, j] * x[i, j] for i in I for j in J),
+    GRB.MINIMIZE
+)
+
+# 添加约束条件
+# 每个任务必须分配给恰好一个工人
+for j in J:
+    model.addConstr(
+        gp.quicksum(x[i, j] for i in I) == 1,
+        name=f"Task_{j}_assigned"
+    )
+
+# 每个工人最多被分配一个任务
+for i in I:
+    model.addConstr(
+        gp.quicksum(x[i, j] for j in J) <= 1,
+        name=f"Worker_{i}_limit"
+    )
+
+# 求解模型
+model.optimize()
+
+# 输出结果
+if model.status == GRB.OPTIMAL:
+    print(f"最优总工作时间: {model.ObjVal}")
+    print("分配方案:")
+    for i in I:
+        for j in J:
+            if x[i, j].X > 0.5:
+                print(f"工人 {i} -> 任务 {j} (工时: {c[i, j]})")
+else:
+    print("未找到最优解")
+```
+Found Python code block, starting execution...
+Python code execution error, error message:
+
+SyntaxError: Non-UTF-8 code starting with '\xb4' in file C:\Users\Bryt\AppData\Local\Temp\tmpv514oote.py on line 4, but no encoding declared; see https://peps.python.org/pep-0263/ for details
+
+------------------------------
+
+Attempt 1 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Found Python code block, starting execution...
+Python code executed successfully, output:
+
+Restricted license - for non-production use only - expires 2027-11-29
+Gurobi Optimizer version 13.0.1 build v13.0.1rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: 13th Gen Intel(R) Core(TM) i5-13490F, instruction set [SSE2|AVX|AVX2]
+Thread count: 10 physical cores, 16 logical processors, using up to 16 threads
+
+Optimize a model with 9 rows, 20 columns and 40 nonzeros (Min)
+Model fingerprint: 0xdddd204a
+Model has 20 linear objective coefficients
+Variable types: 0 continuous, 20 integer (20 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 1e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+
+Found heuristic solution: objective 26.0000000
+Presolve time: 0.01s
+Presolved: 9 rows, 20 columns, 40 nonzeros
+Variable types: 0 continuous, 20 integer (20 binary)
+
+Root relaxation: objective 1.400000e+01, 5 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+*    0     0               0      14.0000000   14.00000  0.00%     -    0s
+
+Explored 1 nodes (5 simplex iterations) in 0.02 seconds (0.00 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 2: 14 26 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.400000000000e+01, best bound 1.400000000000e+01, gap 0.0000%
+Optimal total working hours: 14.0
+Assignment plan:
+Worker I -> Task B (hours: 4)
+Worker II -> Task A (hours: 4)
+Worker IV -> Task C (hours: 2)
+Worker V -> Task D (hours: 4)
+
+
+Optimal solution value (Best objective): 14.0
+------------------------------
+Stage result: True, 14.0
+Successfully executed code, optimal solution value: 14.0
+------------------
+solve: True, llm: 14.0, ground truth: 14
+[Final] run pass: True, solve correct: True
+
+
+=============== num 9 ==================
+Haus Toys can manufacture and sell toy trucks, toy airplanes, toy boats, and toy trains. The profit for each truck sold is $5, each airplane $10, each boat $8, and each train $7. How many types of toys should Haus Toys manufacture to maximize profits?
+
+There are 890 units of wood available. Each truck requires 12 units, each airplane 20 units, each boat 15 units, and each train 10 units.
+
+There are 500 units of steel available. Each airplane requires 3 units, each boat 5 units, each train 4 units, and each truck 6 units.
+
+If Haus Toys manufactures trucks, they will not manufacture trains.
+
+However, if they manufacture boats, they will also manufacture airplanes.
+
+The number of toy boats manufactured cannot exceed the number of toy trains manufactured.
+-------------
+Using Agent mode (three-stage: modeling + design + code generation)
+【Stage 1 - Problem Analysis & Modeling】:
+ **数学模型**
+
+**决策变量**  
+- \( x_1, x_2, x_3, x_4 \in \mathbb{Z}_+ \)：分别表示卡车、飞机、船、火车的生产数量。  
+- \( y \in \{0,1\} \)：二元变量，用于控制卡车与火车的互斥关系。  
+- \( z \in \{0,1\} \)：二元变量，用于指示是否生产船。
+
+**目标函数**  
+\[
+\max \quad 5x_1 + 10x_2 + 8x_3 + 7x_4
+\]
+
+**约束条件**  
+1. 资源约束：  
+   \[
+   \begin{aligned}
+   12x_1 + 20x_2 + 15x_3 + 10x_4 &\leq 890 \quad \text{(木材)} \\
+   6x_1 + 3x_2 + 5x_3 + 4x_4 &\leq 500 \quad \text{(钢铁)}
+   \end{aligned}
+   \]
+
+2. 卡车与火车互斥（若生产卡车则不生产火车）：  
+   \[
+   \begin{aligned}
+   x_1 &\leq M_1 y \\
+   x_4 &\leq M_2 (1 - y)
+   \end{aligned}
+   \]  
+   其中 \( M_1, M_2 \) 为足够大的常数（例如，可取 \( M_1 = 74 \), \( M_2 = 89 \)，基于单独资源上限）。
+
+3. 船与飞机的逻辑关系（若生产船则必须生产飞机）：  
+   \[
+   \begin{aligned}
+   x_3 &\leq M_3 z \\
+   z &\leq x_3 \\
+   x_2 &\geq z
+   \end{aligned}
+   \]  
+   其中 \( M_3 \) 为足够大的常数（例如，可取 \( M_3 = 59 \)）。
+
+4. 船与火车的数量关系：  
+   \[
+   x_3 \leq x_4
+   \]
+
+5. 变量域：  
+   \[
+   x_1, x_2, x_3, x_4 \geq 0, \quad \text{整数}; \quad y, z \in \{0,1\}.
+   \]
+【Stage 2 - Gurobi Algorithm Design】:
+ **Gurobi算法设计方案**
+
+1. **导入库与环境初始化**  
+   导入Gurobi Python库，并创建模型对象。
+
+2. **定义决策变量**  
+   - 定义整数变量 \(x_1, x_2, x_3, x_4 \geq 0\)，分别对应卡车、飞机、船、火车的生产数量。  
+   - 定义二进制变量 \(y, z\)，分别用于卡车-火车互斥和船的指示。
+
+3. **设置目标函数**  
+   最大化总利润：\(5x_1 + 10x_2 + 8x_3 + 7x_4\)。
+
+4. **添加约束条件**  
+   - **资源约束**：  
+     - 木材：\(12x_1 + 20x_2 + 15x_3 + 10x_4 \leq 890\)  
+     - 钢铁：\(6x_1 + 3x_2 + 5x_3 + 4x_4 \leq 500\)  
+   - **卡车与火车互斥约束**（使用给定大常数 \(M_1=74, M_2=89\)）：  
+     - \(x_1 \leq 74 \cdot y\)  
+     - \(x_4 \leq 89 \cdot (1 - y)\)  
+   - **船与飞机的逻辑约束**（使用给定大常数 \(M_3=59\)）：  
+     - \(x_3 \leq 59 \cdot z\)  
+     - \(z \leq x_3\)  
+     - \(x_2 \geq z\)  
+   - **船与火车的数量关系**：  
+     - \(x_3 \leq x_4\)  
+   - **变量域约束**（整数与非负性在变量定义时已隐含，二进制变量域已定义）。
+
+5. **模型求解**  
+   调用求解器，执行优化。
+
+6. **结果提取与输出**  
+   - 检查优化状态，若为最优，则获取并输出各变量值及最优目标函数值。  
+   - 提供清晰的解报告。
+【Python Gurobi Code】:
+ ```python
+import gurobipy as gp
+from gurobipy import GRB
+
+# 创建模型
+model = gp.Model("HausToys")
+
+# 决策变量
+x1 = model.addVar(vtype=GRB.INTEGER, name="x1")  # 卡车数量
+x2 = model.addVar(vtype=GRB.INTEGER, name="x2")  # 飞机数量
+x3 = model.addVar(vtype=GRB.INTEGER, name="x3")  # 船数量
+x4 = model.addVar(vtype=GRB.INTEGER, name="x4")  # 火车数量
+y = model.addVar(vtype=GRB.BINARY, name="y")     # 卡车-火车互斥指示变量
+z = model.addVar(vtype=GRB.BINARY, name="z")     # 船生产指示变量
+
+# 设置目标函数
+model.setObjective(5*x1 + 10*x2 + 8*x3 + 7*x4, GRB.MAXIMIZE)
+
+# 添加约束条件
+# 资源约束
+model.addConstr(12*x1 + 20*x2 + 15*x3 + 10*x4 <= 890, "Wood")
+model.addConstr(6*x1 + 3*x2 + 5*x3 + 4*x4 <= 500, "Steel")
+
+# 卡车与火车互斥约束
+M1 = 74
+M2 = 89
+model.addConstr(x1 <= M1 * y, "Truck_activation")
+model.addConstr(x4 <= M2 * (1 - y), "Train_activation")
+
+# 船与飞机的逻辑约束
+M3 = 59
+model.addConstr(x3 <= M3 * z, "Boat_activation")
+model.addConstr(z <= x3, "Boat_indicator")
+model.addConstr(x2 >= z, "Airplane_if_boat")
+
+# 船与火车的数量关系
+model.addConstr(x3 <= x4, "Boat_vs_Train")
+
+# 求解模型
+model.optimize()
+
+# 输出结果
+if model.status == GRB.OPTIMAL:
+    print("Optimal solution found:")
+    print(f"Number of trucks (x1): {x1.X}")
+    print(f"Number of airplanes (x2): {x2.X}")
+    print(f"Number of boats (x3): {x3.X}")
+    print(f"Number of trains (x4): {x4.X}")
+    print(f"Indicator y (1 if trucks are made): {y.X}")
+    print(f"Indicator z (1 if boats are made): {z.X}")
+    print(f"Maximum profit: ${model.ObjVal}")
+else:
+    print("No optimal solution found. Status:", model.status)
+```
+Found Python code block, starting execution...
+Python code execution error, error message:
+
+SyntaxError: Non-UTF-8 code starting with '\xb4' in file C:\Users\Bryt\AppData\Local\Temp\tmpwk7g4b15.py on line 4, but no encoding declared; see https://peps.python.org/pep-0263/ for details
+
+------------------------------
+
+Attempt 1 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Found Python code block, starting execution...
+Python code execution error, error message:
+
+SyntaxError: Non-UTF-8 code starting with '\xb4' in file C:\Users\Bryt\AppData\Local\Temp\tmp1pbvvxlj.py on line 4, but no encoding declared; see https://peps.python.org/pep-0263/ for details
+
+------------------------------
+
+Attempt 2 failed, requesting LLM to fix code...
+
+
+Received fixed code, preparing to execute again...
+
+Found Python code block, starting execution...
+Python code executed successfully, output:
+
+Restricted license - for non-production use only - expires 2027-11-29
+Gurobi Optimizer version 13.0.1 build v13.0.1rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: 13th Gen Intel(R) Core(TM) i5-13490F, instruction set [SSE2|AVX|AVX2]
+Thread count: 10 physical cores, 16 logical processors, using up to 16 threads
+
+Optimize a model with 7 rows, 6 columns and 18 nonzeros (Max)
+Model fingerprint: 0x9c804382
+Model has 4 linear objective coefficients
+Variable types: 0 continuous, 6 integer (2 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 9e+01]
+  Objective range  [5e+00, 1e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [9e+01, 9e+02]
+
+Found heuristic solution: objective 447.0000000
+Presolve removed 1 rows and 0 columns
+Presolve time: 0.00s
+Presolved: 6 rows, 6 columns, 14 nonzeros
+Variable types: 0 continuous, 6 integer (2 binary)
+
+Root relaxation: objective 6.230000e+02, 0 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+*    0     0               0     623.0000000  623.00000  0.00%     -    0s
+
+Explored 1 nodes (0 simplex iterations) in 0.01 seconds (0.00 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 2: 623 447 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 6.230000000000e+02, best bound 6.230000000000e+02, gap 0.0000%
+Optimal solution found:
+Number of trucks (x1): -0.0
+Number of airplanes (x2): -0.0
+Number of boats (x3): -0.0
+Number of trains (x4): 89.0
+Indicator y (1 if trucks are made): -0.0
+Indicator z (1 if boats are made): -0.0
+Maximum profit: $623.0
+
+
+Optimal solution value (Best objective): 623.0
+------------------------------
+Stage result: True, 623.0
+Successfully executed code, optimal solution value: 623.0
+------------------
+solve: True, llm: 623.0, ground truth: 623.0
+[Final] run pass: True, solve correct: True
+
+
+[Total 3] run pass: 3, solve correct: 3
+[Total fails 0] error datas: []

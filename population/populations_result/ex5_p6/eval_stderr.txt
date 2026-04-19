@@ -1,0 +1,94 @@
+Traceback (most recent call last):
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\Bryt\.conda\envs\agent_env\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\_base_client.py", line 1009, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\Bryt\.conda\envs\agent_env\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Bryt\Desktop\end\new_agent\populations\ex5_p6\or_agent.py", line 149, in <module>
+    run_eval(use_agent=USE_AGENT, model_name=MODEL_NAME)
+  File "c:\Users\Bryt\Desktop\end\new_agent\populations\ex5_p6\or_agent.py", line 124, in run_eval
+    execution_success, agent_result = optimization_solver_agent(problem_text, model_name)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Bryt\Desktop\end\new_agent\populations\ex5_p6\or_agent.py", line 46, in optimization_solver_agent
+    modeling_prompt = query_llm([
+                      ^^^^^^^^^^^
+  File "c:\Users\Bryt\Desktop\end\new_agent\populations\ex5_p6\new_utils.py", line 263, in query_llm
+    response = openai_client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\resources\chat\completions\completions.py", line 879, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\_base_client.py", line 1296, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\_base_client.py", line 973, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\_base_client.py", line 1033, in _request
+    return self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\_base_client.py", line 1111, in _retry_request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\_base_client.py", line 1033, in _request
+    return self._retry_request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\_base_client.py", line 1111, in _retry_request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Bryt\AppData\Roaming\Python\Python312\site-packages\openai\_base_client.py", line 1043, in _request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.

@@ -1,0 +1,6 @@
+{
+  "strategy": "mutation_direct",
+  "parent": "ex2_p4",
+  "generation": 3,
+  "population_index": 5
+}

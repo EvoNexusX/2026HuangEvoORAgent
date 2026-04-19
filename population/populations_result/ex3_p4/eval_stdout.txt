@@ -1,0 +1,82 @@
+=============== num 7 ==================
+An Italian transportation company needs to move some empty containers from its 6 warehouses (located in Verona, Perugia, Rome, Pescara, Taranto, and Lamezia) to major national ports (Genoa, Venice, Ancona, Naples, Bari). The container inventory at the warehouses is as follows:
+
+|  | Empty Containers |
+|:---:|:---:|
+| Verona | 10 |
+| Perugia | 12 |
+| Rome | 20 |
+| Pescara | 24 |
+| Taranto | 18 |
+| Lamezia | 40 |
+
+The demand at the ports is as follows:
+
+|  | Container Demand |
+|:---:|:---:|
+| Genoa | 20 |
+| Venice | 15 |
+| Ancona | 25 |
+| Naples | 33 |
+| Bari | 21 |
+
+The transport is carried out by a fleet of trucks. The cost to transport each container is proportional to the distance traveled by the trucks, with a rate of 30 euros per kilometer. Each truck can carry up to 2 containers. The distances are as follows:
+
+|  | Genoa | Venice | Ancona | Naples | Bari |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| Verona | $290 \mathrm{~km}$ | $115 \mathrm{~km}$ | $355 \mathrm{~km}$ | $715 \mathrm{~km}$ | $810 \mathrm{~km}$ |
+| Perugia | $380 \mathrm{~km}$ | $340 \mathrm{~km}$ | $165 \mathrm{~km}$ | $380 \mathrm{~km}$ | $610 \mathrm{~km}$ |
+| Rome | $505 \mathrm{~km}$ | $530 \mathrm{~km}$ | $285 \mathrm{~km}$ | $220 \mathrm{~km}$ | $450 \mathrm{~km}$ |
+| Pescara | $655 \mathrm{~km}$ | $450 \mathrm{~km}$ | $155 \mathrm{~km}$ | $240 \mathrm{~km}$ | $315 \mathrm{~km}$ |
+| Taranto | $1010 \mathrm{~km}$ | $840 \mathrm{~km}$ | $550 \mathrm{~km}$ | $305 \mathrm{~km}$ | $95 \mathrm{~km}$ |
+| Lamezia | $1072 \mathrm{~km}$ | $1097 \mathrm{~km}$ | $747 \mathrm{~km}$ | $372 \mathrm{~km}$ | $333 \mathrm{~km}$ |
+
+Write a mathematical program to find the minimum cost transportation policy and solve it using COPTPY.
+-------------
+Successfully executed code, optimal solution value: 904590.0
+------------------
+solve: True, llm: 904590.0, ground truth: 904590.0
+[Final] run pass: True, solve correct: True
+
+
+=============== num 8 ==================
+Now, we need to determine 4 out of 5 workers to complete one of the four tasks respectively. Due to each worker's different technical specialties, the time required for them to complete each task varies. The hours required by each worker to complete each task are shown in Table 5-2.
+
+Table 5-2
+| Worker | $A$ | $B$ | $C$ | $D$ |
+|--------|-----|-----|-----|-----|
+| I      | 9   | 4   | 3   | 7   |
+| II     | 4   | 6   | 5   | 6   |
+| III    | 5   | 4   | 7   | 5   |
+| IV     | 7   | 5   | 2   | 3   |
+| V      | 10  | 6   | 7   | 4   |
+
+Try to find a job assignment plan that minimizes the total working hours.
+-------------
+Successfully executed code, optimal solution value: 14.0
+------------------
+solve: True, llm: 14.0, ground truth: 14
+[Final] run pass: True, solve correct: True
+
+
+=============== num 9 ==================
+Haus Toys can manufacture and sell toy trucks, toy airplanes, toy boats, and toy trains. The profit for each truck sold is $5, each airplane $10, each boat $8, and each train $7. How many types of toys should Haus Toys manufacture to maximize profits?
+
+There are 890 units of wood available. Each truck requires 12 units, each airplane 20 units, each boat 15 units, and each train 10 units.
+
+There are 500 units of steel available. Each airplane requires 3 units, each boat 5 units, each train 4 units, and each truck 6 units.
+
+If Haus Toys manufactures trucks, they will not manufacture trains.
+
+However, if they manufacture boats, they will also manufacture airplanes.
+
+The number of toy boats manufactured cannot exceed the number of toy trains manufactured.
+-------------
+Successfully executed code, optimal solution value: 623.0
+------------------
+solve: True, llm: 623.0, ground truth: 623.0
+[Final] run pass: True, solve correct: True
+
+
+[Total 3] run pass: 3, solve correct: 3
+[Total fails 0] error datas: []

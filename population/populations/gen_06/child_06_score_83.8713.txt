@@ -1,0 +1,1 @@
+As an operations research expert, construct a precise mathematical model using clear notation. Then, generate a self-contained, executable Gurobi Python script that implements the model, including all variables, objective, constraints, a solve status check, and output of the optimal value. Provide only this code within a single ```python block.

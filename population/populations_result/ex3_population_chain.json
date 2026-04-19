@@ -1,0 +1,658 @@
+[
+  {
+    "index": 1,
+    "name": "ex3_p1",
+    "dir": "c:\\Users\\Bryt\\Desktop\\end\\new_agent\\populations\\ex3_p1",
+    "chain": [
+      {
+        "phase": "问题分析与建模",
+        "type": "prompt",
+        "action": "分析问题并构建数学模型",
+        "start_state": "优化智能体开始搭建",
+        "end_state": "问题分析与建模完成",
+        "key": "[{\"role\": \"system\", \"content\": \"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\\n你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\\n重点给出正确的数学模型表达式，不必过多解释。\\n该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规划表达式。\"}, {\"role\": \"user\", \"content\": \"用户问题如下：\\n{problem_text}\"}]"
+      },
+      {
+        "phase": "Gurobi算法设计",
+        "type": "prompt",
+        "action": "基于数学模型设计Gurobi算法",
+        "start_state": "问题分析与建模完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "[{\"role\": \"system\", \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。\\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"}, {\"role\": \"user\", \"content\": \"问题分析与建模\\n{stage1_output}\"}]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "构建代码生成提示消息",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "代码生成消息准备完成",
+        "key": "def stage3_generation(self, problem_text, stage1_output, stage2_output):\n    system_prompt = \"\"\"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\"\"\n    \n    messages = [\n        {\"role\": \"system\", \"content\": system_prompt},\n        {\"role\": \"user\", \"content\": f\"用户问题：\\n{problem_text}\\n\\n问题分析与建模：\\n{stage1_output}\\n\\nGurobi算法设计：\\n{stage2_output}\\n\\n\"}\n    ]\n    \n    return messages"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "复制消息以进行代码生成",
+        "start_state": "代码生成消息准备完成",
+        "end_state": "消息复制完成",
+        "key": "messages = copy.deepcopy(messages_bak)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "第一次生成Gurobi代码",
+        "start_state": "消息复制完成",
+        "end_state": "代码生成初步完成",
+        "key": "[{\"role\": \"system\", \"content\": \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\\n请按 ```python\\\\n{code}\\\\n``` 格式输出，不要附带代码解释。\"}, {\"role\": \"user\", \"content\": \"用户问题：\\n{problem_text}\\n\\n问题分析与建模：\\n{stage1_output}\\n\\nGurobi算法设计：\\n{stage2_output}\\n\\n\"}]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存生成的Gurobi代码",
+        "start_state": "代码生成初步完成",
+        "end_state": "代码保存完成",
+        "key": "save_generated_code(gurobi_code, prefix='or_agent')"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行生成的Python代码",
+        "start_state": "代码保存完成",
+        "end_state": "代码执行失败",
+        "key": "extract_and_execute_python_code(text)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "添加代码修复请求消息",
+        "start_state": "代码执行失败",
+        "end_state": "修复消息添加完成",
+        "key": "messages.append({\"role\": \"assistant\", \"content\": gurobi_code})\nmessages.append({\"role\": \"user\", \"content\": f\"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\"})"
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "生成修复后的Gurobi代码",
+        "start_state": "修复消息添加完成",
+        "end_state": "修复代码生成完成",
+        "key": "[{\"role\": \"system\", \"content\": \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\\n请按 ```python\\\\n{code}\\\\n``` 格式输出，不要附带代码解释。\"}, {\"role\": \"user\", \"content\": \"用户问题：\\n{problem_text}\\n\\n问题分析与建模：\\n{stage1_output}\\n\\nGurobi算法设计：\\n{stage2_output}\\n\\n\"}, {\"role\": \"assistant\", \"content\": \"{gurobi_code}\"}, {\"role\": \"user\", \"content\": \"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\"}]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存修复后的代码",
+        "start_state": "修复代码生成完成",
+        "end_state": "修复代码保存完成",
+        "key": "save_generated_code(gurobi_code, prefix='or_agent_fix')"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行修复后的Python代码",
+        "start_state": "修复代码保存完成",
+        "end_state": "代码生成完成",
+        "key": "extract_and_execute_python_code(text)"
+      }
+    ],
+    "or_agent": "import re\nimport subprocess\nimport sys\nimport tempfile\nimport os\nimport json\nfrom datetime import datetime\nfrom itertools import zip_longest\nimport copy\n\nimport openai\nimport anthropic\nfrom dotenv import load_dotenv\n\nWORKSPACE_ROOT = os.path.dirname(os.path.abspath(__file__))\nLOG_DIR = os.path.join(WORKSPACE_ROOT, \"log\")\nos.makedirs(LOG_DIR, exist_ok=True)\nLOG_FILE = os.path.join(LOG_DIR, f\"llm_chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json\")\n\nRESULT_DIR = os.path.join(WORKSPACE_ROOT, \"result\")\nos.makedirs(RESULT_DIR, exist_ok=True)\nTRACE_FILE = os.path.join(RESULT_DIR, f\"thought_chain_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl\")\nCODE_SAVE_COUNTER = 0\nCURRENT_QUESTION_ID = None\n\ndef is_number_string(s):\n    pattern = r\"^[-+]?\\d+(\\.\\d+)?$\"\n    return re.match(pattern, s) is not None\n\ndef convert_to_number(s):\n    try:\n        if s.isdigit() or (s.startswith('-') and s[1:].isdigit()):\n            return int(s)\n        num = float(s)\n        return num\n    except (ValueError, TypeError):\n        return None\n\ndef extract_best_objective(output_text):\n    if \"Model is infeasible\" in output_text:\n        return None\n\n    match = re.search(r'Best objective\\s+([\\d.e+-]+)', output_text)\n    if not match:\n        match = re.search(r'Optimal objective\\s+([\\d.e+-]+)', output_text)\n\n    if not match:\n        match = re.search(r'Optimal cost\\s+([\\d.e+-]+)', output_text)\n\n    if match:\n        try:\n            return float(match.group(1))\n        except ValueError:\n            return None\n\n    return None\n\ndef extract_and_execute_python_code(text_content):\n    python_code_blocks = re.findall(r'```python\\s*([\\s\\S]*?)```', text_content)\n\n    if not python_code_blocks:\n        print(\"No Python code blocks found.\")\n        return False, \"No Python code blocks found\"\n\n    for code_block in python_code_blocks:\n        code_block = code_block.strip()\n        if not code_block:\n            print(\"Found an empty Python code block, skipped.\")\n            continue\n\n        print(\"Found Python code block, starting execution...\")\n        try:\n            with tempfile.NamedTemporaryFile(mode=\"w\", suffix=\".py\", delete=False) as tmp_file:\n                tmp_file.write(code_block)\n                temp_file_path = tmp_file.name\n\n            result = subprocess.run([sys.executable, temp_file_path], capture_output=True, text=True, check=False)\n\n            if result.returncode == 0:\n                print(\"Python code executed successfully, output:\\n\")\n                print(result.stdout)\n                best_obj = extract_best_objective(result.stdout)\n                if best_obj is not None:\n                    print(f\"\\nOptimal solution value (Best objective): {best_obj}\")\n                else:\n                    print(\"\\nOptimal solution value not found\")\n                return True, str(best_obj)\n            else:\n                print(\"Python code execution error, error message:\\n\")\n                print(result.stderr)\n                return False, result.stderr\n\n        except Exception as e:\n            print(f\"Error occurred while executing Python code block: {e}\")\n            return False, str(e)\n        finally:\n            if 'temp_file_path' in locals() and os.path.exists(temp_file_path):\n                os.remove(temp_file_path)\n            print(\"-\" * 30)\n\n    return False, \"No valid code blocks executed\"\n\ndef eval_model_result(success, result, ground_truth, err_rate=0.005):\n    pass_flag = False\n    correct_flag = False\n    if success:\n        pass_flag = True\n        if is_number_string(str(result)) and ground_truth is not None:\n            result_num = convert_to_number(str(result))\n            ground_truth_num = convert_to_number(str(ground_truth))\n            if result_num is not None and ground_truth_num is not None:\n                if ground_truth_num == 0:\n                    if result_num == 0:\n                        correct_flag = True\n                else:\n                    deviation = abs(result_num - ground_truth_num) / abs(ground_truth_num)\n                    if deviation <= err_rate:\n                        correct_flag = True\n        elif result == 'None':\n            if ground_truth is None or ground_truth == 'None':\n                correct_flag = True\n    return pass_flag, correct_flag\n\ndef log_llm_chat(messages, model_name, response_text):\n    try:\n        record = {\n            \"timestamp\": datetime.now().isoformat(timespec=\"seconds\"),\n            \"model\": model_name,\n            \"messages\": messages,\n            \"response\": response_text\n        }\n        if os.path.exists(LOG_FILE):\n            with open(LOG_FILE, \"r\", encoding=\"utf-8\") as f:\n                data = json.load(f)\n        else:\n            data = []\n        data.append(record)\n        with open(LOG_FILE, \"w\", encoding=\"utf-8\") as f:\n            json.dump(data, f, ensure_ascii=False, indent=2)\n    except Exception as e:\n        print(f\"Warning: failed to write chat log: {e}\")\n\ndef save_generated_code(text_content, prefix=\"solve\"):\n    try:\n        global CODE_SAVE_COUNTER\n        CODE_SAVE_COUNTER += 1\n        timestamp = datetime.now().strftime(\"%Y%m%d_%H%M%S\")\n        code_blocks = re.findall(r'```python\\s*([\\s\\S]*?)```', text_content)\n        if code_blocks:\n            code = \"\\n\\n\".join(block.strip() for block in code_blocks if block.strip())\n            if not code:\n                code = text_content\n            extension = \"py\"\n        else:\n            code = text_content\n            extension = \"txt\"\n        if CURRENT_QUESTION_ID is None:\n            qid_part = \"unknown\"\n        else:\n            qid_part = str(CURRENT_QUESTION_ID)\n        filename = f\"{prefix}_q{qid_part}_{CODE_SAVE_COUNTER:04d}_{timestamp}.{extension}\"\n        file_path = os.path.join(RESULT_DIR, filename)\n        with open(file_path, \"w\", encoding=\"utf-8\") as f:\n            f.write(code)\n    except Exception as e:\n        print(f\"Warning: failed to save generated code: {e}\")\n\ndef query_llm(messages, model_name=\"deepseek-reasoner\", temperature=0.2):\n    if not hasattr(query_llm, \"_openai_client\") or not hasattr(query_llm, \"_anthropic_client\"):\n        load_dotenv()\n\n        openai_api_data = dict(\n            api_key=os.getenv(\"DEEPSEEK_API_KEY\", \"sk-258f5399788043a59f3a69205b720e0f\"),\n            base_url=os.getenv(\"OPENAI_API_BASE\", \"https://api.deepseek.com\")\n        )\n        anthropic_api_data = dict(\n            api_key=os.getenv(\"CLAUDE_API_KEY\")\n        )\n\n        query_llm._openai_client = openai.OpenAI(\n            api_key=openai_api_data[\"api_key\"],\n            base_url=openai_api_data[\"base_url\"] if openai_api_data[\"base_url\"] else None\n        )\n        query_llm._anthropic_client = anthropic.Anthropic(\n            api_key=anthropic_api_data[\"api_key\"]\n        )\n\n    openai_client = query_llm._openai_client\n    anthropic_client = query_llm._anthropic_client\n\n    if model_name.lower().startswith(\"claude\"):\n        system_message = next((m[\"content\"] for m in messages if m[\"role\"] == \"system\"), \"\")\n        user_messages = [m[\"content\"] for m in messages if m[\"role\"] == \"user\"]\n        assistant_messages = [m[\"content\"] for m in messages if m[\"role\"] == \"assistant\"]\n\n        conversation = system_message + \"\\n\\n\"\n        for user_msg, asst_msg in zip_longest(user_messages, assistant_messages, fillvalue=None):\n            if user_msg:\n                conversation += f\"Human: {user_msg}\\n\\n\"\n            if asst_msg:\n                conversation += f\"Assistant: {asst_msg}\\n\\n\"\n\n        if len(user_messages) > len(assistant_messages):\n            conversation += f\"Human: {user_messages[-1]}\\n\\n\"\n\n        response = anthropic_client.messages.create(\n            model=model_name,\n            max_tokens=8192,\n            temperature=temperature,\n            messages=[{\"role\": \"user\", \"content\": conversation}]\n        )\n        response_text = response.content[0].text\n        log_llm_chat(messages, model_name, response_text)\n        return response_text\n\n    response = openai_client.chat.completions.create(\n        model=model_name,\n        messages=messages,\n        temperature=temperature\n    )\n    response_text = response.choices[0].message.content\n    log_llm_chat(messages, model_name, response_text)\n    return response_text\n\ndef load_dataset():\n    dataset = {}\n    data_path = r\"c:\\Users\\Bryt\\Desktop\\end\\new_agent\\dataset\\IndustryOR_test.json\"\n\n    with open(data_path, 'r', encoding='utf-8') as f:\n        first_line = f.readline().strip()\n        f.seek(0)\n\n        if first_line.startswith('{\"en_question\"') or first_line.startswith('{\"cn_question\"'):\n            for line_num, line in enumerate(f, 1):\n                line = line.strip()\n                if line:\n                    try:\n                        item = json.loads(line)\n                        dataset_item = {\n                            'question': item.get('en_question', item.get('cn_question', '')),\n                            'answer': item.get('en_answer', item.get('cn_answer', '')),\n                            'difficulty': item.get('difficulty', 'Unknown'),\n                            'id': item.get('id', line_num - 1)\n                        }\n                        dataset[str(dataset_item['id'])] = dataset_item\n                    except json.JSONDecodeError:\n                        print(f\"Warning: Could not parse line {line_num}: {line}\")\n                        continue\n        else:\n            dataset = json.load(f)\n\n    return dataset\n\ndef generate_code_with_repair(messages_bak, model_name, max_attempts):\n    messages = copy.deepcopy(messages_bak)\n\n    gurobi_code = query_llm(messages, model_name)\n    print(\"【Generated Gurobi Code】:\\n\", gurobi_code)\n    save_generated_code(gurobi_code, prefix=\"or_agent\")\n\n    text = f\"{gurobi_code}\"\n    attempt = 0\n    while attempt < max_attempts:\n        success, error_msg = extract_and_execute_python_code(text)\n        if success:\n            messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n            return True, error_msg, messages_bak\n\n        print(f\"\\nAttempt {attempt + 1} failed, requesting LLM to fix code...\\n\")\n        messages.append({\"role\": \"assistant\", \"content\": gurobi_code})\n        messages.append({\n            \"role\": \"user\",\n            \"content\": f\"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\",\n        })\n\n        gurobi_code = query_llm(messages, model_name)\n        save_generated_code(gurobi_code, prefix=\"or_agent_fix\")\n        text = f\"{gurobi_code}\"\n\n        print(\"\\nReceived fixed code, preparing to execute again...\\n\")\n        attempt += 1\n\n    messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n    print(f\"Reached maximum number of attempts ({max_attempts}), could not execute code successfully.\")\n    return False, None, messages_bak\n\nclass EnhancedORAgent:\n    def __init__(self, model_name=\"deepseek-reasoner\", max_repair_attempts=3):\n        self.model_name = model_name\n        self.max_repair_attempts = max_repair_attempts\n        \n    def stage1_analysis(self, problem_text):\n        system_prompt = \"\"\"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\n你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\n重点给出正确的数学模型表达式，不必过多解释。\n该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规划表达式。\"\"\"\n        \n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": f\"用户问题如下：\\n{problem_text}\"}\n        ]\n        \n        response = query_llm(messages, model_name=self.model_name)\n        return response\n    \n    def stage2_design(self, stage1_output):\n        system_prompt = \"\"\"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\n请基于以下建模方案设计Gurobi求解算法。\n重点给出正确的Gurobi算法设计方案，不必过多解释。\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"\"\"\n        \n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": f\"问题分析与建模\\n{stage1_output}\"}\n        ]\n        \n        response = query_llm(messages, model_name=self.model_name)\n        return response\n    \n    def stage3_generation(self, problem_text, stage1_output, stage2_output):\n        system_prompt = \"\"\"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\"\"\n        \n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": f\"用户问题：\\n{problem_text}\\n\\n问题分析与建模：\\n{stage1_output}\\n\\nGurobi算法设计：\\n{stage2_output}\\n\\n\"}\n        ]\n        \n        return messages\n    \n    def solve_problem(self, problem_text):\n        print(\"=\" * 50)\n        print(\"阶段1：问题分析与建模\")\n        print(\"=\" * 50)\n        stage1_result = self.stage1_analysis(problem_text)\n        print(stage1_result)\n        \n        print(\"\\n\" + \"=\" * 50)\n        print(\"阶段2：Gurobi算法设计\")\n        print(\"=\" * 50)\n        stage2_result = self.stage2_design(stage1_result)\n        print(stage2_result)\n        \n        print(\"\\n\" + \"=\" * 50)\n        print(\"阶段3：代码生成与执行修复\")\n        print(\"=\" * 50)\n        \n        messages = self.stage3_generation(problem_text, stage1_result, stage2_result)\n        \n        is_solve_success, result, messages = generate_code_with_repair(messages, self.model_name, self.max_repair_attempts)\n        \n        if is_solve_success:\n            if not is_number_string(str(result)):\n                print(\"!![No available solution warning]!!\")\n                messages.append({\n                    \"role\": \"user\",\n                    \"content\": (\n                        \"当前模型得到*无可行解*。请回溯并检查阶段1建模和阶段2算法设计中可能导致不可行的点，\"\n                        \"然后重新输出修正后的Gurobi Python代码。\"\n                        \"请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\n                    )\n                })\n                is_solve_success, result, messages = generate_code_with_repair(messages, self.model_name, max_attempts=1)\n        else:\n            print(\"!![Max attempt debug error warning]!!\")\n            messages.append({\n                \"role\": \"user\",\n                \"content\": (\n                    \"多次调试后代码仍报错。请仔细检查阶段1建模和阶段2算法设计是否有错误。\"\n                    \"检查后请重新构建Gurobi Python代码。\"\n                    \"请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\n                )\n            })\n            is_solve_success, result, messages = generate_code_with_repair(messages, self.model_name, max_attempts=2)\n        \n        return is_solve_success, result\n\ndef run_eval(use_agent=True, model_name=\"deepseek-reasoner\"):\n    dataset = load_dataset()\n\n    pass_count = 0\n    correct_count = 0\n    error_datas = []\n\n    if use_agent:\n        agent = EnhancedORAgent(model_name=model_name)\n\n    for qid, data in dataset.items():\n        global CURRENT_QUESTION_ID\n        CURRENT_QUESTION_ID = qid\n        print(f\"\\n{'='*60}\")\n        print(f\"处理问题 ID: {qid}\")\n        print(f\"难度: {data['difficulty']}\")\n        print(f\"问题: {data['question'][:200]}...\")\n        print(f\"答案: {data['answer']}\")\n        print(f\"{'='*60}\")\n        \n        try:\n            if use_agent:\n                is_solve_success, llm_result = agent.solve_problem(data['question'])\n            else:\n                is_solve_success = True\n                llm_result = data['answer']\n\n            pass_flag, correct_flag = eval_model_result(is_solve_success, llm_result, data['answer'])\n            pass_count += 1 if pass_flag else 0\n            correct_count += 1 if correct_flag else 0\n\n            if not pass_flag or not correct_flag:\n                error_datas.append(qid)\n\n            print(f\"[ID {qid}] run pass: {pass_flag}, solve correct: {correct_flag}\")\n            print(f\"Result: {llm_result}, Expected: {data['answer']}\")\n                \n        except Exception as e:\n            print(f\"[ID {qid}] 异常: {str(e)}\")\n            error_datas.append(qid)\n\n    print(f\"[Total {len(dataset)}] run pass: {pass_count}, solve correct: {correct_count}\")\n    print(f\"[Total fails {len(error_datas)}] error datas: {error_datas}\")\n\ndef main():\n    print(\"开始加载数据集...\")\n    dataset = load_dataset()\n    print(f\"数据集加载完成，共 {len(dataset)} 个问题\")\n\n    print(\"\\n开始评测...\")\n    run_eval(use_agent=True, model_name=\"deepseek-reasoner\")\n\nif __name__ == \"__main__\":\n    main()"
+  },
+  {
+    "index": 2,
+    "name": "ex3_p2",
+    "dir": "c:\\Users\\Bryt\\Desktop\\end\\new_agent\\populations\\ex3_p2",
+    "chain": [
+      {
+        "phase": "问题分析与建模",
+        "type": "prompt",
+        "action": "调用LLM进行问题分析与建模",
+        "start_state": "优化智能体开始搭建",
+        "end_state": "问题分析与建模完成",
+        "key": "[{\"role\": \"user\", \"content\": \"Analyze this optimization problem:\\n\\n{question}\\n\\nProvide a complete mathematical model with:\\n1. Decision variables (clearly define each variable and its type)\\n2. Objective function (maximize/minimize)\\n3. All constraints (linear, integer, binary, etc.)\\n4. Variable domains and any special conditions\\n\\nOutput format:\\nDecision variables:\\nObjective:\\nConstraints:\\nModel type (LP, MIP, etc.):\"}]"
+      },
+      {
+        "phase": "问题分析与建模",
+        "type": "code",
+        "action": "修复编码问题",
+        "start_state": "问题分析与建模完成",
+        "end_state": "问题分析与建模完成",
+        "key": "stage1_modeling = stage1_modeling.encode('utf-8', errors='ignore').decode('utf-8')"
+      },
+      {
+        "phase": "Gurobi算法设计",
+        "type": "prompt",
+        "action": "调用LLM设计Gurobi算法",
+        "start_state": "问题分析与建模完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "[{\"role\": \"system\", \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。\\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"}, {\"role\": \"user\", \"content\": \"问题分析与建模\\n{stage1_modeling}\"}]"
+      },
+      {
+        "phase": "Gurobi算法设计",
+        "type": "code",
+        "action": "修复编码问题",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "stage2_design = stage2_design.encode('utf-8', errors='ignore').decode('utf-8')"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "构建代码生成消息",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "代码生成消息构建完成",
+        "key": "messages_bak = stage3_generation(user_question, stage1_modeling, stage2_design)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "调用LLM生成初始Gurobi代码",
+        "start_state": "代码生成消息构建完成",
+        "end_state": "初始代码生成完成",
+        "key": "[{\"role\": \"system\", \"content\": \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"}, {\"role\": \"user\", \"content\": \"用户问题：\\n{problem_text}\\n\\n问题分析与建模：\\n{stage1_output}\\n\\nGurobi算法设计：\\n{stage2_output}\\n\\n\"}]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "修复编码问题",
+        "start_state": "初始代码生成完成",
+        "end_state": "初始代码生成完成",
+        "key": "gurobi_code = gurobi_code.encode('utf-8', errors='ignore').decode('utf-8')"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存生成的代码",
+        "start_state": "初始代码生成完成",
+        "end_state": "初始代码生成完成",
+        "key": "调用 save_generated_code(gurobi_code, prefix=\"or_agent\")"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行初始代码",
+        "start_state": "初始代码生成完成",
+        "end_state": "初始代码执行失败",
+        "key": "调用 extract_and_execute_python_code(text) 其中 text = f\"{gurobi_code}\""
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "调用LLM修复代码",
+        "start_state": "初始代码执行失败",
+        "end_state": "修复代码生成完成",
+        "key": "[{\"role\": \"system\", \"content\": \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"}, {\"role\": \"user\", \"content\": \"用户问题：\\n{problem_text}\\n\\n问题分析与建模：\\n{stage1_output}\\n\\nGurobi算法设计：\\n{stage2_output}\\n\\n\"}, {\"role\": \"assistant\", \"content\": \"{gurobi_code}\"}, {\"role\": \"user\", \"content\": \"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\"}]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "修复编码问题",
+        "start_state": "修复代码生成完成",
+        "end_state": "修复代码生成完成",
+        "key": "gurobi_code = gurobi_code.encode('utf-8', errors='ignore').decode('utf-8')"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存修复后的代码",
+        "start_state": "修复代码生成完成",
+        "end_state": "修复代码生成完成",
+        "key": "调用 save_generated_code(gurobi_code, prefix='or_agent_fix')"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行修复后的代码",
+        "start_state": "修复代码生成完成",
+        "end_state": "修复代码执行完成",
+        "key": "调用 extract_and_execute_python_code(text) 其中 text = f\"{gurobi_code}\""
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "返回执行结果",
+        "start_state": "修复代码执行完成",
+        "end_state": "代码生成完成",
+        "key": "return True, result"
+      }
+    ],
+    "or_agent": "import copy\nimport new_utils\nfrom new_utils import (\n    query_llm,\n    save_generated_code,\n    load_dataset,\n    extract_and_execute_python_code,\n    eval_model_result,\n    is_number_string,\n)\n\ndef stage3_generation(problem_text, stage1_output, stage2_output):\n    system_prompt = \"\"\"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\"\"\n    \n    messages = [\n        {\"role\": \"system\", \"content\": system_prompt},\n        {\"role\": \"user\", \"content\": f\"用户问题：\\n{problem_text}\\n\\n问题分析与建模：\\n{stage1_output}\\n\\nGurobi算法设计：\\n{stage2_output}\\n\\n\"}\n    ]\n    \n    return messages\n\ndef generate_or_code_solver(messages_bak, model_name, max_attempts):\n    messages = copy.deepcopy(messages_bak)\n\n    gurobi_code = query_llm(messages, model_name)\n    print(\"【Python Gurobi Code】:\\n\", gurobi_code)\n    save_generated_code(gurobi_code, prefix=\"or_agent\")\n\n    text = f\"{gurobi_code}\"\n    attempt = 0\n    while attempt < max_attempts:\n        success, error_msg = extract_and_execute_python_code(text)\n        if success:\n            messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n            return True, error_msg, messages_bak\n\n        print(f\"\\nAttempt {attempt + 1} failed, requesting LLM to fix code...\\n\")\n        messages.append({\"role\": \"assistant\", \"content\": gurobi_code})\n        messages.append({\n            \"role\": \"user\",\n            \"content\": f\"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\",\n        })\n\n        gurobi_code = query_llm(messages, model_name)\n        save_generated_code(gurobi_code, prefix='or_agent_fix')\n        text = f\"{gurobi_code}\"\n\n        print(\"\\nReceived fixed code, preparing to execute again...\\n\")\n        attempt += 1\n\n    messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n    print(f\"Reached maximum number of attempts ({max_attempts}), could not execute code successfully.\")\n    return False, None, messages_bak\n\ndef or_llm_agent(user_question, model_name=\"deepseek-reasoner\", max_attempts=3):\n    # Stage 1: 问题分析与建模\n    stage1_prompt = \"Analyze this optimization problem:\\n\\n{question}\\n\\nProvide a complete mathematical model with:\\n1. Decision variables (clearly define each variable and its type)\\n2. Objective function (maximize/minimize)\\n3. All constraints (linear, integer, binary, etc.)\\n4. Variable domains and any special conditions\\n\\nOutput format:\\nDecision variables:\\nObjective:\\nConstraints:\\nModel type (LP, MIP, etc.):\"\n    stage1_messages = [\n        {\"role\": \"user\", \"content\": stage1_prompt.format(question=user_question)}\n    ]\n    stage1_modeling = query_llm(stage1_messages, model_name)\n    # 修复编码问题\n    if stage1_modeling:\n        stage1_modeling = stage1_modeling.encode('utf-8', errors='ignore').decode('utf-8')\n    print(\"【Stage 1 - Problem Analysis & Modeling】:\\n\", stage1_modeling)\n\n    # Stage 2: Gurobi算法设计\n    stage2_messages = [\n        {\"role\": \"system\", \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。\\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"},\n        {\"role\": \"user\", \"content\": f\"问题分析与建模\\n{stage1_modeling}\"}\n    ]\n    stage2_design = query_llm(stage2_messages, model_name)\n    # 修复编码问题\n    if stage2_design:\n        stage2_design = stage2_design.encode('utf-8', errors='ignore').decode('utf-8')\n    print(\"【Stage 2 - Gurobi Algorithm Design】:\\n\", stage2_design)\n\n    # Stage 3: 代码生成\n    messages_bak = stage3_generation(user_question, stage1_modeling, stage2_design)\n    messages = copy.deepcopy(messages_bak)\n    \n    gurobi_code = query_llm(messages, model_name)\n    # 修复编码问题\n    if gurobi_code:\n        gurobi_code = gurobi_code.encode('utf-8', errors='ignore').decode('utf-8')\n    print(\"【Stage 3 - Initial Gurobi Code】:\\n\", gurobi_code)\n    save_generated_code(gurobi_code, prefix='or_agent')\n    \n    text = f\"{gurobi_code}\"\n    success, error_msg = extract_and_execute_python_code(text)\n    \n    if not success:\n        print(\"代码执行失败，开始修复...\")\n        messages.append({\"role\": \"assistant\", \"content\": gurobi_code})\n        messages.append({\"role\": \"user\", \"content\": f\"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\"})\n        \n        gurobi_code = query_llm(messages, model_name)\n        # 修复编码问题\n        if gurobi_code:\n            gurobi_code = gurobi_code.encode('utf-8', errors='ignore').decode('utf-8')\n        save_generated_code(gurobi_code, prefix='or_agent_fix')\n        \n        text = f\"{gurobi_code}\"\n        success, result = extract_and_execute_python_code(text)\n        \n        if not success:\n            print(\"修复后代码仍执行失败\")\n            return False, None\n        else:\n            return True, result\n    else:\n        return True, error_msg\n\ndef run_eval(use_agent=True, model_name=\"deepseek-reasoner\"):\n    dataset = load_dataset()\n\n    pass_count = 0\n    correct_count = 0\n    error_datas = []\n\n    for i, d in dataset.items():\n        new_utils.CURRENT_QUESTION_ID = i\n        print(f\"=============== num {i} ==================\")\n        user_question, answer = d[\"question\"], d[\"answer\"]\n        print(user_question)\n        print(\"-------------\")\n\n        if use_agent:\n            print(\"Using Agent mode (three-stage: modeling + design + code generation)\")\n            is_solve_success, llm_result = or_llm_agent(user_question, model_name)\n\n        if is_solve_success:\n            print(f\"Successfully executed code, optimal solution value: {llm_result}\")\n        else:\n            print(\"Failed to execute code.\")\n        print(\"------------------\")\n\n        pass_flag, correct_flag = eval_model_result(is_solve_success, llm_result, answer)\n        pass_count += 1 if pass_flag else 0\n        correct_count += 1 if correct_flag else 0\n\n        if not pass_flag or not correct_flag:\n            error_datas.append(i)\n\n        print(f\"solve: {is_solve_success}, llm: {llm_result}, ground truth: {answer}\")\n        print(f\"[Final] run pass: {pass_flag}, solve correct: {correct_flag}\")\n        print(\"\\n\")\n\n    print(f\"[Total {len(dataset)}] run pass: {pass_count}, solve correct: {correct_count}\")\n    print(f\"[Total fails {len(error_datas)}] error datas: {error_datas}\")\n\nif __name__ == \"__main__\":\n    USE_AGENT = True\n    MODEL_NAME = \"deepseek-reasoner\"\n    run_eval(use_agent=USE_AGENT, model_name=MODEL_NAME)"
+  },
+  {
+    "index": 3,
+    "name": "ex3_p3",
+    "dir": "c:\\Users\\Bryt\\Desktop\\end\\new_agent\\populations\\ex3_p3",
+    "chain": [
+      {
+        "phase": "问题分析与建模",
+        "type": "prompt",
+        "action": "LLM 生成问题分析与建模",
+        "start_state": "优化智能体开始搭建",
+        "end_state": "问题分析与建模完成",
+        "key": "[{\"role\": \"system\", \"content\": \"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\\n你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\\n重点给出正确的数学模型表达式，不必过多解释。\\n该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规划表达式。\"}, {\"role\": \"user\", \"content\": \"用户问题如下：\\n{user_question}\"}]"
+      },
+      {
+        "phase": "算法设计",
+        "type": "prompt",
+        "action": "LLM 生成 Gurobi 算法设计",
+        "start_state": "问题分析与建模完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "[{\"role\": \"system\", \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。\\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"}, {\"role\": \"user\", \"content\": \"问题分析与建模\\n{stage1_modeling}\"}]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "LLM 生成 Gurobi Python 代码",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "代码已生成",
+        "key": "[{\"role\": \"system\", \"content\": \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"}, {\"role\": \"user\", \"content\": \"用户问题：\\n{user_question}\\n\\n问题分析与建模：\\n{stage1_modeling}\\n\\nGurobi算法设计：\\n{stage2_design}\\n\\n\"}]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存生成代码",
+        "start_state": "代码已生成",
+        "end_state": "代码已保存",
+        "key": "save_generated_code(gurobi_code, prefix='agent')"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行 Python 代码",
+        "start_state": "代码已保存",
+        "end_state": "代码执行结果",
+        "key": "extract_and_execute_python_code(text)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "处理执行失败，准备修复",
+        "start_state": "代码执行结果",
+        "end_state": "准备修复代码",
+        "key": "print(f\"\\nAttempt {attempt + 1} failed, requesting LLM to fix code...\\n\")\nmessages.append({\"role\": \"assistant\", \"content\": gurobi_code})\nmessages.append({\"role\": \"user\", \"content\": f\"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\"})"
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "LLM 修复代码",
+        "start_state": "准备修复代码",
+        "end_state": "修复代码已生成",
+        "key": "代码执行时发生错误，错误信息如下:\n{error_msg}\n请修复代码并重新提供完整可执行代码。"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存修复代码",
+        "start_state": "修复代码已生成",
+        "end_state": "修复代码已保存",
+        "key": "save_generated_code(gurobi_code, prefix='agent_fix')"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行修复代码",
+        "start_state": "修复代码已保存",
+        "end_state": "修复代码执行结果",
+        "key": "extract_and_execute_python_code(text)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "从 generate_or_code_solver 返回成功",
+        "start_state": "修复代码执行结果",
+        "end_state": "代码生成成功",
+        "key": "messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\nreturn True, error_msg, messages_bak"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "检查结果是否为数字",
+        "start_state": "代码生成成功",
+        "end_state": "结果检查完成",
+        "key": "if is_solve_success:\n    if not is_number_string(str(result)):"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "返回最终结果",
+        "start_state": "结果检查完成",
+        "end_state": "代码生成完成",
+        "key": "return is_solve_success, result"
+      }
+    ],
+    "or_agent": "import copy\nimport new_utils\nfrom new_utils import (\n    query_llm,\n    save_generated_code,\n    load_dataset,\n    extract_and_execute_python_code,\n    eval_model_result,\n    is_number_string,\n)\n\ndef generate_or_code_solver(messages_bak, model_name, max_attempts):\n    messages = copy.deepcopy(messages_bak)\n    gurobi_code = query_llm(messages, model_name)\n    print(\"【Python Gurobi Code】:\\n\", gurobi_code)\n    save_generated_code(gurobi_code, prefix=\"agent\")\n    text = f\"{gurobi_code}\"\n    attempt = 0\n    while attempt < max_attempts:\n        success, error_msg = extract_and_execute_python_code(text)\n        if success:\n            messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n            return True, error_msg, messages_bak\n        print(f\"\\nAttempt {attempt + 1} failed, requesting LLM to fix code...\\n\")\n        messages.append({\"role\": \"assistant\", \"content\": gurobi_code})\n        messages.append({\n            \"role\": \"user\",\n            \"content\": f\"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\",\n        })\n        gurobi_code = query_llm(messages, model_name)\n        save_generated_code(gurobi_code, prefix=\"agent_fix\")\n        text = f\"{gurobi_code}\"\n        print(\"\\nReceived fixed code, preparing to execute again...\\n\")\n        attempt += 1\n    messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n    print(f\"Reached maximum number of attempts ({max_attempts}), could not execute code successfully.\")\n    return False, None, messages_bak\n\ndef or_llm_agent(user_question, model_name=\"deepseek-reasoner\", max_attempts=3):\n    stage1_messages = [\n        {\n            \"role\": \"system\",\n            \"content\": (\n                \"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\\n\"\n                \"你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\\n\"\n                \"重点给出正确的数学模型表达式，不必过多解释。\"\n                \"该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规划表达式。\"\n            ),\n        },\n        {\n            \"role\": \"user\",\n            \"content\": (\n                f\"用户问题如下：\\n{user_question}\"\n            ),\n        },\n    ]\n    stage1_modeling = query_llm(stage1_messages, model_name)\n    print(\"【Stage 1 - Problem Analysis & Modeling】:\\n\", stage1_modeling)\n    stage2_messages = [\n        {\n            \"role\": \"system\",\n            \"content\": (\n                \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n\"\n                \"请基于以下建模方案设计Gurobi求解算法。\\n\"\n                \"重点给出正确的Gurobi算法设计方案，不必过多解释。\"\n                \"该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"\n            ),\n        },\n        {\n            \"role\": \"user\",\n            \"content\": (\n                f\"问题分析与建模\\n{stage1_modeling}\"\n            ),\n        },\n    ]\n    stage2_design = query_llm(stage2_messages, model_name)\n    print(\"【Stage 2 - Gurobi Algorithm Design】:\\n\", stage2_design)\n    messages = [\n        {\n            \"role\": \"system\",\n            \"content\": (\n                \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\"\n                \"代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\"\n                \"请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\n            ),\n        },\n        {\n            \"role\": \"user\",\n            \"content\": (\n                f\"用户问题：\\n{user_question}\\n\\n\"\n                f\"问题分析与建模：\\n{stage1_modeling}\\n\\n\"\n                f\"Gurobi算法设计：\\n{stage2_design}\\n\\n\"\n            ),\n        },\n    ]\n    is_solve_success, result, messages = generate_or_code_solver(messages, model_name, max_attempts)\n    print(f\"Stage result: {is_solve_success}, {result}\")\n    if is_solve_success:\n        if not is_number_string(str(result)):\n            print(\"!![No available solution warning]!!\")\n            messages.append(\n                {\n                    \"role\": \"user\",\n                    \"content\": (\n                        \"当前模型得到*无可行解*。请回溯并检查阶段1建模和阶段2算法设计中可能导致不可行的点，\"\n                        \"然后重新输出修正后的Gurobi Python代码。\"\n                        \"请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\n                    ),\n                }\n            )\n            is_solve_success, result, messages = generate_or_code_solver(messages, model_name, max_attempts=1)\n    else:\n        print(\"!![Max attempt debug error warning]!!\")\n        messages.append(\n            {\n                \"role\": \"user\",\n                \"content\": (\n                    \"多次调试后代码仍报错。请仔细检查阶段1建模和阶段2算法设计是否有错误。\"\n                    \"检查后请重新构建Gurobi Python代码。\"\n                    \"请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\n                ),\n            }\n        )\n        is_solve_success, result, messages = generate_or_code_solver(messages, model_name, max_attempts=2)\n    return is_solve_success, result\n\ndef run_eval(use_agent=True, model_name=\"deepseek-reasoner\"):\n    dataset = load_dataset()\n    pass_count = 0\n    correct_count = 0\n    error_datas = []\n    for i, d in dataset.items():\n        new_utils.CURRENT_QUESTION_ID = i\n        print(f\"=============== num {i} ==================\")\n        user_question, answer = d[\"question\"], d[\"answer\"]\n        print(user_question)\n        print(\"-------------\")\n        if use_agent:\n            print(\"Using Agent mode (three-stage: modeling + design + code generation)\")\n            is_solve_success, llm_result = or_llm_agent(user_question, model_name)\n        if is_solve_success:\n            print(f\"Successfully executed code, optimal solution value: {llm_result}\")\n        else:\n            print(\"Failed to execute code.\")\n        print(\"------------------\")\n        pass_flag, correct_flag = eval_model_result(is_solve_success, llm_result, answer)\n        pass_count += 1 if pass_flag else 0\n        correct_count += 1 if correct_flag else 0\n        if not pass_flag or not correct_flag:\n            error_datas.append(i)\n        print(f\"solve: {is_solve_success}, llm: {llm_result}, ground truth: {answer}\")\n        print(f\"[Final] run pass: {pass_flag}, solve correct: {correct_flag}\")\n        print(\"\\n\")\n    print(f\"[Total {len(dataset)}] run pass: {pass_count}, solve correct: {correct_count}\")\n    print(f\"[Total fails {len(error_datas)}] error datas: {error_datas}\")\n\nif __name__ == \"__main__\":\n    USE_AGENT = True\n    MODEL_NAME = \"deepseek-reasoner\"\n    run_eval(use_agent=USE_AGENT, model_name=MODEL_NAME)"
+  },
+  {
+    "index": 4,
+    "name": "ex3_p4",
+    "dir": "c:\\Users\\Bryt\\Desktop\\end\\new_agent\\populations\\ex3_p4",
+    "chain": [
+      {
+        "phase": "问题分析与建模",
+        "type": "code",
+        "action": "定义阶段1的消息列表",
+        "start_state": "优化智能体开始搭建",
+        "end_state": "stage1_messages定义完成",
+        "key": "stage1_messages = [\n    {\n        \"role\": \"system\",\n        \"content\": \"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\\n你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\\n重点给出正确的数学模型表达式，不必过多解释。\\n该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规模表达式。\"\n    },\n    {\n        \"role\": \"user\",\n        \"content\": f\"用户问题如下：\\n{user_question}\"\n    }\n]"
+      },
+      {
+        "phase": "问题分析与建模",
+        "type": "prompt",
+        "action": "LLM生成问题分析与建模",
+        "start_state": "stage1_messages定义完成",
+        "end_state": "问题分析与建模完成",
+        "key": "[{\"role\": \"system\", \"content\": \"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\\n你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\\n重点给出正确的数学模型表达式，不必过多解释。\\n该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规模表达式。\"}, {\"role\": \"user\", \"content\": \"用户问题如下：\\n{user_question}\"}]"
+      },
+      {
+        "phase": "Gurobi算法设计",
+        "type": "code",
+        "action": "定义阶段2的消息列表",
+        "start_state": "问题分析与建模完成",
+        "end_state": "stage2_messages定义完成",
+        "key": "stage2_messages = [\n    {\n        \"role\": \"system\",\n        \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。\\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"\n    },\n    {\n        \"role\": \"user\",\n        \"content\": f\"问题分析与建模\\n{stage1_modeling}\"\n    }\n]"
+      },
+      {
+        "phase": "Gurobi算法设计",
+        "type": "prompt",
+        "action": "LLM生成Gurobi算法设计",
+        "start_state": "stage2_messages定义完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "[{\"role\": \"system\", \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。\\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"}, {\"role\": \"user\", \"content\": \"问题分析与建模\\n{stage1_modeling}\"}]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "定义消息为代码生成准备",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "messages定义完成",
+        "key": "messages = [\n    {\n        \"role\": \"system\",\n        \"content\": \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\n    },\n    {\n        \"role\": \"user\",\n        \"content\": f\"用户问题：\\n{user_question}\\n\\n问题分析与建模：\\n{stage1_modeling}\\n\\nGurobi算法设计：\\n{stage2_design}\\n\\n\"\n    }\n]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "调用generate_or_code_solver函数",
+        "start_state": "messages定义完成",
+        "end_state": "generate_or_code_solver调用开始",
+        "key": "is_solve_success, result, messages = generate_or_code_solver(messages, model_name, max_attempts)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "复制消息列表",
+        "start_state": "generate_or_code_solver调用开始",
+        "end_state": "messages复制完成",
+        "key": "messages = copy.deepcopy(messages_bak)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "LLM生成Gurobi代码",
+        "start_state": "messages复制完成",
+        "end_state": "gurobi_code生成完成",
+        "key": "[{\"role\": \"system\", \"content\": \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"}, {\"role\": \"user\", \"content\": \"用户问题：\\n{user_question}\\n\\n问题分析与建模：\\n{stage1_modeling}\\n\\nGurobi算法设计：\\n{stage2_design}\\n\\n\"}]"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存生成的代码",
+        "start_state": "gurobi_code生成完成",
+        "end_state": "代码保存完成",
+        "key": "save_generated_code(gurobi_code, prefix=\"agent\")"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行Python代码",
+        "start_state": "代码保存完成",
+        "end_state": "代码执行完成",
+        "key": "success, error_msg = extract_and_execute_python_code(gurobi_code)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "检查执行是否成功",
+        "start_state": "代码执行完成",
+        "end_state": "执行结果检查完成",
+        "key": "if success:"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "返回成功结果",
+        "start_state": "执行结果检查完成",
+        "end_state": "generate_or_code_solver返回成功",
+        "key": "return True, error_msg, messages_bak"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "检查求解结果并返回",
+        "start_state": "generate_or_code_solver返回成功",
+        "end_state": "代码生成完成",
+        "key": "if is_solve_success:\n    if not is_number_string(str(result)):\n        pass\n    return is_solve_success, result"
+      }
+    ],
+    "or_agent": "import copy\nimport re\nimport subprocess\nimport sys\nimport tempfile\nimport os\nimport json\nimport math\nfrom datetime import datetime\nfrom itertools import zip_longest\n\nimport openai\nimport anthropic\nfrom dotenv import load_dotenv\n\nWORKSPACE_ROOT = os.path.dirname(os.path.abspath(__file__))\nLOG_DIR = os.path.join(WORKSPACE_ROOT, \"log\")\nos.makedirs(LOG_DIR, exist_ok=True)\nLOG_FILE = os.path.join(LOG_DIR, f\"llm_chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json\")\n\nRESULT_DIR = os.path.join(WORKSPACE_ROOT, \"result\")\nos.makedirs(RESULT_DIR, exist_ok=True)\nCODE_SAVE_COUNTER = 0\nCURRENT_QUESTION_ID = None\n\ndef is_number_string(s):\n    pattern = r\"^[-+]?\\d+(\\.\\d+)?$\"\n    return re.match(pattern, s) is not None\n\ndef convert_to_number(s):\n    try:\n        if s.isdigit() or (s.startswith('-') and s[1:].isdigit()):\n            return int(s)\n        num = float(s)\n        if math.isnan(num) or math.isinf(num):\n            return None\n        return num\n    except (ValueError, TypeError):\n        return None\n\ndef extract_best_objective(output_text):\n    if \"Model is infeasible\" in output_text or \"Infeasible\" in output_text:\n        return None\n\n    patterns = [\n        r'Best objective\\s+([\\d.e+-]+)',\n        r'Optimal objective\\s+([\\d.e+-]+)', \n        r'Optimal cost\\s+([\\d.e+-]+)',\n        r'Objective value:\\s+([\\d.e+-]+)',\n        r'Optimal Value:\\s+([\\d.e+-]+)'\n    ]\n    \n    for pattern in patterns:\n        match = re.search(pattern, output_text, re.IGNORECASE)\n        if match:\n            try:\n                return float(match.group(1))\n            except ValueError:\n                continue\n    \n    lines = output_text.split('\\n')\n    for line in lines:\n        line = line.strip()\n        if line and is_number_string(line):\n            try:\n                return float(line)\n            except ValueError:\n                continue\n    \n    return None\n\ndef extract_and_execute_python_code(text_content):\n    python_code_blocks = re.findall(r'```python\\s*([\\s\\S]*?)```', text_content)\n    \n    if not python_code_blocks:\n        python_code_blocks = re.findall(r'```\\s*([\\s\\S]*?)```', text_content)\n    \n    if not python_code_blocks:\n        lines = text_content.split('\\n')\n        code_lines = []\n        in_code = False\n        for line in lines:\n            if line.strip().startswith('import ') or line.strip().startswith('from ') or line.strip().startswith('def ') or line.strip().startswith('class '):\n                in_code = True\n            if in_code:\n                code_lines.append(line)\n        if code_lines:\n            python_code_blocks = ['\\n'.join(code_lines)]\n    \n    if not python_code_blocks:\n        return False, \"No Python code blocks found\"\n\n    for code_block in python_code_blocks:\n        code_block = code_block.strip()\n        if not code_block:\n            continue\n\n        try:\n            with tempfile.NamedTemporaryFile(mode=\"w\", suffix=\".py\", delete=False) as tmp_file:\n                tmp_file.write(code_block)\n                temp_file_path = tmp_file.name\n\n            env = os.environ.copy()\n            env['PYTHONPATH'] = os.path.dirname(os.path.abspath(__file__)) + os.pathsep + env.get('PYTHONPATH', '')\n            \n            result = subprocess.run(\n                [sys.executable, temp_file_path],\n                capture_output=True,\n                text=True,\n                timeout=30,\n                env=env,\n                check=False\n            )\n\n            if result.returncode == 0:\n                best_obj = extract_best_objective(result.stdout)\n                if best_obj is not None:\n                    return True, str(best_obj)\n                else:\n                    return True, \"None\"\n            else:\n                return False, result.stderr\n\n        except subprocess.TimeoutExpired:\n            return False, \"Execution timeout (30 seconds)\"\n        except Exception as e:\n            return False, str(e)\n        finally:\n            if 'temp_file_path' in locals() and os.path.exists(temp_file_path):\n                os.remove(temp_file_path)\n\n    return False, \"No valid code blocks executed\"\n\ndef eval_model_result(success, result, ground_truth, err_rate=0.005):\n    pass_flag = False\n    correct_flag = False\n    \n    if success:\n        pass_flag = True\n        \n        if result == 'None' and (ground_truth is None or ground_truth == 'None'):\n            correct_flag = True\n            return pass_flag, correct_flag\n        \n        if ground_truth is None or ground_truth == 'None':\n            return pass_flag, correct_flag\n        \n        result_num = convert_to_number(str(result))\n        ground_truth_num = convert_to_number(str(ground_truth))\n        \n        if result_num is None or ground_truth_num is None:\n            return pass_flag, correct_flag\n        \n        if ground_truth_num == 0:\n            if result_num == 0:\n                correct_flag = True\n        else:\n            deviation = abs(result_num - ground_truth_num) / abs(ground_truth_num)\n            if deviation <= err_rate:\n                correct_flag = True\n    \n    return pass_flag, correct_flag\n\ndef log_llm_chat(messages, model_name, response_text):\n    try:\n        record = {\n            \"timestamp\": datetime.now().isoformat(timespec=\"seconds\"),\n            \"model\": model_name,\n            \"messages\": messages,\n            \"response\": response_text\n        }\n        if os.path.exists(LOG_FILE):\n            with open(LOG_FILE, \"r\", encoding=\"utf-8\") as f:\n                data = json.load(f)\n        else:\n            data = []\n        data.append(record)\n        with open(LOG_FILE, \"w\", encoding=\"utf-8\") as f:\n            json.dump(data, f, ensure_ascii=False, indent=2)\n    except Exception:\n        pass\n\ndef save_generated_code(text_content, prefix=\"solve\"):\n    try:\n        global CODE_SAVE_COUNTER\n        CODE_SAVE_COUNTER += 1\n        timestamp = datetime.now().strftime(\"%Y%m%d_%H%M%S\")\n        code_blocks = re.findall(r'```python\\s*([\\s\\S]*?)```', text_content)\n        if not code_blocks:\n            code_blocks = re.findall(r'```\\s*([\\s\\S]*?)```', text_content)\n        \n        if code_blocks:\n            code = \"\\n\\n\".join(block.strip() for block in code_blocks if block.strip())\n            if not code:\n                code = text_content\n            extension = \"py\"\n        else:\n            code = text_content\n            extension = \"txt\"\n        \n        if CURRENT_QUESTION_ID is None:\n            qid_part = \"unknown\"\n        else:\n            qid_part = str(CURRENT_QUESTION_ID)\n        filename = f\"{prefix}_q{qid_part}_{CODE_SAVE_COUNTER:04d}_{timestamp}.{extension}\"\n        file_path = os.path.join(RESULT_DIR, filename)\n        with open(file_path, \"w\", encoding=\"utf-8\") as f:\n            f.write(code)\n    except Exception:\n        pass\n\ndef query_llm(messages, model_name=\"deepseek-reasoner\", temperature=0.2):\n    if not hasattr(query_llm, \"_openai_client\") or not hasattr(query_llm, \"_anthropic_client\"):\n        load_dotenv()\n        \n        openai_api_data = dict(\n            api_key=os.getenv(\"DEEPSEEK_API_KEY\", \"sk-258f5399788043a59f3a69205b720e0f\"),\n            base_url=os.getenv(\"OPENAI_API_BASE\", \"https://api.deepseek.com\")\n        )\n        anthropic_api_data = dict(\n            api_key=os.getenv(\"CLAUDE_API_KEY\")\n        )\n        \n        query_llm._openai_client = openai.OpenAI(\n            api_key=openai_api_data[\"api_key\"],\n            base_url=openai_api_data[\"base_url\"] if openai_api_data[\"base_url\"] else None\n        )\n        query_llm._anthropic_client = anthropic.Anthropic(\n            api_key=anthropic_api_data[\"api_key\"]\n        )\n    \n    openai_client = query_llm._openai_client\n    anthropic_client = query_llm._anthropic_client\n    \n    if model_name.lower().startswith(\"claude\"):\n        system_message = next((m[\"content\"] for m in messages if m[\"role\"] == \"system\"), \"\")\n        user_messages = [m[\"content\"] for m in messages if m[\"role\"] == \"user\"]\n        assistant_messages = [m[\"content\"] for m in messages if m[\"role\"] == \"assistant\"]\n        \n        conversation = system_message + \"\\n\\n\"\n        for user_msg, asst_msg in zip_longest(user_messages, assistant_messages, fillvalue=None):\n            if user_msg:\n                conversation += f\"Human: {user_msg}\\n\\n\"\n            if asst_msg:\n                conversation += f\"Assistant: {asst_msg}\\n\\n\"\n        \n        if len(user_messages) > len(assistant_messages):\n            conversation += f\"Human: {user_messages[-1]}\\n\\n\"\n        \n        response = anthropic_client.messages.create(\n            model=model_name,\n            max_tokens=8192,\n            temperature=temperature,\n            messages=[{\"role\": \"user\", \"content\": conversation}]\n        )\n        response_text = response.content[0].text\n        log_llm_chat(messages, model_name, response_text)\n        return response_text\n    \n    response = openai_client.chat.completions.create(\n        model=model_name,\n        messages=messages,\n        temperature=temperature\n    )\n    response_text = response.choices[0].message.content\n    log_llm_chat(messages, model_name, response_text)\n    return response_text\n\ndef load_dataset():\n    dataset = {}\n    data_path = r\"c:\\Users\\Bryt\\Desktop\\end\\new_agent\\dataset\\IndustryOR_test.json\"\n    \n    with open(data_path, 'r', encoding='utf-8') as f:\n        first_line = f.readline().strip()\n        f.seek(0)\n        \n        if first_line.startswith('{\"en_question\"') or first_line.startswith('{\"cn_question\"'):\n            for line_num, line in enumerate(f, 1):\n                line = line.strip()\n                if line:\n                    try:\n                        item = json.loads(line)\n                        dataset_item = {\n                            'question': item.get('en_question', item.get('cn_question', '')),\n                            'answer': item.get('en_answer', item.get('cn_answer', '')),\n                            'difficulty': item.get('difficulty', 'Unknown'),\n                            'id': item.get('id', line_num - 1)\n                        }\n                        dataset[str(dataset_item['id'])] = dataset_item\n                    except json.JSONDecodeError:\n                        continue\n        else:\n            try:\n                dataset = json.load(f)\n            except json.JSONDecodeError:\n                f.seek(0)\n                for line_num, line in enumerate(f, 1):\n                    line = line.strip()\n                    if line:\n                        try:\n                            item = json.loads(line)\n                            dataset_item = {\n                                'question': item.get('en_question', item.get('cn_question', '')),\n                                'answer': item.get('en_answer', item.get('cn_answer', '')),\n                                'difficulty': item.get('difficulty', 'Unknown'),\n                                'id': item.get('id', line_num - 1)\n                            }\n                            dataset[str(dataset_item['id'])] = dataset_item\n                        except json.JSONDecodeError:\n                            continue\n    \n    return dataset\n\ndef generate_or_code_solver(messages_bak, model_name, max_attempts):\n    messages = copy.deepcopy(messages_bak)\n    \n    gurobi_code = query_llm(messages, model_name)\n    save_generated_code(gurobi_code, prefix=\"agent\")\n    \n    text = f\"{gurobi_code}\"\n    attempt = 0\n    while attempt < max_attempts:\n        success, error_msg = extract_and_execute_python_code(text)\n        if success:\n            messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n            return True, error_msg, messages_bak\n        \n        messages.append({\"role\": \"assistant\", \"content\": gurobi_code})\n        messages.append({\n            \"role\": \"user\",\n            \"content\": f\"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\",\n        })\n        \n        gurobi_code = query_llm(messages, model_name)\n        save_generated_code(gurobi_code, prefix=\"agent_fix\")\n        text = f\"{gurobi_code}\"\n        \n        attempt += 1\n    \n    messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n    return False, None, messages_bak\n\ndef or_llm_agent(user_question, model_name=\"deepseek-reasoner\", max_attempts=3):\n    stage1_messages = [\n        {\n            \"role\": \"system\",\n            \"content\": (\n                \"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\\n\"\n                \"你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\\n\"\n                \"重点给出正确的数学模型表达式，不必过多解释。\"\n                \"该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规模表达式。\"\n            ),\n        },\n        {\n            \"role\": \"user\",\n            \"content\": (\n                f\"用户问题如下：\\n{user_question}\"\n            ),\n        },\n    ]\n    stage1_modeling = query_llm(stage1_messages, model_name)\n    \n    stage2_messages = [\n        {\n            \"role\": \"system\",\n            \"content\": (\n                \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n\"\n                \"请基于以下建模方案设计Gurobi求解算法。\\n\"\n                \"重点给出正确的Gurobi算法设计方案，不必过多解释。\"\n                \"该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"\n            ),\n        },\n        {\n            \"role\": \"user\",\n            \"content\": (\n                f\"问题分析与建模\\n{stage1_modeling}\"\n            ),\n        },\n    ]\n    stage2_design = query_llm(stage2_messages, model_name)\n    \n    messages = [\n        {\n            \"role\": \"system\",\n            \"content\": (\n                \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\"\n                \"代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\"\n                \"请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\n            ),\n        },\n        {\n            \"role\": \"user\",\n            \"content\": (\n                f\"用户问题：\\n{user_question}\\n\\n\"\n                f\"问题分析与建模：\\n{stage1_modeling}\\n\\n\"\n                f\"Gurobi算法设计：\\n{stage2_design}\\n\\n\"\n            ),\n        },\n    ]\n    \n    is_solve_success, result, messages = generate_or_code_solver(messages, model_name, max_attempts)\n    \n    if is_solve_success:\n        if not is_number_string(str(result)):\n            messages.append(\n                {\n                    \"role\": \"user\",\n                    \"content\": (\n                        \"当前模型得到*无可行解*。请回溯并检查阶段1建模和阶段2算法设计中可能导致不可行的点，\"\n                        \"然后重新输出修正后的Gurobi Python代码。\"\n                        \"请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\n                    ),\n                }\n            )\n            is_solve_success, result, messages = generate_or_code_solver(messages, model_name, max_attempts=1)\n    else:\n        messages.append(\n            {\n                \"role\": \"user\",\n                \"content\": (\n                    \"多次调试后代码仍报错。请仔细检查阶段1建模和阶段2算法设计是否有错误。\"\n                    \"检查后请重新构建Gurobi Python代码。\"\n                    \"请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"\n                ),\n            }\n        )\n        is_solve_success, result, messages = generate_or_code_solver(messages, model_name, max_attempts=2)\n    \n    return is_solve_success, result\n\ndef run_eval(use_agent=True, model_name=\"deepseek-reasoner\"):\n    dataset = load_dataset()\n    \n    pass_count = 0\n    correct_count = 0\n    error_datas = []\n    \n    for i, d in dataset.items():\n        global CURRENT_QUESTION_ID\n        CURRENT_QUESTION_ID = i\n        print(f\"=============== num {i} ==================\")\n        user_question, answer = d[\"question\"], d[\"answer\"]\n        print(user_question)\n        print(\"-------------\")\n        \n        if use_agent:\n            is_solve_success, llm_result = or_llm_agent(user_question, model_name)\n        else:\n            is_solve_success, llm_result = False, None\n        \n        if is_solve_success:\n            print(f\"Successfully executed code, optimal solution value: {llm_result}\")\n        else:\n            print(\"Failed to execute code.\")\n        print(\"------------------\")\n        \n        pass_flag, correct_flag = eval_model_result(is_solve_success, llm_result, answer)\n        pass_count += 1 if pass_flag else 0\n        correct_count += 1 if correct_flag else 0\n        \n        if not pass_flag or not correct_flag:\n            error_datas.append(i)\n        \n        print(f\"solve: {is_solve_success}, llm: {llm_result}, ground truth: {answer}\")\n        print(f\"[Final] run pass: {pass_flag}, solve correct: {correct_flag}\")\n        print(\"\\n\")\n    \n    print(f\"[Total {len(dataset)}] run pass: {pass_count}, solve correct: {correct_count}\")\n    print(f\"[Total fails {len(error_datas)}] error datas: {error_datas}\")\n\nif __name__ == \"__main__\":\n    USE_AGENT = True\n    MODEL_NAME = \"deepseek-reasoner\"\n    \n    run_eval(use_agent=USE_AGENT, model_name=MODEL_NAME)"
+  },
+  {
+    "index": 5,
+    "name": "ex3_p5",
+    "dir": "c:\\Users\\Bryt\\Desktop\\end\\new_agent\\populations\\ex3_p5",
+    "chain": [
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "导入Gurobi库",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "库导入完成",
+        "key": "import gurobipy as gp\nfrom gurobipy import GRB"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "创建Gurobi模型",
+        "start_state": "库导入完成",
+        "end_state": "模型创建完成",
+        "key": "model = gp.Model()"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "定义变量、约束和目标函数（代码内容占位）",
+        "start_state": "模型创建完成",
+        "end_state": "模型内容定义完成",
+        "key": "# ... 代码内容 ..."
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "检查求解状态并输出结果",
+        "start_state": "模型内容定义完成",
+        "end_state": "代码生成完成",
+        "key": "if model.status == GRB.OPTIMAL:\n    print(f\"最优目标值: {model.objVal}\")\nelse:\n    print(f\"求解状态: {model.status}\")"
+      }
+    ],
+    "or_agent": "import re\nimport subprocess\nimport sys\nimport tempfile\nimport os\nimport json\nimport random\nfrom datetime import datetime\nfrom itertools import zip_longest\nimport copy\n\nimport openai\nimport anthropic\nfrom dotenv import load_dotenv\n\nWORKSPACE_ROOT = os.path.dirname(os.path.abspath(__file__))\nLOG_DIR = os.path.join(WORKSPACE_ROOT, \"log\")\nos.makedirs(LOG_DIR, exist_ok=True)\nLOG_FILE = os.path.join(LOG_DIR, f\"llm_chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json\")\n\nRESULT_DIR = os.path.join(WORKSPACE_ROOT, \"result\")\nos.makedirs(RESULT_DIR, exist_ok=True)\nTRACE_FILE = os.path.join(RESULT_DIR, f\"thought_chain_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl\")\nCODE_SAVE_COUNTER = 0\nCURRENT_QUESTION_ID = None\n\ndef is_number_string(s):\n    pattern = r\"^[-+]?\\d+(\\.\\d+)?$\"\n    return re.match(pattern, s) is not None\n\ndef convert_to_number(s):\n    try:\n        if s.isdigit() or (s.startswith('-') and s[1:].isdigit()):\n            return int(s)\n        num = float(s)\n        return num\n    except (ValueError, TypeError):\n        return None\n\ndef extract_best_objective(output_text):\n    if \"Model is infeasible\" in output_text:\n        return None\n\n    patterns = [\n        r'Best objective\\s+([\\d.e+-]+)',\n        r'Optimal objective\\s+([\\d.e+-]+)',\n        r'Optimal cost\\s+([\\d.e+-]+)',\n        r'Optimal value:?\\s*([\\d.e+-]+)',\n        r'Objective\\s*=\\s*([\\d.e+-]+)',\n        r'最优目标\\s*[:：]?\\s*([\\d.e+-]+)'\n    ]\n\n    for pattern in patterns:\n        match = re.search(pattern, output_text, re.IGNORECASE)\n        if match:\n            try:\n                return float(match.group(1))\n            except ValueError:\n                continue\n\n    numbers = re.findall(r'[-+]?\\d*\\.?\\d+e?[-+]?\\d*', output_text)\n    if numbers:\n        try:\n            return float(numbers[-1])\n        except ValueError:\n            pass\n\n    return None\n\ndef extract_and_execute_python_code(text_content, max_retries=1):\n    python_code_blocks = re.findall(r'```python\\s*([\\s\\S]*?)```', text_content)\n\n    if not python_code_blocks:\n        print(\"未找到Python代码块，尝试直接执行。\")\n        python_code_blocks = [text_content]\n\n    best_result = None\n    best_error = None\n\n    for code_block in python_code_blocks:\n        code_block = code_block.strip()\n        if not code_block:\n            continue\n\n        print(\"开始执行代码块...\")\n        retry_count = 0\n        \n        while retry_count <= max_retries:\n            try:\n                with tempfile.NamedTemporaryFile(mode=\"w\", suffix=\".py\", delete=False) as tmp_file:\n                    tmp_file.write(code_block)\n                    temp_file_path = tmp_file.name\n\n                # 增加超时时间到120秒，并添加更详细的错误处理\n                result = subprocess.run([sys.executable, temp_file_path], \n                                      capture_output=True, text=True, timeout=120)\n\n                if result.returncode == 0:\n                    print(\"代码执行成功，输出：\")\n                    print(result.stdout)\n                    best_obj = extract_best_objective(result.stdout)\n                    \n                    if best_obj is not None:\n                        print(f\"解析到最优值：{best_obj}\")\n                        return True, str(best_obj)\n                    else:\n                        print(\"未找到最优值，但执行成功\")\n                        return True, \"SUCCESS_NO_OBJ\"\n                else:\n                    error_msg = f\"执行错误（返回值{result.returncode}）：{result.stderr}\"\n                    print(error_msg)\n                    best_error = error_msg\n                    \n            except subprocess.TimeoutExpired as e:\n                error_msg = f\"执行超时（120秒）：{str(e)}\"\n                print(error_msg)\n                best_error = error_msg\n            except Exception as e:\n                error_msg = f\"执行异常：{str(e)}\"\n                print(error_msg)\n                best_error = error_msg\n            finally:\n                if 'temp_file_path' in locals() and os.path.exists(temp_file_path):\n                    try:\n                        os.remove(temp_file_path)\n                    except:\n                        pass\n                print(\"-\" * 30)\n            \n            retry_count += 1\n\n    return False, best_error if best_error else \"所有代码块执行失败\"\n\ndef eval_model_result(success, result, ground_truth, err_rate=0.01):\n    pass_flag = False\n    correct_flag = False\n    \n    if success:\n        pass_flag = True\n        if result == \"SUCCESS_NO_OBJ\":\n            correct_flag = False\n        elif ground_truth is None or ground_truth == 'None':\n            if result == 'None':\n                correct_flag = True\n        elif is_number_string(str(result)):\n            result_num = convert_to_number(str(result))\n            ground_truth_num = convert_to_number(str(ground_truth))\n            if result_num is not None and ground_truth_num is not None:\n                if ground_truth_num == 0:\n                    if abs(result_num) < 1e-10:\n                        correct_flag = True\n                else:\n                    deviation = abs(result_num - ground_truth_num) / abs(ground_truth_num)\n                    if deviation <= err_rate:\n                        correct_flag = True\n    \n    return pass_flag, correct_flag\n\ndef log_llm_chat(messages, model_name, response_text, stage_tag=\"\"):\n    try:\n        record = {\n            \"timestamp\": datetime.now().isoformat(timespec=\"seconds\"),\n            \"model\": model_name,\n            \"stage\": stage_tag,\n            \"messages\": messages[-3:] if len(messages) > 3 else messages,\n            \"response\": response_text[:2000]\n        }\n        if os.path.exists(LOG_FILE):\n            with open(LOG_FILE, \"r\", encoding=\"utf-8\") as f:\n                data = json.load(f)\n        else:\n            data = []\n        data.append(record)\n        with open(LOG_FILE, \"w\", encoding=\"utf-8\") as f:\n            json.dump(data, f, ensure_ascii=False, indent=2)\n    except Exception as e:\n        print(f\"日志记录失败：{e}\")\n\ndef save_generated_code(text_content, prefix=\"solve\", stage=\"\"):\n    try:\n        global CODE_SAVE_COUNTER\n        CODE_SAVE_COUNTER += 1\n        timestamp = datetime.now().strftime(\"%Y%m%d_%H%M%S\")\n        code_blocks = re.findall(r'```python\\s*([\\s\\S]*?)```', text_content)\n        if code_blocks:\n            code = \"\\n\\n\".join(block.strip() for block in code_blocks if block.strip())\n            if not code:\n                code = text_content\n            extension = \"py\"\n        else:\n            code = text_content\n            extension = \"txt\"\n        \n        if CURRENT_QUESTION_ID is None:\n            qid_part = \"unknown\"\n        else:\n            qid_part = str(CURRENT_QUESTION_ID)\n        \n        stage_part = f\"_{stage}\" if stage else \"\"\n        filename = f\"{prefix}_q{qid_part}_{CODE_SAVE_COUNTER:04d}{stage_part}_{timestamp}.{extension}\"\n        file_path = os.path.join(RESULT_DIR, filename)\n        with open(file_path, \"w\", encoding=\"utf-8\") as f:\n            f.write(code)\n        print(f\"代码已保存至：{file_path}\")\n    except Exception as e:\n        print(f\"代码保存失败：{e}\")\n\ndef query_llm(messages, model_name=\"deepseek-reasoner\", temperature=0.3, stage_tag=\"\"):\n    if not hasattr(query_llm, \"_openai_client\") or not hasattr(query_llm, \"_anthropic_client\"):\n        load_dotenv()\n\n        openai_api_data = dict(\n            api_key=os.getenv(\"DEEPSEEK_API_KEY\", \"sk-258f5399788043a59f3a69205b720e0f\"),\n            base_url=os.getenv(\"OPENAI_API_BASE\", \"https://api.deepseek.com\")\n        )\n        anthropic_api_data = dict(\n            api_key=os.getenv(\"CLAUDE_API_KEY\", \"\")\n        )\n\n        query_llm._openai_client = openai.OpenAI(\n            api_key=openai_api_data[\"api_key\"],\n            base_url=openai_api_data[\"base_url\"] if openai_api_data[\"base_url\"] else None\n        )\n        query_llm._anthropic_client = anthropic.Anthropic(\n            api_key=anthropic_api_data[\"api_key\"]\n        ) if anthropic_api_data[\"api_key\"] else None\n\n    if model_name.lower().startswith(\"claude\"):\n        if not query_llm._anthropic_client:\n            print(\"警告：Claude API密钥未配置，切换到DeepSeek\")\n            model_name = \"deepseek-reasoner\"\n        else:\n            system_message = next((m[\"content\"] for m in messages if m[\"role\"] == \"system\"), \"\")\n            user_messages = [m[\"content\"] for m in messages if m[\"role\"] == \"user\"]\n            assistant_messages = [m[\"content\"] for m in messages if m[\"role\"] == \"assistant\"]\n\n            conversation = system_message + \"\\n\\n\" if system_message else \"\"\n            for user_msg, asst_msg in zip_longest(user_messages, assistant_messages, fillvalue=None):\n                if user_msg:\n                    conversation += f\"Human: {user_msg}\\n\\n\"\n                if asst_msg:\n                    conversation += f\"Assistant: {asst_msg}\\n\\n\"\n\n            if len(user_messages) > len(assistant_messages):\n                conversation += f\"Human: {user_messages[-1]}\\n\\n\"\n\n            try:\n                response = query_llm._anthropic_client.messages.create(\n                    model=model_name,\n                    max_tokens=8192,\n                    temperature=temperature,\n                    messages=[{\"role\": \"user\", \"content\": conversation}]\n                )\n                response_text = response.content[0].text\n                log_llm_chat(messages, model_name, response_text, stage_tag)\n                return response_text\n            except Exception as e:\n                print(f\"Claude API错误：{e}，切换到DeepSeek\")\n                model_name = \"deepseek-reasoner\"\n\n    openai_client = query_llm._openai_client\n    \n    try:\n        response = openai_client.chat.completions.create(\n            model=model_name,\n            messages=messages,\n            temperature=temperature\n        )\n        response_text = response.choices[0].message.content\n        log_llm_chat(messages, model_name, response_text, stage_tag)\n        return response_text\n    except Exception as e:\n        print(f\"API调用失败：{e}\")\n        raise\n\ndef load_dataset():\n    dataset = {}\n    possible_paths = [\n        r\"c:\\Users\\Bryt\\Desktop\\end\\new_agent\\dataset\\IndustryOR_test.json\",\n        \"./dataset/IndustryOR_test.json\",\n        \"../dataset/IndustryOR_test.json\",\n        \"dataset/IndustryOR_test.json\"\n    ]\n    \n    data_path = None\n    for path in possible_paths:\n        if os.path.exists(path):\n            data_path = path\n            break\n    \n    if not data_path:\n        print(\"警告：未找到数据集文件，使用空数据集\")\n        return {}\n    \n    try:\n        with open(data_path, 'r', encoding='utf-8') as f:\n            first_line = f.readline().strip()\n            f.seek(0)\n            \n            if first_line.startswith('{\"en_question\"') or first_line.startswith('{\"cn_question\"'):\n                for line_num, line in enumerate(f, 1):\n                    line = line.strip()\n                    if line:\n                        try:\n                            item = json.loads(line)\n                            dataset_item = {\n                                'question': item.get('en_question', item.get('cn_question', '')),\n                                'answer': item.get('en_answer', item.get('cn_answer', '')),\n                                'difficulty': item.get('difficulty', 'Unknown'),\n                                'id': item.get('id', line_num - 1)\n                            }\n                            dataset[str(dataset_item['id'])] = dataset_item\n                        except json.JSONDecodeError:\n                            print(f\"解析错误第{line_num}行：{line}\")\n                            continue\n            else:\n                dataset = json.load(f)\n                \n    except Exception as e:\n        print(f\"加载数据集失败：{e}\")\n    \n    return dataset\n\ndef generate_code_with_repair(messages_bak, model_name, max_attempts=3):\n    messages = copy.deepcopy(messages_bak)\n    \n    for attempt in range(max_attempts):\n        try:\n            gurobi_code = query_llm(messages, model_name, stage_tag=\"code_gen\")\n            print(f\"\\n【第{attempt+1}次生成Gurobi代码】\")\n            save_generated_code(gurobi_code, prefix=\"or_agent\", stage=f\"gen{attempt+1}\")\n            \n            success, result = extract_and_execute_python_code(gurobi_code)\n            \n            if success:\n                messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n                return True, result, messages_bak\n            \n            print(f\"执行失败，错误：{result}\")\n            \n            if attempt < max_attempts - 1:\n                messages.append({\"role\": \"assistant\", \"content\": gurobi_code})\n                error_hint = f\"\"\"代码执行失败，错误信息：\n{result}\n\n请分析错误原因：\n1. 如果是语法错误，请修正语法\n2. 如果是变量未定义，请检查变量声明\n3. 如果是Gurobi语法错误，请查阅Gurobi文档\n4. 如果是模型不可行或无界，请调整约束\n5. 如果执行超时，请简化模型或设置求解时间限制\n\n修复后请提供完整可执行的Python代码：\"\"\"\n                messages.append({\"role\": \"user\", \"content\": error_hint})\n                print(\"正在请求修复...\")\n                \n        except Exception as e:\n            print(f\"生成代码过程中出错：{e}\")\n            if attempt < max_attempts - 1:\n                continue\n            else:\n                return False, str(e), messages_bak\n    \n    print(f\"已达到最大尝试次数{max_attempts}，执行失败\")\n    return False, \"max_attempts_exceeded\", messages_bak\n\nclass OptimizedORAgent:\n    def __init__(self, model_name=\"deepseek-reasoner\", max_repair_attempts=3):\n        self.model_name = model_name\n        self.max_repair_attempts = max_repair_attempts\n        \n    def stage1_analysis(self, problem_text):\n        system_prompt = \"\"\"你是一个运筹优化专家。请分析以下优化问题，提取关键信息并建立数学模型。\n\n分析步骤：\n1. 识别决策变量（variables）\n2. 明确目标函数（objective function）\n3. 列出所有约束条件（constraints）\n4. 判断问题类型（线性规划、整数规划、混合整数规划等）\n\n请用规范的数学表达式描述模型，包括：\n- 变量定义\n- 目标函数（最大化或最小化）\n- 约束条件\n\n问题：\"\"\"\n        \n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": problem_text}\n        ]\n        \n        response = query_llm(messages, model_name=self.model_name, stage_tag=\"stage1\")\n        return response\n    \n    def stage2_design(self, stage1_output):\n        system_prompt = \"\"\"基于上述数学模型，设计Gurobi求解方案。\n\n设计要点：\n1. 如何初始化Gurobi模型\n2. 如何定义决策变量（连续/整数/二进制）\n3. 如何设置目标函数\n4. 如何添加约束条件\n5. 如何设置求解参数（如时间限制、最优性容差）\n6. 如何提取和输出结果\n\n请提供详细的算法设计步骤。\"\"\"\n        \n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": f\"数学模型：\\n{stage1_output}\"}\n        ]\n        \n        response = query_llm(messages, model_name=self.model_name, stage_tag=\"stage2\")\n        return response\n    \n    def stage3_validation(self, problem_text, stage1_output, stage2_output):\n        system_prompt = \"\"\"请检查上述数学模型和算法设计是否存在潜在问题：\n\n常见问题检查清单：\n1. 变量类型是否正确（整数变量误设为连续变量）\n2. 目标函数方向是否正确（最大化/最小化）\n3. 约束条件是否完整（是否遗漏重要约束）\n4. 约束条件是否矛盾（可能导致不可行）\n5. 模型规模是否过大（可能需要简化）\n\n请指出潜在问题并提出改进建议。\"\"\"\n        \n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": f\"问题：{problem_text}\\n\\n数学模型：\\n{stage1_output}\\n\\n算法设计：\\n{stage2_output}\"}\n        ]\n        \n        response = query_llm(messages, model_name=self.model_name, stage_tag=\"stage3\")\n        return response\n    \n    def stage4_generation(self, problem_text, stage1_output, stage2_output, stage3_output):\n        system_prompt = \"\"\"请基于前三个阶段的分析，编写完整的Gurobi Python代码。\n\n代码要求：\n1. 包含完整的import语句\n2. 添加清晰的注释说明\n3. 处理异常情况（如不可行、无界）\n4. 输出最优目标值和主要决策变量值\n5. 使用适当的求解参数，特别是设置时间限制避免超时\n6. 确保代码能够快速求解，对于复杂问题设置合理的时间限制\n\n请按以下格式输出代码：\n```python\n# 导入库\nimport gurobipy as gp\nfrom gurobipy import GRB\n\n# 创建模型\nmodel = gp.Model()\n\n# ... 代码内容 ...\n\n# 设置求解时间限制\nmodel.setParam('TimeLimit', 60)  # 设置60秒时间限制\n\n# 求解并输出结果\nif model.status == GRB.OPTIMAL:\n    print(f\"最优目标值: {model.objVal}\")\nelse:\n    print(f\"求解状态: {model.status}\")\n```\n\n注意：只输出代码，不要额外解释。\"\"\"\n        \n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": f\"\"\"问题描述：\n{problem_text}\n\n数学模型：\n{stage1_output}\n\n算法设计：\n{stage2_output}\n\n验证反馈：\n{stage3_output}\n\n请生成完整代码，特别注意设置求解时间限制：\"\"\"}\n        ]\n        \n        return messages\n    \n    def solve_problem(self, problem_text):\n        print(\"\\n\" + \"=\"*60)\n        print(\"阶段1：问题分析与建模\")\n        print(\"=\"*60)\n        stage1_result = self.stage1_analysis(problem_text)\n        print(stage1_result[:500] + \"...\" if len(stage1_result) > 500 else stage1_result)\n        \n        print(\"\\n\" + \"=\"*60)\n        print(\"阶段2：Gurobi算法设计\")\n        print(\"=\"*60)\n        stage2_result = self.stage2_design(stage1_result)\n        print(stage2_result[:500] + \"...\" if len(stage2_result) > 500 else stage2_result)\n        \n        print(\"\\n\" + \"=\"*60)\n        print(\"阶段3：模型验证与改进\")\n        print(\"=\"*60)\n        stage3_result = self.stage3_validation(problem_text, stage1_result, stage2_result)\n        print(stage3_result[:500] + \"...\" if len(stage3_result) > 500 else stage3_result)\n        \n        print(\"\\n\" + \"=\"*60)\n        print(\"阶段4：代码生成与执行修复\")\n        print(\"=\"*60)\n        \n        messages = self.stage4_generation(problem_text, stage1_result, stage2_result, stage3_result)\n        \n        is_solve_success, result, messages = generate_code_with_repair(\n            messages, self.model_name, self.max_repair_attempts)\n        \n        if not is_solve_success:\n            print(\"代码执行失败，尝试简化问题重试...\")\n            simplified_prompt = f\"\"\"原问题：{problem_text}\n\n之前的尝试失败了，特别是执行超时。请生成一个更简单但能解决问题的Gurobi代码。重点关注：\n1. 只实现核心的数学模型\n2. 使用默认求解参数，但必须设置时间限制（TimeLimit=60）\n3. 简化变量和约束的定义\n4. 确保代码能在60秒内完成求解\n\n生成可直接执行的代码：\"\"\"\n            \n            simple_messages = [\n                {\"role\": \"system\", \"content\": \"生成简单可执行的Gurobi代码，必须设置时间限制\"},\n                {\"role\": \"user\", \"content\": simplified_prompt}\n            ]\n            \n            is_solve_success, result, _ = generate_code_with_repair(\n                simple_messages, self.model_name, max_attempts=2)\n        \n        return is_solve_success, result\n\ndef run_eval(use_agent=True, model_name=\"deepseek-reasoner\", sample_size=None):\n    dataset = load_dataset()\n    \n    if not dataset:\n        print(\"数据集为空，无法进行评估\")\n        print(f\"[Total 0] run pass: 0, solve correct: 0\")\n        print(f\"[Total fails 0] error datas: []\")\n        return 0, 0, []\n    \n    if sample_size and sample_size < len(dataset):\n        print(f\"随机采样 {sample_size} 个问题进行测试\")\n        keys = random.sample(list(dataset.keys()), sample_size)\n        dataset = {k: dataset[k] for k in keys}\n    \n    pass_count = 0\n    correct_count = 0\n    error_datas = []\n    \n    if use_agent:\n        agent = OptimizedORAgent(model_name=model_name)\n    \n    for idx, (qid, data) in enumerate(dataset.items(), 1):\n        global CURRENT_QUESTION_ID\n        CURRENT_QUESTION_ID = qid\n        print(f\"\\n{'='*60}\")\n        print(f\"问题 {idx}/{len(dataset)} | ID: {qid}\")\n        print(f\"难度: {data['difficulty']}\")\n        print(f\"问题摘要: {data['question'][:150]}...\")\n        print(f\"标准答案: {data['answer']}\")\n        print(f\"{'='*60}\")\n        \n        try:\n            if use_agent:\n                is_solve_success, llm_result = agent.solve_problem(data['question'])\n            else:\n                is_solve_success = True\n                llm_result = data['answer']\n            \n            pass_flag, correct_flag = eval_model_result(is_solve_success, llm_result, data['answer'])\n            pass_count += 1 if pass_flag else 0\n            correct_count += 1 if correct_flag else 0\n            \n            if not pass_flag or not correct_flag:\n                error_datas.append(qid)\n            \n            status_symbol = \"✓\" if correct_flag else \"✗\"\n            print(f\"[ID {qid}] {status_symbol} 执行: {'通过' if pass_flag else '失败'}, 正确: {'是' if correct_flag else '否'}\")\n            print(f\"得到结果: {llm_result}, 期望: {data['answer']}\")\n            \n        except Exception as e:\n            print(f\"[ID {qid}] 异常: {str(e)}\")\n            error_datas.append(qid)\n    \n    print(f\"\\n{'='*60}\")\n    print(\"评估结果汇总\")\n    print(f\"{'='*60}\")\n    print(f\"[Total {len(dataset)}] run pass: {pass_count}, solve correct: {correct_count}\")\n    print(f\"[Total fails {len(error_datas)}] error datas: {error_datas}\")\n    \n    return pass_count, correct_count, error_datas\n\ndef main():\n    print(\"优化智能体 - 运筹问题求解器\")\n    print(\"=\"*60)\n    \n    print(\"加载数据集中...\")\n    dataset = load_dataset()\n    print(f\"加载完成，共 {len(dataset)} 个问题\")\n    \n    model_choice = input(\"选择模型 (1=DeepSeek, 2=Claude-3, 默认DeepSeek): \").strip()\n    if model_choice == \"2\":\n        model_name = \"claude-3-sonnet-20240229\"\n    else:\n        model_name = \"deepseek-reasoner\"\n    \n    sample_input = input(\"输入测试样本数量 (默认全部): \").strip()\n    sample_size = int(sample_input) if sample_input.isdigit() else None\n    \n    print(f\"\\n开始评测，使用模型: {model_name}\")\n    run_eval(use_agent=True, model_name=model_name, sample_size=sample_size)\n\nif __name__ == \"__main__\":\n    main()"
+  },
+  {
+    "index": 6,
+    "name": "ex3_p6",
+    "dir": "c:\\Users\\Bryt\\Desktop\\end\\new_agent\\populations\\ex3_p6",
+    "chain": [
+      {
+        "phase": "问题分析与建模",
+        "type": "prompt",
+        "action": "分析优化问题并构建数学模型",
+        "start_state": "优化智能体开始搭建",
+        "end_state": "问题分析与建模完成",
+        "key": "Analyze this optimization problem:\n\n{question}\n\nProvide a complete mathematical model with:\n1. Decision variables (clearly define each variable and its type)\n2. Objective function (maximize/minimize)\n3. All constraints (linear, integer, binary, etc.)\n4. Variable domains and any special conditions\n\nOutput format:\nDecision variables:\nObjective:\nConstraints:\nModel type (LP, MIP, etc.):"
+      },
+      {
+        "phase": "Gurobi算法设计",
+        "type": "prompt",
+        "action": "设计Gurobi实现策略",
+        "start_state": "问题分析与建模完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "Problem: {question}\n\nMathematical model:\n{stage1_output}\n\n{error_context}\nDesign a Gurobi implementation strategy:\n\n1. Required imports (gurobipy, etc.)\n2. How to create and set up the model\n3. Variable definition strategy (names, types, bounds)\n4. Objective function implementation\n5. Constraint addition method\n6. Model solving and result extraction\n7. Error handling considerations\n\nProvide a clear implementation plan."
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "生成Python/Gurobi代码",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "代码生成完成",
+        "key": "Generate Python code for this problem:\n\nProblem: {question}\n\nMathematical Model:\n{stage1_output}\n\nImplementation Plan:\n{stage2_output}\n\n{error_guidance}\nRequirements:\n- Use gurobipy library\n- Include proper exception handling\n- Model must be properly named and configured\n- Print the optimal objective value if solution exists\n- Print appropriate messages for infeasible/unbounded cases\n- Code must be standalone and executable\n- Add comments for key steps\n\nGenerate ONLY the Python code within ```python ``` markers."
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存生成的代码",
+        "start_state": "代码生成完成",
+        "end_state": "代码保存完成",
+        "key": "save_generated_code(text_content, prefix)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行Python代码并提取结果",
+        "start_state": "代码保存完成",
+        "end_state": "执行完成",
+        "key": "extract_and_execute_python_code(text_content, previous_error)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "检查执行结果，如果成功则返回，否则设置错误",
+        "start_state": "执行完成",
+        "end_state": "问题分析与建模完成",
+        "key": "if success:\n    return True, result\nlast_error = result"
+      },
+      {
+        "phase": "Gurobi算法设计",
+        "type": "prompt",
+        "action": "设计Gurobi实现策略",
+        "start_state": "问题分析与建模完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "Problem: {question}\n\nMathematical model:\n{stage1_output}\n\n{error_context}\nDesign a Gurobi implementation strategy:\n\n1. Required imports (gurobipy, etc.)\n2. How to create and set up the model\n3. Variable definition strategy (names, types, bounds)\n4. Objective function implementation\n5. Constraint addition method\n6. Model solving and result extraction\n7. Error handling considerations\n\nProvide a clear implementation plan."
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "生成Python/Gurobi代码",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "代码生成完成",
+        "key": "Generate Python code for this problem:\n\nProblem: {question}\n\nMathematical Model:\n{stage1_output}\n\nImplementation Plan:\n{stage2_output}\n\n{error_guidance}\nRequirements:\n- Use gurobipy library\n- Include proper exception handling\n- Model must be properly named and configured\n- Print the optimal objective value if solution exists\n- Print appropriate messages for infeasible/unbounded cases\n- Code must be standalone and executable\n- Add comments for key steps\n\nGenerate ONLY the Python code within ```python ``` markers."
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存生成的代码",
+        "start_state": "代码生成完成",
+        "end_state": "代码保存完成",
+        "key": "save_generated_code(text_content, prefix)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行Python代码并提取结果",
+        "start_state": "代码保存完成",
+        "end_state": "执行完成",
+        "key": "extract_and_execute_python_code(text_content, previous_error)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "检查执行结果，如果成功则返回，否则设置错误",
+        "start_state": "执行完成",
+        "end_state": "问题分析与建模完成",
+        "key": "if success:\n    return True, result\nlast_error = result"
+      },
+      {
+        "phase": "Gurobi算法设计",
+        "type": "prompt",
+        "action": "设计Gurobi实现策略",
+        "start_state": "问题分析与建模完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "Problem: {question}\n\nMathematical model:\n{stage1_output}\n\n{error_context}\nDesign a Gurobi implementation strategy:\n\n1. Required imports (gurobipy, etc.)\n2. How to create and set up the model\n3. Variable definition strategy (names, types, bounds)\n4. Objective function implementation\n5. Constraint addition method\n6. Model solving and result extraction\n7. Error handling considerations\n\nProvide a clear implementation plan."
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "生成Python/Gurobi代码",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "代码生成完成",
+        "key": "Generate Python code for this problem:\n\nProblem: {question}\n\nMathematical Model:\n{stage1_output}\n\nImplementation Plan:\n{stage2_output}\n\n{error_guidance}\nRequirements:\n- Use gurobipy library\n- Include proper exception handling\n- Model must be properly named and configured\n- Print the optimal objective value if solution exists\n- Print appropriate messages for infeasible/unbounded cases\n- Code must be standalone and executable\n- Add comments for key steps\n\nGenerate ONLY the Python code within ```python ``` markers."
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存生成的代码",
+        "start_state": "代码生成完成",
+        "end_state": "代码保存完成",
+        "key": "save_generated_code(text_content, prefix)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行Python代码并提取结果",
+        "start_state": "代码保存完成",
+        "end_state": "执行完成",
+        "key": "extract_and_execute_python_code(text_content, previous_error)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "检查执行结果，如果成功则返回，否则设置错误",
+        "start_state": "执行完成",
+        "end_state": "问题分析与建模完成",
+        "key": "if success:\n    return True, result\nlast_error = result"
+      },
+      {
+        "phase": "Gurobi算法设计",
+        "type": "prompt",
+        "action": "设计Gurobi实现策略",
+        "start_state": "问题分析与建模完成",
+        "end_state": "Gurobi算法设计完成",
+        "key": "Problem: {question}\n\nMathematical model:\n{stage1_output}\n\n{error_context}\nDesign a Gurobi implementation strategy:\n\n1. Required imports (gurobipy, etc.)\n2. How to create and set up the model\n3. Variable definition strategy (names, types, bounds)\n4. Objective function implementation\n5. Constraint addition method\n6. Model solving and result extraction\n7. Error handling considerations\n\nProvide a clear implementation plan."
+      },
+      {
+        "phase": "代码生成",
+        "type": "prompt",
+        "action": "生成Python/Gurobi代码",
+        "start_state": "Gurobi算法设计完成",
+        "end_state": "代码生成完成",
+        "key": "Generate Python code for this problem:\n\nProblem: {question}\n\nMathematical Model:\n{stage1_output}\n\nImplementation Plan:\n{stage2_output}\n\n{error_guidance}\nRequirements:\n- Use gurobipy library\n- Include proper exception handling\n- Model must be properly named and configured\n- Print the optimal objective value if solution exists\n- Print appropriate messages for infeasible/unbounded cases\n- Code must be standalone and executable\n- Add comments for key steps\n\nGenerate ONLY the Python code within ```python ``` markers."
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "保存生成的代码",
+        "start_state": "代码生成完成",
+        "end_state": "代码保存完成",
+        "key": "save_generated_code(text_content, prefix)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "tool",
+        "action": "执行Python代码并提取结果",
+        "start_state": "代码保存完成",
+        "end_state": "执行完成",
+        "key": "extract_and_execute_python_code(text_content, previous_error)"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "检查执行结果，如果成功则返回，否则设置错误",
+        "start_state": "执行完成",
+        "end_state": "问题分析与建模完成",
+        "key": "if success:\n    return True, result\nlast_error = result"
+      },
+      {
+        "phase": "代码生成",
+        "type": "code",
+        "action": "返回失败结果",
+        "start_state": "问题分析与建模完成",
+        "end_state": "工作流结束",
+        "key": "return False, f'Failed after {self.max_retries} attempts. Last error: {last_error}'"
+      }
+    ],
+    "or_agent": "import re\nimport subprocess\nimport sys\nimport tempfile\nimport os\nimport json\nimport traceback\nfrom datetime import datetime\nfrom itertools import zip_longest\nfrom typing import List, Dict, Tuple, Optional, Any\n\nimport openai\nimport anthropic\nfrom dotenv import load_dotenv\n\n\nWORKSPACE_ROOT = os.path.dirname(os.path.abspath(__file__))\nLOG_DIR = os.path.join(WORKSPACE_ROOT, \"log\")\nos.makedirs(LOG_DIR, exist_ok=True)\nLOG_FILE = os.path.join(LOG_DIR, f\"llm_chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json\")\n\nRESULT_DIR = os.path.join(WORKSPACE_ROOT, \"result\")\nos.makedirs(RESULT_DIR, exist_ok=True)\nTRACE_FILE = os.path.join(RESULT_DIR, f\"thought_chain_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl\")\nCODE_SAVE_COUNTER = 0\nCURRENT_QUESTION_ID = None\n\n\ndef is_number_string(s: str) -> bool:\n    pattern = r\"^[-+]?\\d+(\\.\\d+)?$\"\n    return re.match(pattern, s) is not None\n\n\ndef convert_to_number(s: str) -> Optional[float]:\n    try:\n        if s.isdigit() or (s.startswith('-') and s[1:].isdigit()):\n            return int(s)\n        num = float(s)\n        return num\n    except (ValueError, TypeError):\n        return None\n\n\ndef extract_best_objective(output_text: str) -> Optional[float]:\n    if \"Model is infeasible\" in output_text or \"INFEASIBLE\" in output_text.upper():\n        return None\n\n    match = re.search(r'Best objective\\s+([\\d.e+-]+)', output_text)\n    if not match:\n        match = re.search(r'Optimal objective\\s+([\\d.e+-]+)', output_text)\n\n    if not match:\n        match = re.search(r'Optimal cost\\s+([\\d.e+-]+)', output_text)\n\n    if not match:\n        match = re.search(r'Objective\\s+:\\s+([\\d.e+-]+)', output_text)\n\n    if not match:\n        match = re.search(r'Objective\\s+=\\s+([\\d.e+-]+)', output_text)\n\n    if match:\n        try:\n            return float(match.group(1))\n        except ValueError:\n            return None\n\n    return None\n\n\ndef extract_and_execute_python_code(text_content: str, previous_error: str = \"\") -> Tuple[bool, str]:\n    python_code_blocks = re.findall(r'```python\\s*([\\s\\S]*?)```', text_content)\n\n    if not python_code_blocks:\n        python_code_blocks = re.findall(r'```\\s*([\\s\\S]*?)```', text_content)\n\n    if not python_code_blocks:\n        print(\"No executable code blocks found.\")\n        return False, \"No executable code blocks found\"\n\n    for code_block in python_code_blocks:\n        code_block = code_block.strip()\n        if not code_block:\n            print(\"Found an empty code block, skipped.\")\n            continue\n\n        print(\"Found Python code block, starting execution...\")\n        try:\n            with tempfile.NamedTemporaryFile(mode=\"w\", suffix=\".py\", delete=False) as tmp_file:\n                tmp_file.write(code_block)\n                temp_file_path = tmp_file.name\n\n            result = subprocess.run([sys.executable, temp_file_path], capture_output=True, text=True, check=False, timeout=30)\n\n            if result.returncode == 0:\n                print(\"Python code executed successfully\")\n                if result.stdout:\n                    print(\"Output:\", result.stdout[:200])\n                best_obj = extract_best_objective(result.stdout)\n                if best_obj is not None:\n                    print(f\"Optimal solution value: {best_obj}\")\n                    return True, str(best_obj)\n                else:\n                    return True, \"None\"\n            else:\n                error_msg = result.stderr[:500]\n                print(f\"Execution error: {error_msg}\")\n                return False, error_msg\n\n        except subprocess.TimeoutExpired:\n            print(\"Code execution timed out after 30 seconds\")\n            return False, \"Execution timeout\"\n        except Exception as e:\n            error_msg = str(e)[:500]\n            print(f\"Execution exception: {error_msg}\")\n            return False, error_msg\n        finally:\n            if 'temp_file_path' in locals() and os.path.exists(temp_file_path):\n                os.remove(temp_file_path)\n            print(\"-\" * 30)\n\n    return False, \"No valid code blocks executed\"\n\n\ndef eval_model_result(success: bool, result: Any, ground_truth: Any, err_rate: float = 0.01) -> Tuple[bool, bool]:\n    pass_flag = False\n    correct_flag = False\n    if success:\n        pass_flag = True\n        if result == 'None':\n            if ground_truth is None or ground_truth == 'None' or str(ground_truth).lower() == 'none':\n                correct_flag = True\n        elif ground_truth is not None and ground_truth != 'None':\n            result_num = convert_to_number(str(result))\n            ground_truth_num = convert_to_number(str(ground_truth))\n            if result_num is not None and ground_truth_num is not None:\n                if ground_truth_num == 0:\n                    if abs(result_num) < 1e-6:\n                        correct_flag = True\n                else:\n                    deviation = abs(result_num - ground_truth_num) / abs(ground_truth_num)\n                    if deviation <= err_rate:\n                        correct_flag = True\n    return pass_flag, correct_flag\n\n\ndef log_llm_chat(messages: List[Dict], model_name: str, response_text: str) -> None:\n    try:\n        record = {\n            \"timestamp\": datetime.now().isoformat(timespec=\"seconds\"),\n            \"model\": model_name,\n            \"messages\": messages,\n            \"response\": response_text\n        }\n        if os.path.exists(LOG_FILE):\n            with open(LOG_FILE, \"r\", encoding=\"utf-8\") as f:\n                data = json.load(f)\n        else:\n            data = []\n        data.append(record)\n        with open(LOG_FILE, \"w\", encoding=\"utf-8\") as f:\n            json.dump(data, f, ensure_ascii=False, indent=2)\n    except Exception as e:\n        print(f\"Warning: failed to write chat log: {e}\")\n\n\ndef save_generated_code(text_content: str, prefix: str = \"solve\") -> None:\n    try:\n        global CODE_SAVE_COUNTER\n        CODE_SAVE_COUNTER += 1\n        timestamp = datetime.now().strftime(\"%Y%m%d_%H%M%S\")\n        code_blocks = re.findall(r'```python\\s*([\\s\\S]*?)```', text_content)\n        if not code_blocks:\n            code_blocks = re.findall(r'```\\s*([\\s\\S]*?)```', text_content)\n        if code_blocks:\n            code = \"\\n\\n\".join(block.strip() for block in code_blocks if block.strip())\n            if not code:\n                code = text_content\n            extension = \"py\"\n        else:\n            code = text_content\n            extension = \"txt\"\n        if CURRENT_QUESTION_ID is None:\n            qid_part = \"unknown\"\n        else:\n            qid_part = str(CURRENT_QUESTION_ID)\n        filename = f\"{prefix}_q{qid_part}_{CODE_SAVE_COUNTER:04d}_{timestamp}.{extension}\"\n        file_path = os.path.join(RESULT_DIR, filename)\n        with open(file_path, \"w\", encoding=\"utf-8\") as f:\n            f.write(code)\n    except Exception as e:\n        print(f\"Warning: failed to save generated code: {e}\")\n\n\ndef query_llm(messages: List[Dict], model_name: str = \"deepseek-reasoner\", temperature: float = 0.3) -> str:\n    if not hasattr(query_llm, \"_openai_client\") or not hasattr(query_llm, \"_anthropic_client\"):\n        load_dotenv()\n\n        openai_api_data = dict(\n            api_key=os.getenv(\"DEEPSEEK_API_KEY\", \"sk-258f5399788043a59f3a69205b720e0f\"),\n            base_url=os.getenv(\"OPENAI_API_BASE\", \"https://api.deepseek.com\")\n        )\n        anthropic_api_data = dict(\n            api_key=os.getenv(\"CLAUDE_API_KEY\")\n        )\n\n        query_llm._openai_client = openai.OpenAI(\n            api_key=openai_api_data[\"api_key\"],\n            base_url=openai_api_data[\"base_url\"] if openai_api_data[\"base_url\"] else None\n        )\n        query_llm._anthropic_client = anthropic.Anthropic(\n            api_key=anthropic_api_data[\"api_key\"]\n        )\n\n    openai_client = query_llm._openai_client\n    anthropic_client = query_llm._anthropic_client\n\n    if model_name.lower().startswith(\"claude\"):\n        system_message = next((m[\"content\"] for m in messages if m[\"role\"] == \"system\"), \"\")\n        user_messages = [m[\"content\"] for m in messages if m[\"role\"] == \"user\"]\n        assistant_messages = [m[\"content\"] for m in messages if m[\"role\"] == \"assistant\"]\n\n        conversation = system_message + \"\\n\\n\"\n        for user_msg, asst_msg in zip_longest(user_messages, assistant_messages, fillvalue=None):\n            if user_msg:\n                conversation += f\"Human: {user_msg}\\n\\n\"\n            if asst_msg:\n                conversation += f\"Assistant: {asst_msg}\\n\\n\"\n\n        if len(user_messages) > len(assistant_messages):\n            conversation += f\"Human: {user_messages[-1]}\\n\\n\"\n\n        response = anthropic_client.messages.create(\n            model=model_name,\n            max_tokens=8192,\n            temperature=temperature,\n            messages=[{\"role\": \"user\", \"content\": conversation}]\n        )\n        response_text = response.content[0].text\n        log_llm_chat(messages, model_name, response_text)\n        return response_text\n\n    response = openai_client.chat.completions.create(\n        model=model_name,\n        messages=messages,\n        temperature=temperature\n    )\n    response_text = response.choices[0].message.content\n    log_llm_chat(messages, model_name, response_text)\n    return response_text\n\n\ndef load_dataset() -> Dict:\n    dataset = {}\n    data_path = r\"c:\\Users\\Bryt\\Desktop\\end\\new_agent\\dataset\\IndustryOR_test.json\"\n\n    with open(data_path, 'r', encoding='utf-8') as f:\n        first_line = f.readline().strip()\n        f.seek(0)\n\n        if first_line.startswith('{\"en_question\"') or first_line.startswith('{\"cn_question\"'):\n            for line_num, line in enumerate(f, 1):\n                line = line.strip()\n                if line:\n                    try:\n                        item = json.loads(line)\n                        dataset_item = {\n                            'question': item.get('en_question', item.get('cn_question', '')),\n                            'answer': item.get('en_answer', item.get('cn_answer', '')),\n                            'difficulty': item.get('difficulty', 'Unknown'),\n                            'id': item.get('id', line_num - 1)\n                        }\n                        dataset[str(dataset_item['id'])] = dataset_item\n                    except json.JSONDecodeError:\n                        print(f\"Warning: Could not parse line {line_num}: {line}\")\n                        continue\n        else:\n            dataset = json.load(f)\n\n    return dataset\n\n\nclass OROptimizationAgent:\n    def __init__(self, model_name: str = \"deepseek-reasoner\", temperature: float = 0.3):\n        self.model_name = model_name\n        self.temperature = temperature\n        self.max_retries = 4\n        \n    def stage1_analysis(self, question: str) -> str:\n        system_prompt = \"\"\"You are an operations research specialist. Analyze the optimization problem thoroughly and provide a mathematical formulation.\"\"\"\n\n        user_prompt = f\"\"\"Analyze this optimization problem:\n\n{question}\n\nProvide a complete mathematical model with:\n1. Decision variables (clearly define each variable and its type)\n2. Objective function (maximize/minimize)\n3. All constraints (linear, integer, binary, etc.)\n4. Variable domains and any special conditions\n\nOutput format:\nDecision variables:\nObjective:\nConstraints:\nModel type (LP, MIP, etc.):\"\"\"\n\n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": user_prompt}\n        ]\n\n        return query_llm(messages, self.model_name, self.temperature)\n\n    def stage2_algorithm(self, question: str, stage1_output: str, previous_error: str = \"\") -> str:\n        system_prompt = \"\"\"You are a Gurobi modeling expert. Design a detailed solution approach for the optimization problem.\"\"\"\n\n        error_context = \"\"\n        if previous_error:\n            error_context = f\"\\nPrevious execution error that should be avoided:\\n{previous_error}\\n\"\n\n        user_prompt = f\"\"\"Problem: {question}\n\nMathematical model:\n{stage1_output}\n\n{error_context}\nDesign a Gurobi implementation strategy:\n\n1. Required imports (gurobipy, etc.)\n2. How to create and set up the model\n3. Variable definition strategy (names, types, bounds)\n4. Objective function implementation\n5. Constraint addition method\n6. Model solving and result extraction\n7. Error handling considerations\n\nProvide a clear implementation plan.\"\"\"\n\n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": user_prompt}\n        ]\n\n        return query_llm(messages, self.model_name, self.temperature)\n\n    def stage3_code(self, question: str, stage1_output: str, stage2_output: str, previous_error: str = \"\") -> str:\n        system_prompt = \"\"\"You are a Python/Gurobi developer. Generate complete, executable, and robust optimization code.\"\"\"\n\n        error_guidance = \"\"\n        if previous_error:\n            error_guidance = f\"\\nImportant: Avoid this previous error: {previous_error}\\n\"\n\n        user_prompt = f\"\"\"Generate Python code for this problem:\n\nProblem: {question}\n\nMathematical Model:\n{stage1_output}\n\nImplementation Plan:\n{stage2_output}\n\n{error_guidance}\nRequirements:\n- Use gurobipy library\n- Include proper exception handling\n- Model must be properly named and configured\n- Print the optimal objective value if solution exists\n- Print appropriate messages for infeasible/unbounded cases\n- Code must be standalone and executable\n- Add comments for key steps\n\nGenerate ONLY the Python code within ```python ``` markers.\"\"\"\n\n        messages = [\n            {\"role\": \"system\", \"content\": system_prompt},\n            {\"role\": \"user\", \"content\": user_prompt}\n        ]\n\n        return query_llm(messages, self.model_name, self.temperature)\n\n    def solve_with_adaptive_retry(self, question: str) -> Tuple[bool, str]:\n        global CURRENT_QUESTION_ID\n\n        print(f\"\\n{'='*60}\")\n        print(\"Stage 1: Problem Analysis\")\n        print('='*60)\n        stage1_output = self.stage1_analysis(question)\n\n        last_error = \"\"\n        for attempt in range(self.max_retries):\n            print(f\"\\nAttempt {attempt + 1}/{self.max_retries}\")\n\n            print(f\"\\n{'='*60}\")\n            print(f\"Stage 2: Solution Design (Attempt {attempt + 1})\")\n            print('='*60)\n            stage2_output = self.stage2_algorithm(question, stage1_output, last_error)\n\n            print(f\"\\n{'='*60}\")\n            print(f\"Stage 3: Code Generation (Attempt {attempt + 1})\")\n            print('='*60)\n            stage3_output = self.stage3_code(question, stage1_output, stage2_output, last_error)\n\n            save_generated_code(stage3_output, prefix=f\"solve_attempt_{attempt+1}\")\n\n            print(f\"\\n{'='*60}\")\n            print(f\"Executing Code (Attempt {attempt + 1})\")\n            print('='*60)\n            success, result = extract_and_execute_python_code(stage3_output, last_error)\n\n            if success:\n                return True, result\n\n            last_error = result\n            print(f\"Attempt {attempt + 1} failed: {result[:100]}\")\n\n            if attempt < self.max_retries - 1:\n                print(f\"Retrying with error feedback...\")\n\n        return False, f\"Failed after {self.max_retries} attempts. Last error: {last_error}\"\n\n    def solve_problem(self, question: str) -> Tuple[bool, str]:\n        return self.solve_with_adaptive_retry(question)\n\n\ndef or_llm_agent(question: str, ground_truth: Any = None) -> Tuple[bool, bool]:\n    agent = OROptimizationAgent()\n    success, result = agent.solve_problem(question)\n    pass_flag, correct_flag = eval_model_result(success, result, ground_truth)\n    return pass_flag, correct_flag\n\n\ndef run_eval(use_agent: bool = True) -> None:\n    global CURRENT_QUESTION_ID\n\n    dataset = load_dataset()\n    print(f\"Loaded dataset with {len(dataset)} problems\")\n\n    pass_count = 0\n    correct_count = 0\n    error_datas = []\n\n    for qid, data in dataset.items():\n        CURRENT_QUESTION_ID = qid\n        question = data['question']\n        ground_truth = data['answer']\n\n        print(f\"\\n{'#'*80}\")\n        print(f\"Processing ID: {qid}\")\n        print(f\"Question preview: {question[:120]}...\")\n        print(f\"Expected answer: {ground_truth}\")\n        print('#'*80)\n\n        try:\n            if use_agent:\n                pass_flag, correct_flag = or_llm_agent(question, ground_truth)\n            else:\n                pass_flag, correct_flag = False, False\n\n            if pass_flag:\n                pass_count += 1\n            if correct_flag:\n                correct_count += 1\n\n            print(f\"Result: pass={pass_flag}, correct={correct_flag}\")\n\n        except Exception as e:\n            print(f\"Error processing {qid}: {e}\")\n            traceback.print_exc()\n            error_datas.append(qid)\n\n    print(f\"[Total {len(dataset)}] run pass: {pass_count}, solve correct: {correct_count}\")\n    print(f\"[Total fails {len(error_datas)}] error datas: {error_datas}\")\n\n\nif __name__ == \"__main__\":\n    run_eval(use_agent=True)"
+  }
+]

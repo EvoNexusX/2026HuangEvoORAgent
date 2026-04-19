@@ -1,0 +1,250 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "code",
+    "action": "打印阶段1标题",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "阶段1标题已打印",
+    "key": "print('=' * 50)\nprint('阶段1：问题分析与建模')\nprint('=' * 50)"
+  },
+  {
+    "phase": "问题分析与建模",
+    "type": "prompt",
+    "action": "定义问题分析系统提示词",
+    "start_state": "阶段1标题已打印",
+    "end_state": "系统提示词已定义",
+    "key": "你是一个运筹优化专家。请对以下优化问题进行建模分析。\n\n输出格式必须严格遵循：\n### 决策变量\n列出所有决策变量及其定义\n\n### 目标函数\n给出目标函数的数学表达式\n\n### 约束条件\n列出所有约束条件的数学表达式\n\n### 数学模型\n给出完整的数学模型（包括变量、目标函数、约束条件）"
+  },
+  {
+    "phase": "问题分析与建模",
+    "type": "code",
+    "action": "构建用户消息",
+    "start_state": "系统提示词已定义",
+    "end_state": "用户消息已构建",
+    "key": "messages = [\n    {'role': 'system', 'content': system_prompt},\n    {'role': 'user', 'content': f'请对以下优化问题进行建模：\\n\\n{problem_text}'}\n]"
+  },
+  {
+    "phase": "问题分析与建模",
+    "type": "tool",
+    "action": "调用LLM查询",
+    "start_state": "用户消息已构建",
+    "end_state": "LLM响应已接收",
+    "key": "query_llm(messages, model_name=self.model_name)"
+  },
+  {
+    "phase": "问题分析与建模",
+    "type": "code",
+    "action": "打印阶段1结果",
+    "start_state": "LLM响应已接收",
+    "end_state": "问题分析与建模完成",
+    "key": "print(stage1_result)"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "code",
+    "action": "打印阶段2标题",
+    "start_state": "问题分析与建模完成",
+    "end_state": "阶段2标题已打印",
+    "key": "print('\\n' + '=' * 50)\nprint('阶段2：求解器算法设计')\nprint('=' * 50)"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "定义算法设计系统提示词",
+    "start_state": "阶段2标题已打印",
+    "end_state": "阶段2系统提示词已定义",
+    "key": "你是一个Gurobi优化专家。基于阶段1的数学模型，设计Gurobi求解方案。\n\n输出格式必须严格遵循：\n### 导入模块\nimport gurobipy as gp\nfrom gurobipy import GRB\n\n### 参数与数据\n（根据问题需要定义参数和数据）\n\n### 模型构建\n1. 创建模型：m = gp.Model()\n2. 定义决策变量：使用m.addVar()或m.addVars()\n3. 设置目标函数：m.setObjective()\n4. 添加约束：m.addConstr()或m.addConstrs()\n\n### 求解与输出\n1. 求解模型：m.optimize()\n2. 输出结果：打印最优解和目标值"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "code",
+    "action": "构建用户消息",
+    "start_state": "阶段2系统提示词已定义",
+    "end_state": "阶段2用户消息已构建",
+    "key": "messages = [\n    {'role': 'system', 'content': system_prompt},\n    {'role': 'user', 'content': f'基于以下数学模型，设计Gurobi求解方案：\\n\\n{stage1_output}'}\n]"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "tool",
+    "action": "调用LLM查询",
+    "start_state": "阶段2用户消息已构建",
+    "end_state": "阶段2LLM响应已接收",
+    "key": "query_llm(messages, model_name=self.model_name)"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "code",
+    "action": "打印阶段2结果",
+    "start_state": "阶段2LLM响应已接收",
+    "end_state": "Gurobi算法设计完成",
+    "key": "print(stage2_result)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印阶段3标题",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "阶段3标题已打印",
+    "key": "print('\\n' + '=' * 50)\nprint('阶段3：代码生成与执行修复')\nprint('=' * 50)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印第一次尝试标题",
+    "start_state": "阶段3标题已打印",
+    "end_state": "第一次尝试标题已打印",
+    "key": "print(f'\\n--- 第1次代码生成尝试 ---')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "定义代码生成系统提示词",
+    "start_state": "第一次尝试标题已打印",
+    "end_state": "代码生成系统提示词已定义",
+    "key": "你是一个Python程序员。基于阶段1和阶段2的输出，生成完整的可执行Python代码。\n\n要求：\n1. 代码必须完整，可以直接运行\n2. 必须包含所有必要的导入\n3. 必须有清晰的数据结构定义\n4. 必须有完整的模型构建和求解过程\n5. 必须输出最优目标值（如果存在）\n\n输出格式：\n```python\n# 完整Python代码\nimport gurobipy as gp\nfrom gurobipy import GRB\n\n# ... 完整代码 ...\n```"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "构建用户消息",
+    "start_state": "代码生成系统提示词已定义",
+    "end_state": "代码生成用户消息已构建",
+    "key": "messages = [\n    {'role': 'system', 'content': system_prompt},\n    {'role': 'user', 'content': f'阶段1输出：\\n{stage1_output}\\n\\n阶段2输出：\\n{stage2_output}\\n\\n请生成完整的Python代码：'}\n]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "调用LLM查询生成代码",
+    "start_state": "代码生成用户消息已构建",
+    "end_state": "代码生成响应已接收",
+    "key": "query_llm(messages, model_name=self.model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印生成的代码",
+    "start_state": "代码生成响应已接收",
+    "end_state": "代码已打印",
+    "key": "print(stage3_result)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "代码已打印",
+    "end_state": "代码已保存",
+    "key": "save_generated_code(stage3_result, prefix='or_agent')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行生成的代码",
+    "start_state": "代码已保存",
+    "end_state": "代码执行完成",
+    "key": "extract_and_execute_python_code(stage3_result)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "判断执行是否成功",
+    "start_state": "代码执行完成",
+    "end_state": "成功判断完成",
+    "key": "if success:"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印失败信息",
+    "start_state": "成功判断完成",
+    "end_state": "失败信息已打印",
+    "key": "print(f'代码执行失败，错误：{result}')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查是否还有重试",
+    "start_state": "失败信息已打印",
+    "end_state": "重试检查完成",
+    "key": "if retry < self.max_retries - 1:"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印修复提示",
+    "start_state": "重试检查完成",
+    "end_state": "修复提示已打印",
+    "key": "print('尝试修复重试...')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "构建修复提示词",
+    "start_state": "修复提示已打印",
+    "end_state": "修复提示词已定义",
+    "key": "之前的代码执行失败，错误信息如下：\n{result}\n\n请修复代码中的问题，重新生成完整的可执行Python代码。\n\n要求：\n1. 修复所有错误\n2. 保持代码完整性\n3. 输出格式必须是 ```python ... ```"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "构建修复消息",
+    "start_state": "修复提示词已定义",
+    "end_state": "修复消息已构建",
+    "key": "messages = [\n    {'role': 'system', 'content': '你是一个Python程序员，需要修复代码错误。'},\n    {'role': 'user', 'content': f'原始问题：{problem_text}\\n\\n阶段1输出：{stage1_result}\\n\\n阶段2输出：{stage2_result}\\n\\n错误信息：{result}\\n\\n{repair_prompt}'}\n]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "调用LLM进行修复",
+    "start_state": "修复消息已构建",
+    "end_state": "修复响应已接收",
+    "key": "stage3_result = query_llm(messages, model_name=self.model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印第二次尝试标题",
+    "start_state": "修复响应已接收",
+    "end_state": "第二次尝试标题已打印",
+    "key": "print(f'\\n--- 第2次代码生成尝试 ---')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印修复后的代码",
+    "start_state": "第二次尝试标题已打印",
+    "end_state": "修复后代码已打印",
+    "key": "print(stage3_result)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存修复后的代码",
+    "start_state": "修复后代码已打印",
+    "end_state": "修复后代码已保存",
+    "key": "save_generated_code(stage3_result, prefix='or_agent')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行修复后的代码",
+    "start_state": "修复后代码已保存",
+    "end_state": "修复后代码执行完成",
+    "key": "extract_and_execute_python_code(stage3_result)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "判断执行是否成功",
+    "start_state": "修复后代码执行完成",
+    "end_state": "第二次成功判断完成",
+    "key": "if success:"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "打印成功信息并返回",
+    "start_state": "第二次成功判断完成",
+    "end_state": "代码生成完成",
+    "key": "print(f'代码执行成功！结果：{result}')\nreturn success, result"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "tool",
+    "action": "调用 LLM 进行问题分析与建模",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "query_llm(messages=[{'role': 'system', 'content': '你是一个运筹优化专家。用户提供一个优化问题。\\n首先，分析问题，确定目标函数、决策变量、约束条件。\\n然后，用数学表达式构建线性规划模型。\\n最后，为后续代码生成提供清晰的模型描述。'}, {'role': 'user', 'content': f'优化问题：\\n{user_question}\\n请完成分析建模，要求简洁准确，直接给出模型。'}], model_name=model_name)"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "tool",
+    "action": "调用 LLM 设计 Gurobi 求解算法",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "query_llm(messages=[{'role': 'system', 'content': '基于给定的数学模型，设计Gurobi求解算法。\\n明确变量类型、约束添加方式、求解参数设置。\\n为代码实现提供具体的设计方案。'}, {'role': 'user', 'content': f'数学模型：\\n{stage1_modeling}\\n请设计Gurobi求解算法。'}], model_name=model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "调用 LLM 生成初始 Gurobi Python 代码",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "初始代码生成",
+    "key": "query_llm(messages=[{'role': 'system', 'content': '根据问题和设计方案，编写完整可执行的Gurobi Python代码。\\n代码必须包含：导入gurobipy、定义模型、变量、约束、目标、求解、输出最优值。\\n输出格式：```python\\n代码\\n```'}, {'role': 'user', 'content': f'问题：\\n{user_question}\\n\\n模型：\\n{stage1_modeling}\\n\\n算法设计：\\n{stage2_design}\\n'}], model_name=model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的初始代码",
+    "start_state": "初始代码生成",
+    "end_state": "初始代码已保存",
+    "key": "save_generated_code(text_content=gurobi_code, prefix='agent')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行生成的初始代码",
+    "start_state": "初始代码已保存",
+    "end_state": "初始代码执行结果",
+    "key": "extract_and_execute_python_code(text_content=gurobi_code)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查执行结果并返回成功",
+    "start_state": "初始代码执行结果",
+    "end_state": "代码生成完成",
+    "key": "if success: messages_bak.append({'role': 'assistant', 'content': gurobi_code}); return True, error_msg, messages_bak"
+  }
+]

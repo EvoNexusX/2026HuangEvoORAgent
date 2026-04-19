@@ -1,0 +1,50 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "tool",
+    "action": "使用阶段1提示词调用LLM进行问题分析",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "query_llm(messages=[{\"role\": \"system\", \"content\": \"You are an expert in operations research and mathematical optimization. \\nYour task is to analyze optimization problems and provide mathematical models.\"}, {\"role\": \"user\", \"content\": \"Please analyze the following optimization problem and provide a mathematical model.\\n\\nProblem: {question}\\n\\nRequirements:\\n1. Identify decision variables.\\n2. Define the objective function.\\n3. List all constraints.\\n4. Provide a computable mathematical model (use mathematical notation).\\n\\nOutput format:\\n- Decision variables: \\n- Objective function: \\n- Constraints: \\n- Mathematical model: \\n\\nPlease output in English.\"}], model_name=\"deepseek-reasoner\", temperature=0.2)"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "tool",
+    "action": "使用阶段2提示词调用LLM进行算法设计",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "query_llm(messages=[{\"role\": \"system\", \"content\": \"You are an expert in optimization algorithms and Gurobi solver. \\nYour task is to design Gurobi-based solutions for mathematical models.\"}, {\"role\": \"user\", \"content\": \"Based on the following mathematical model, design a Gurobi solver solution.\\n\\nMathematical Model:\\n{stage1_output}\\n\\nRequirements:\\n1. Explain how to convert the mathematical model to a Gurobi model.\\n2. Design the solution algorithm steps (variable definition, objective setting, constraint addition, etc.).\\n3. Provide a practical Gurobi solution plan, including code framework.\\n\\nOutput format:\\n- Gurobi conversion strategy:\\n- Algorithm steps:\\n- Solution plan:\\n\\nPlease output in English.\"}], model_name=\"deepseek-reasoner\", temperature=0.2)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "使用阶段3提示词调用LLM进行代码生成",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成完成",
+    "key": "query_llm(messages=[{\"role\": \"system\", \"content\": \"You are a Python programming expert specializing in Gurobi optimization. \\nYour task is to generate complete, executable Python code for optimization problems.\"}, {\"role\": \"user\", \"content\": \"Based on the following problem description, mathematical model, and solution plan, \\ngenerate complete Python code using Gurobi.\\n\\nProblem Description:\\n{question}\\n\\nMathematical Model:\\n{stage1_output}\\n\\nSolution Plan:\\n{stage2_output}\\n\\nRequirements:\\n1. Generate complete Python code including necessary imports (gurobipy, etc.).\\n2. The code must be standalone and output the optimal solution if exists, or indicate infeasibility.\\n3. Include comments explaining key steps.\\n4. Output ONLY the code within ```python ``` code blocks.\\n\\nPlease output ONLY the code, no other explanations.\"}], model_name=\"deepseek-reasoner\", temperature=0.2)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码保存完成",
+    "key": "save_generated_code(text_content=stage3_output, prefix=\"solve_attempt_1\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行生成的Python代码",
+    "start_state": "代码保存完成",
+    "end_state": "代码执行完成",
+    "key": "extract_and_execute_python_code(text_content=stage3_output)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "评估模型结果",
+    "start_state": "代码执行完成",
+    "end_state": "评估完成",
+    "key": "eval_model_result(success, result, ground_truth)"
+  }
+]

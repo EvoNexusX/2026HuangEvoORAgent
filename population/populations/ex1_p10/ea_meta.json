@@ -1,0 +1,11 @@
+{
+  "strategy": "init",
+  "generation": 1,
+  "population_index": 10,
+  "uid": "ex1_p10",
+  "score": 89.9155,
+  "parent_a_ref": null,
+  "parent_b_ref": null,
+  "parent_a": null,
+  "parent_b": null
+}

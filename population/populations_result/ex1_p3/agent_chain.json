@@ -1,0 +1,66 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "prompt",
+    "action": "分析问题并生成数学模型",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析结果生成",
+    "key": "请分析以下运筹优化问题，并给出数学模型：\n\n问题描述：\n{problem_text}\n\n请按以下格式输出：\n1. 决策变量：\n2. 目标函数：\n3. 约束条件：\n4. 数学模型（数学表达式）：\n\n注意：只输出分析结果，不要输出代码。"
+  },
+  {
+    "phase": "问题分析与建模",
+    "type": "tool",
+    "action": "保存问题分析结果",
+    "start_state": "问题分析结果生成",
+    "end_state": "问题分析与建模完成",
+    "key": "save_generated_code(problem_analysis, prefix=f'stage1_q{question_id}')"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "设计Gurobi求解方案",
+    "start_state": "问题分析与建模完成",
+    "end_state": "求解器设计结果生成",
+    "key": "基于以下数学模型，设计Gurobi求解方案：\n\n{problem_analysis}\n\n请按以下格式输出求解方案：\n1. 模型类型（LP/MIP/QP等）：\n2. 变量定义方法：\n3. 目标函数设置：\n4. 约束添加方法：\n5. 求解参数建议：\n6. 结果提取方法：\n\n注意：只输出求解方案，不要输出完整代码。"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "tool",
+    "action": "保存求解器设计结果",
+    "start_state": "求解器设计结果生成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "save_generated_code(solver_design, prefix=f'stage2_q{question_id}')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "生成完整Python代码",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成结果生成",
+    "key": "请根据以下信息生成完整的Python代码：\n\n问题描述：\n{problem_text}\n\n数学模型分析：\n{problem_analysis}\n\n求解器设计方案：\n{solver_design}\n\n要求：\n1. 使用gurobipy库\n2. 生成完整可运行的代码\n3. 代码必须包含数据定义、模型构建、求解和结果输出\n4. 输出最优目标值\n5. 代码放在```python```代码块中\n\n请生成代码："
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "代码生成结果生成",
+    "end_state": "代码生成完成",
+    "key": "save_generated_code(code_content, prefix=f'stage3_q{question_id}_attempt{attempt+1}')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行生成的代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码执行完成",
+    "key": "extract_and_execute_python_code(code_content)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "评估执行结果",
+    "start_state": "代码执行完成",
+    "end_state": "结果评估完成",
+    "key": "eval_model_result(success, result, ground_truth)"
+  }
+]

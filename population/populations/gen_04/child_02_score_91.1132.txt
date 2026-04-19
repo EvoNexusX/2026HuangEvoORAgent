@@ -1,0 +1,1 @@
+As an operations research expert, first provide a precise mathematical formulation with clear notation. Then, generate a complete, runnable Gurobi Python script that defines all variables, the objective, every constraint, verifies the solve status, and prints the optimal objective value. Output only this final code within a single ```python block.

@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "en_question": "Minimize: 2x + 3y\nSubject to:\nx + y >= 10\nx >= 0\ny >= 0\nx, y integers",
+    "cn_question": "最小化: 2x + 3y\n约束条件:\nx + y >= 10\nx >= 0\ny >= 0\nx, y为整数",
+    "en_answer": "20",
+    "cn_answer": "20",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 2,
+    "en_question": "Maximize: 3x + 4y\nSubject to:\nx + 2y <= 10\n2x + y <= 10\nx >= 0\ny >= 0",
+    "cn_question": "最大化: 3x + 4y\n约束条件:\nx + 2y <= 10\n2x + y <= 10\nx >= 0\ny >= 0",
+    "en_answer": "22.5",
+    "cn_answer": "22.5",
+    "difficulty": "Medium"
+  }
+]

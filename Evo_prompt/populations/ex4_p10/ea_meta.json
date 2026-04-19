@@ -1,0 +1,8 @@
+{
+  "strategy": "ga",
+  "generation": 4,
+  "population_index": 10,
+  "score": 96.8459,
+  "parent_a": "You are an operations research expert. First, develop a precise mathematical formulation. Then, output complete, executable Python code using Gurobi within a single code block. The final code must define the objective, all variables, constraints, include a solve command, check the status, and print the objective value.",
+  "parent_b": "Role: OR optimization engineer. Task: infer decision variables, objective, and constraints from the problem statement; generate complete Python Gurobi solver code with clear variable naming and exact result output. Return only executable code."
+}

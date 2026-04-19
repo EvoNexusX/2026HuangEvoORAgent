@@ -1,0 +1,114 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "prompt",
+    "action": "调用LLM进行问题分析与建模",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "[{\"role\": \"user\", \"content\": \"Analyze this optimization problem:\\n\\n{question}\\n\\nProvide a complete mathematical model with:\\n1. Decision variables (clearly define each variable and its type)\\n2. Objective function (maximize/minimize)\\n3. All constraints (linear, integer, binary, etc.)\\n4. Variable domains and any special conditions\\n\\nOutput format:\\nDecision variables:\\nObjective:\\nConstraints:\\nModel type (LP, MIP, etc.):\"}]"
+  },
+  {
+    "phase": "问题分析与建模",
+    "type": "code",
+    "action": "修复编码问题",
+    "start_state": "问题分析与建模完成",
+    "end_state": "问题分析与建模完成",
+    "key": "stage1_modeling = stage1_modeling.encode('utf-8', errors='ignore').decode('utf-8')"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "调用LLM设计Gurobi算法",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "[{\"role\": \"system\", \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。\\n该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"}, {\"role\": \"user\", \"content\": \"问题分析与建模\\n{stage1_modeling}\"}]"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "code",
+    "action": "修复编码问题",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "stage2_design = stage2_design.encode('utf-8', errors='ignore').decode('utf-8')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "构建代码生成消息",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成消息构建完成",
+    "key": "messages_bak = stage3_generation(user_question, stage1_modeling, stage2_design)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "调用LLM生成初始Gurobi代码",
+    "start_state": "代码生成消息构建完成",
+    "end_state": "初始代码生成完成",
+    "key": "[{\"role\": \"system\", \"content\": \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"}, {\"role\": \"user\", \"content\": \"用户问题：\\n{problem_text}\\n\\n问题分析与建模：\\n{stage1_output}\\n\\nGurobi算法设计：\\n{stage2_output}\\n\\n\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "修复编码问题",
+    "start_state": "初始代码生成完成",
+    "end_state": "初始代码生成完成",
+    "key": "gurobi_code = gurobi_code.encode('utf-8', errors='ignore').decode('utf-8')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "初始代码生成完成",
+    "end_state": "初始代码生成完成",
+    "key": "调用 save_generated_code(gurobi_code, prefix=\"or_agent\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行初始代码",
+    "start_state": "初始代码生成完成",
+    "end_state": "初始代码执行失败",
+    "key": "调用 extract_and_execute_python_code(text) 其中 text = f\"{gurobi_code}\""
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "调用LLM修复代码",
+    "start_state": "初始代码执行失败",
+    "end_state": "修复代码生成完成",
+    "key": "[{\"role\": \"system\", \"content\": \"根据以上数学模型，使用Gurobi编写完整可靠的Python代码来求解该运筹优化问题。\\n代码应包含必要的模型构建、变量定义、约束添加、目标函数设置，以及求解与结果输出。\\n请按 ```python\\n{code}\\n``` 格式输出，不要附带代码解释。\"}, {\"role\": \"user\", \"content\": \"用户问题：\\n{problem_text}\\n\\n问题分析与建模：\\n{stage1_output}\\n\\nGurobi算法设计：\\n{stage2_output}\\n\\n\"}, {\"role\": \"assistant\", \"content\": \"{gurobi_code}\"}, {\"role\": \"user\", \"content\": \"代码执行时发生错误，错误信息如下:\\n{error_msg}\\n请修复代码并重新提供完整可执行代码。\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "修复编码问题",
+    "start_state": "修复代码生成完成",
+    "end_state": "修复代码生成完成",
+    "key": "gurobi_code = gurobi_code.encode('utf-8', errors='ignore').decode('utf-8')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存修复后的代码",
+    "start_state": "修复代码生成完成",
+    "end_state": "修复代码生成完成",
+    "key": "调用 save_generated_code(gurobi_code, prefix='or_agent_fix')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行修复后的代码",
+    "start_state": "修复代码生成完成",
+    "end_state": "修复代码执行完成",
+    "key": "调用 extract_and_execute_python_code(text) 其中 text = f\"{gurobi_code}\""
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "返回执行结果",
+    "start_state": "修复代码执行完成",
+    "end_state": "代码生成完成",
+    "key": "return True, result"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "format_ok": true,
+  "metrics": {
+    "total": 2,
+    "run_pass": 0,
+    "solve_correct": 0,
+    "total_fails": 2,
+    "error_datas": "[\"q1_error_name 'model' is not defined\", \"q2_error_name 'model' is not defined\"]"
+  }
+}

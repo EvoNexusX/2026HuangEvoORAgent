@@ -1,0 +1,66 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "prompt",
+    "action": "发送问题分析提示词给LLM，获取数学模型",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "[{\"role\": \"system\", \"content\": \"你是一个运筹优化专家。请分析以下优化问题，提取关键信息并建立数学模型。\\n\\n请用规范的数学表达式描述模型，包括：\\n- 变量定义\\n- 目标函数（最大化或最小化）\\n- 约束条件\\n\\n问题：\"}, {\"role\": \"user\", \"content\": \"problem_text\"}]"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "发送算法设计提示词给LLM，获取设计步骤",
+    "start_state": "问题分析与建模完成",
+    "end_state": "算法设计步骤完成",
+    "key": "[{\"role\": \"system\", \"content\": \"基于上述数学模型，设计Gurobi求解方案。\\n\\n设计要点：\\n1. 如何初始化Gurobi模型\\n2. 如何定义决策变量（连续/整数/二进制）\\n3. 如何设置目标函数\\n4. 如何添加约束条件\\n5. 如何设置求解参数\\n\\n请提供详细的算法设计步骤。\"}, {\"role\": \"user\", \"content\": \"数学模型：\\nstage1_result\"}]"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "发送验证提示词给LLM，获取验证反馈",
+    "start_state": "算法设计步骤完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "[{\"role\": \"system\", \"content\": \"请检查上述数学模型和算法设计是否存在潜在问题。\\n\\n请指出潜在问题并提出改进建议。\"}, {\"role\": \"user\", \"content\": \"问题：problem_text\\n\\n数学模型：\\nstage1_result\\n\\n算法设计：\\nstage2_result\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "构建代码生成消息列表",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成消息准备完成",
+    "key": "messages = [\n    {\"role\": \"system\", \"content\": \"请基于以下分析生成完整的Gurobi Python代码。\\n\\n代码要求：\\n1. 包含完整的import语句\\n2. 添加清晰的注释说明\\n3. 处理异常情况\\n4. 输出最优目标值和主要决策变量值\\n5. 设置求解时间限制为10秒，避免超时\\n\\n请按以下格式输出代码：\\n```python\\n# 导入库\\nimport gurobipy as gp\\nfrom gurobipy import GRB\\n\\n# 创建模型\\nmodel = gp.Model()\\n\\n# 设置求解时间限制为10秒\\nmodel.setParam('TimeLimit', 10)\\n\\n# ... 代码内容 ...\\n\\n# 求解并输出结果\\nmodel.optimize()\\nif model.status == GRB.OPTIMAL:\\n    print(f\\\"最优目标值: {model.objVal}\\\")\\nelse:\\n    print(f\\\"求解状态: {model.status}\\\")\\n```\\n\\n注意：只输出代码，不要额外解释。\"},\n    {\"role\": \"user\", \"content\": \"问题描述：\\nproblem_text\\n\\n数学模型：\\nstage1_result\\n\\n算法设计：\\nstage2_result\\n\\n验证反馈：\\nstage3_result\\n\\n请生成完整代码：\"}\n]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "调用query_llm生成代码",
+    "start_state": "代码生成消息准备完成",
+    "end_state": "代码生成LLM响应接收",
+    "key": "query_llm(messages, model_name=self.model_name, stage_tag=\"code_gen\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码到文件",
+    "start_state": "代码生成LLM响应接收",
+    "end_state": "代码保存完成",
+    "key": "save_generated_code(gurobi_code, prefix=\"or_agent\", stage=\"gen1\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "提取并执行Python代码块",
+    "start_state": "代码保存完成",
+    "end_state": "代码执行完成",
+    "key": "extract_and_execute_python_code(gurobi_code)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查执行结果并返回成功",
+    "start_state": "代码执行完成",
+    "end_state": "代码生成完成",
+    "key": "if success:\n    return True, result, messages_bak"
+  }
+]

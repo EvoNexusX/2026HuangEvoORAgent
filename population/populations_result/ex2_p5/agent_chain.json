@@ -1,0 +1,82 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "code",
+    "action": "构建stage1_messages消息列表",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "stage1_messages构建完成",
+    "key": "stage1_messages = [\n    {\n        \"role\": \"system\",\n        \"content\": \"You are an operations research expert. Analyze the optimization problem carefully.\\n\\nOutput requirements:\\n1. Identify decision variables with clear notation\\n2. Formulate objective function mathematically\\n3. List all constraints with mathematical expressions\\n4. Specify variable types (continuous, integer, binary) and bounds\\n5. Use standard LP/MILP notation\\n\\nKeep analysis concise and precise.\"\n    },\n    {\n        \"role\": \"user\",\n        \"content\": f\"Problem:\\n{user_question}\"\n    }\n]"
+  },
+  {
+    "phase": "问题分析与建模",
+    "type": "tool",
+    "action": "调用LLM进行问题分析与建模",
+    "start_state": "stage1_messages构建完成",
+    "end_state": "问题分析与建模完成",
+    "key": "stage1_modeling = query_llm(stage1_messages, model_name)"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "code",
+    "action": "构建stage2_messages消息列表",
+    "start_state": "问题分析与建模完成",
+    "end_state": "stage2_messages构建完成",
+    "key": "stage2_messages = [\n    {\n        \"role\": \"system\",\n        \"content\": \"Design Gurobi implementation strategy based on the mathematical model.\\n\\nOutput requirements:\\n1. Map mathematical variables to Gurobi variables with proper types\\n2. Specify how to add objective function to model\\n3. Detail constraint addition process\\n4. Mention any special settings (e.g., time limit, MIP gap)\\n5. Consider numerical stability and model scaling\\n\\nProvide clear implementation plan.\"\n    },\n    {\n        \"role\": \"user\",\n        \"content\": f\"Mathematical Model:\\n{stage1_modeling}\"\n    }\n]"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "tool",
+    "action": "调用LLM进行Gurobi算法设计",
+    "start_state": "stage2_messages构建完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "stage2_design = query_llm(stage2_messages, model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "构建final_messages消息列表",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "final_messages构建完成",
+    "key": "final_messages = [\n    {\n        \"role\": \"system\",\n        \"content\": \"Generate complete, executable Gurobi Python code.\\n\\nRequirements:\\n1. Include all necessary imports\\n2. Define model with appropriate name\\n3. Create variables with correct types and bounds\\n4. Set objective function (minimize/maximize)\\n5. Add all constraints\\n6. Include model.optimize() call\\n7. Extract and print optimal objective value\\n8. Handle potential errors (infeasibility, unboundedness)\\n9. Add brief comments for key sections\\n\\nFormat code inside ```python ``` blocks.\"\n    },\n    {\n        \"role\": \"user\",\n        \"content\": f\"Problem Description:\\n{user_question}\\n\\nMathematical Model:\\n{stage1_modeling}\\n\\nImplementation Design:\\n{stage2_design}\\n\\nGenerate complete Python code using Gurobi.\"\n    }\n]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "复制消息列表以避免修改原始数据",
+    "start_state": "final_messages构建完成",
+    "end_state": "消息复制完成",
+    "key": "messages = copy.deepcopy(messages_bak)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "调用LLM生成Gurobi代码",
+    "start_state": "消息复制完成",
+    "end_state": "Gurobi代码生成完成",
+    "key": "gurobi_code = query_llm(messages, model_name)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码到文件",
+    "start_state": "Gurobi代码生成完成",
+    "end_state": "代码已保存",
+    "key": "save_generated_code(gurobi_code, prefix='agent')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行生成的Python代码并提取最优目标值",
+    "start_state": "代码已保存",
+    "end_state": "代码执行结果就绪",
+    "key": "success, error_msg = extract_and_execute_python_code(gurobi_code)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "判断执行是否成功并更新消息列表，返回结果",
+    "start_state": "代码执行结果就绪",
+    "end_state": "代码生成完成",
+    "key": "if success:\n    messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n    return True, error_msg, messages_bak"
+  }
+]

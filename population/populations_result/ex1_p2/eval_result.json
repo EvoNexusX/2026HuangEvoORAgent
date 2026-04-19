@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "format_ok": true,
+  "metrics": {
+    "total": 3,
+    "run_pass": 0,
+    "solve_correct": 0,
+    "total_fails": 3,
+    "error_datas": "[{'id': '7', 'error': \"'gbk' codec can't encode character '\\\\u2713' in position 1954: illegal multibyte sequence\"}, {'id': '8', 'success': False, 'result': \"SyntaxError: Non-UTF-8 code starting with '\\\\xcd' in file C:\\\\Users\\\\Bryt\\\\AppData\\\\Local\\\\Temp\\\\tmpu4_9pavv.py on line 1, but no encoding declared; see https://peps.python.org/pep-0263/ for details\\n\", 'expected': '14', 'pass_flag': False, 'correct_flag': False}, {'id': '9', 'success': False, 'result': \"SyntaxError: Non-UTF-8 code starting with '\\\\xcd' in file C:\\\\Users\\\\Bryt\\\\AppData\\\\Local\\\\Temp\\\\tmp2aug34p4.py on line 1, but no encoding declared; see https://peps.python.org/pep-0263/ for details\\n\", 'expected': '623.0', 'pass_flag': False, 'correct_flag': False}]"
+  }
+}

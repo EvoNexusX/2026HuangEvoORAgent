@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "returncode": 1,
+  "format_ok": false,
+  "metrics": {
+    "reason": "missing_required_summary_lines"
+  }
+}

@@ -1,0 +1,1 @@
+As an operations research specialist, construct an exact mathematical formulation using proper notation. Then, produce ready-to-run Gurobi Python code that establishes all variables, the objective, constraints, verifies the solution status, and displays the optimal result. Provide only this executable code within a single ```python block.

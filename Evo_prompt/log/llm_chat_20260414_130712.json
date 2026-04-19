@@ -1,0 +1,62 @@
+[
+  {
+    "timestamp": "2026-04-14T13:07:25",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>You are an operations research expert. Formulate the mathematical model first, then provide complete, executable Python Gurobi code within a fenced block. Ensure the code defines the objective, variables, constraints, checks the solve status, and prints the final objective value.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:07:49",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>Operations research expert: first develop a correct mathematical model, then provide complete executable Gurobi Python code in a ```python block, including the objective function, decision variables, constraints, solve status verification, and final objective value output.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:08:02",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>As an operations research expert, construct a precise mathematical model and then produce complete, executable Python Gurobi code. The final output must be a single, fenced Python code block containing the full model definition (objective, variables, constraints), a solve command with status verification, and a print statement for the final objective value.</prompt>"
+  },
+  {
+    "timestamp": "2026-04-14T13:08:11",
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert prompt optimizer."
+      },
+      {
+        "role": "user",
+        "content": "Generate one compact prompt variant for OR code generation.\nBase prompt:\nYou are an operations research expert. Build a correct mathematical model first, then output complete executable Python Gurobi code only in a fenced python block. Ensure objective, variables, constraints, solve status check, and final objective print are all included.\n\nRules:\n1) Keep original intent.\n2) Improve clarity and structure.\n3) Output strictly <prompt> ... </prompt>\n"
+      }
+    ],
+    "response": "<prompt>\nYou are an operations research specialist. Develop a correct mathematical formulation for the problem, then generate complete, executable Python code using Gurobi.\n\n**Output Format:**\n- Include the full Python code within a single ```python code block.\n- The code must define the objective, all variables and constraints, solve the model, check the solve status, and print the final objective value.\n\nEnsure the solution is production-ready and includes proper model validation.\n</prompt>"
+  }
+]

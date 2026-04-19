@@ -1,0 +1,58 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "prompt",
+    "action": "调用 LLM 进行问题分析与数学建模，获取数学模型",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "[{\"role\": \"system\", \"content\": \"第一阶段：问题分析与数学建模。\\n你是一个专业的运筹学顾问。请仔细阅读下面的优化问题，识别其中的决策变量、目标函数和所有约束条件。\\n用清晰的数学表达式（线性规划形式）建立精确的数学模型。确保变量定义明确，目标函数方向正确，约束完整。\\n输出时重点呈现数学模型，无需额外解释。\"}, {\"role\": \"user\", \"content\": \"优化问题：\\n{user_problem}\"}]"
+  },
+  {
+    "phase": "算法设计",
+    "type": "prompt",
+    "action": "调用 LLM 基于数学模型设计 Gurobi 算法",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "[{\"role\": \"system\", \"content\": \"第二阶段：算法设计与求解策略。\\n基于上述数学模型，设计使用Gurobi求解器的具体算法流程。\\n说明如何初始化模型、添加变量、设置目标函数、添加约束、配置求解参数，以及如何提取结果。\\n输出应侧重于算法步骤和关键考虑点，确保后续代码实现无误。\"}, {\"role\": \"user\", \"content\": \"数学模型：\\n{modeling_result}\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "复制消息列表以准备代码生成",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "消息复制完成",
+    "key": "messages = copy.deepcopy(initial_messages)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "发送最终消息给 LLM 生成 Gurobi Python 代码",
+    "start_state": "消息复制完成",
+    "end_state": "代码响应收到",
+    "key": "[{\"role\": \"system\", \"content\": \"请根据提供的优化问题、数学模型和算法设计，编写完整的Gurobi Python求解代码。\\n代码必须独立可运行，包含必要的import语句、模型构建、求解和结果输出部分。\\n确保代码能处理可能的数值问题，并在最后打印或返回最优目标值。\\n严格按照以下格式输出代码：```python\\n<你的代码>\\n```\"}, {\"role\": \"user\", \"content\": \"原始问题：\\n{user_problem}\\n\\n数学模型：\\n{modeling_result}\\n\\n算法设计：\\n{algorithm_design}\\n\\n\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码到文件",
+    "start_state": "代码响应收到",
+    "end_state": "代码保存完成",
+    "key": "store_generated_code(text_content, prefix='agent')"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "构建完整文本以执行",
+    "start_state": "代码保存完成",
+    "end_state": "文本构建完成",
+    "key": "full_text = f\"{code_response}\""
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行 Python 代码并提取最优目标值",
+    "start_state": "文本构建完成",
+    "end_state": "代码生成完成",
+    "key": "execute_python_extract(text_content)"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "strategy": "ga",
+  "generation": 7,
+  "population_index": 1,
+  "score": 103.3662,
+  "parent_a": "As an operations research expert, first develop a precise mathematical model with clear notation. Then, craft executable Gurobi Python code that defines all variables, the objective, all constraints, checks the solve status, and prints the objective value. Output only this code in a single ```python block.",
+  "parent_b": "You are an operations research expert. Develop a correct mathematical model with clear notation. Then, provide complete, executable Python code for the Gurobi optimizer. The final output must include the objective definition, decision variables, all constraints, a solve status check, and a print statement for the final objective value. Deliver only the final code within a single ```python code block."
+}

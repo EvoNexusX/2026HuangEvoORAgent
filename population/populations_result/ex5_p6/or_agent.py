@@ -1,0 +1,149 @@
+﻿import copy
+import new_utils
+from new_utils import (
+    query_llm,
+    save_generated_code,
+    load_dataset,
+    extract_and_execute_python_code,
+    eval_model_result,
+    is_number_string,
+)
+
+def generate_optimization_code(messages_base, model_name, max_attempts):
+    conversation = copy.deepcopy(messages_base)
+    
+    solution_code = query_llm(conversation, model_name)
+    print("【生成的求解代码】:\n", solution_code)
+    save_generated_code(solution_code, prefix="opt_agent")
+    
+    code_text = f"{solution_code}"
+    attempt = 0
+    while attempt < max_attempts:
+        execute_success, error_detail = extract_and_execute_python_code(code_text)
+        if execute_success:
+            messages_base.append({"role": "assistant", "content": solution_code})
+            return True, error_detail, messages_base
+        
+        print(f"\n第 {attempt + 1} 次尝试失败，请求模型修复代码...\n")
+        conversation.append({"role": "assistant", "content": solution_code})
+        conversation.append({
+            "role": "user",
+            "content": f"代码执行出错，错误详情:\n{error_detail}\n请分析错误原因并修正代码，返回完整可执行的修复版本。",
+        })
+        
+        solution_code = query_llm(conversation, model_name)
+        save_generated_code(solution_code, prefix="opt_agent_fix")
+        code_text = f"{solution_code}"
+        
+        print("\n收到修复代码，准备重新执行...\n")
+        attempt += 1
+    
+    messages_base.append({"role": "assistant", "content": solution_code})
+    print(f"已达最大尝试次数 ({max_attempts})，代码无法成功执行。")
+    return False, None, messages_base
+
+def optimization_solver_agent(user_problem, model_name="", max_attempts=3):
+    modeling_prompt = query_llm([
+        {
+            "role": "system",
+            "content": "你是一个运筹优化专家。任务：分析给定的优化问题，构建精确的数学模型。需要明确指定决策变量、目标函数（最大化或最小化）以及所有约束条件。使用规范的数学表达式，避免冗长解释。确保模型可直接转化为Gurobi求解代码。"
+        },
+        {
+            "role": "user",
+            "content": f"优化问题描述：\n{user_problem}"
+        }
+    ], model_name)
+    print("【阶段1 - 问题建模】:\n", modeling_prompt)
+    
+    design_messages = [
+        {
+            "role": "system",
+            "content": "基于下面的数学模型，设计Gurobi求解算法。明确说明变量类型（连续、整数、二进制）、约束添加方式、目标函数设置以及结果提取方法。输出清晰的设计方案，便于后续代码生成。"
+        },
+        {
+            "role": "user",
+            "content": f"数学模型：\n{modeling_prompt}"
+        }
+    ]
+    
+    algorithm_design = query_llm(design_messages, model_name)
+    print("【阶段2 - 算法设计】:\n", algorithm_design)
+    
+    code_messages = [
+        {
+            "role": "system",
+            "content": "根据以下问题描述、数学模型和算法设计，编写完整的Gurobi Python求解代码。代码需包含：模型初始化、变量定义、约束添加、目标函数设置、模型求解以及结果输出。确保代码可直接运行。严格使用 ```python\n{code}\n``` 格式输出，不要额外解释。"
+        },
+        {
+            "role": "user",
+            "content": f"问题描述：\n{user_problem}\n\n数学模型：\n{modeling_prompt}\n\n算法设计：\n{algorithm_design}\n\n"
+        }
+    ]
+    
+    success_flag, result_value, code_messages = generate_optimization_code(code_messages, model_name, max_attempts)
+    print(f"求解状态：{success_flag}, 结果：{result_value}")
+    
+    if success_flag:
+        if not is_number_string(str(result_value)):
+            print("警告：模型返回非数值解或无可行解！")
+            code_messages.append(
+                {
+                    "role": "user",
+                    "content": "当前求解结果不可行或无解。请检查数学模型和算法设计是否存在矛盾或错误，修正后重新生成Gurobi代码。格式：```python\n{code}\n```"
+                }
+            )
+            success_flag, result_value, code_messages = generate_optimization_code(code_messages, model_name, max_attempts=1)
+    else:
+        print("警告：代码执行多次失败！")
+        code_messages.append(
+            {
+                "role": "user",
+                "content": "多次尝试后代码仍无法执行。请彻底检查数学模型、算法设计及代码实现的逻辑错误，重新生成正确代码。格式：```python\n{code}\n```"
+            }
+        )
+        success_flag, result_value, code_messages = generate_optimization_code(code_messages, model_name, max_attempts=2)
+    
+    return success_flag, result_value
+
+def run_eval(use_agent=True, model_name=""):
+    dataset = load_dataset()
+    
+    pass_count = 0
+    correct_count = 0
+    error_datas = []
+    
+    for idx, data_item in dataset.items():
+        new_utils.CURRENT_QUESTION_ID = idx
+        print(f"=============== 问题 {idx} ==================")
+        problem_text, ground_truth = data_item["question"], data_item["answer"]
+        print(problem_text)
+        print("-------------")
+        
+        if use_agent:
+            print("使用智能体模式（建模->设计->代码生成）")
+            execution_success, agent_result = optimization_solver_agent(problem_text, model_name)
+        
+        if execution_success:
+            print(f"代码执行成功，最优解值：{agent_result}")
+        else:
+            print("代码执行失败。")
+        print("------------------")
+        
+        passed, correct = eval_model_result(execution_success, agent_result, ground_truth)
+        pass_count += 1 if passed else 0
+        correct_count += 1 if correct else 0
+        
+        if not passed or not correct:
+            error_datas.append(idx)
+        
+        print(f"执行状态：{execution_success}, 模型输出：{agent_result}, 正确答案：{ground_truth}")
+        print(f"[当前结果] 执行通过：{passed}, 答案正确：{correct}")
+        print("\n")
+    
+    print(f"[Total {len(dataset)}] run pass: {pass_count}, solve correct: {correct_count}")
+    print(f"[Total fails {len(error_datas)}] error datas: {error_datas}")
+
+if __name__ == "__main__":
+    USE_AGENT = True
+    MODEL_NAME = ""
+    run_eval(use_agent=USE_AGENT, model_name=MODEL_NAME)

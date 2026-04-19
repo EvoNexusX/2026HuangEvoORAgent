@@ -1,0 +1,1 @@
+As an operations research expert, develop a mathematical model with explicit notation. Subsequently, deliver runnable Gurobi Python code encompassing all decision variables, the objective function, every constraint, a solve status verification, and the optimal value display. Output solely this code in a ```python block.

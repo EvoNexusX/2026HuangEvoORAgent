@@ -1,0 +1,52 @@
+new_utils.py 工具调用说明
+
+
+1) extract_best_objective(output_text)
+- 作用：从求解器输出中提取目标值（Best objective / Optimal objective / Optimal cost）。
+- 入参：output_text (str)
+- 返回：float | None（不可行或未匹配返回 None）
+
+2) extract_and_execute_python_code(text_content)
+- 作用：提取文本中的 ```python ... ``` 代码块并执行；解析最优目标值。
+- 入参：text_content (str)
+- 返回：(success, result)
+  - success: bool
+  - result: str（成功时为目标值字符串；失败时为错误信息）
+
+3) eval_model_result(success, result, ground_truth, err_range=0.1)
+- 作用：评估结果是否“跑通”和“正确”。
+- 入参：
+  - success (bool)
+  - result (str/number)
+  - ground_truth (str/number/None)
+  - err_range (float，默认 0.1)
+- 返回：(pass_flag, correct_flag) -> (bool, bool)
+
+4) log_llm_chat(messages, model_name, response_text)
+- 作用：将对话记录写入 log/llm_chat_时间戳.json。
+- 入参：messages (list), model_name (str), response_text (str)
+- 返回：无（异常仅打印 warning）
+
+5) save_generated_code(text_content, prefix="solve")
+- 作用：保存生成内容到 result/；优先提取 python 代码块为 .py，否则存为 .txt。
+- 入参：text_content (str), prefix (str)
+- 返回：无
+- 文件名格式：{prefix}_q{CURRENT_QUESTION_ID}_{序号}_{时间戳}.py/.txt
+
+6) query_llm(messages, model_name="deepseek-reasoner", temperature=0.2)
+- 作用：调用 LLM（Claude 或 OpenAI 兼容接口），并自动记录日志。
+- 入参：
+  - messages: [{"role": "system|user|assistant", "content": "..."}, ...]
+  - model_name: str（以 "claude" 开头走 Anthropic，否则走 OpenAI 兼容）
+  - temperature: float
+- 返回：response_text (str)
+- 环境变量：
+  - DEEPSEEK_API_KEY
+  - OPENAI_API_BASE
+  - CLAUDE_API_KEY
+
+7) load_dataset(data_path)
+- 作用：加载数据集（支持 JSONL 与 JSON）。
+- 入参：data_path (str)
+- 返回：dict
+- JSONL 期望字段：en_question/cn_question, en_answer/cn_answer, difficulty, id

@@ -1,0 +1,74 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "prompt",
+    "action": "查询LLM进行问题分析与建模",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "[{\"role\": \"system\", \"content\": \"阶段1（start_state: 优化智能体开始搭建, end_state: 问题分析与建模完成）。\\n你是运筹优化领域的专家。请根据用户提供的优化问题，分析问题的优化目标、决策变量、约束条件和目标函数等，用数学（线性规划）表达式构建能够准确描述原问题的数学模型。\\n重点给出正确的数学模型表达式，不必过多解释。该模型将用于后续生成Gurobi算法设计方案，本步骤主要用于生成有效的线性规模表达式。\"}, {\"role\": \"user\", \"content\": \"用户问题如下：\\n{user_question}\"}]"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "查询LLM进行Gurobi算法设计",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "[{\"role\": \"system\", \"content\": \"阶段2（start_state: 问题分析与建模完成, end_state: Gurobi算法设计完成）。\\n请基于以下建模方案设计Gurobi求解算法。\\n重点给出正确的Gurobi算法设计方案，不必过多解释。该模型将用于后续生成Gurobi代码，本步骤主要用于生成有效的设计方案。\"}, {\"role\": \"user\", \"content\": \"问题分析与建模\\n{stage1_modeling}\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "构建阶段3提示词消息",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "阶段3消息构建完成",
+    "key": "stage3_messages = [{\"role\": \"system\", \"content\": \"You are a Python programming expert specializing in Gurobi optimization. \\nYour task is to generate complete, executable Python code for optimization problems.\"}, {\"role\": \"user\", \"content\": f\"Based on the following problem description, mathematical model, and solution plan, \\ngenerate complete Python code using Gurobi.\\n\\nProblem Description:\\n{user_question}\\n\\nMathematical Model:\\n{stage1_modeling}\\n\\nSolution Plan:\\n{stage2_design}\\n\\nRequirements:\\n1. Generate complete Python code including necessary imports (gurobipy, etc.).\\n2. The code must be standalone and output the optimal solution if exists, or indicate infeasibility.\\n3. Include comments explaining key steps.\\n4. Output ONLY the code within ```python ``` code blocks.\\n\\nPlease output ONLY the code, no other explanations.\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "深拷贝messages_bak到messages",
+    "start_state": "阶段3消息构建完成",
+    "end_state": "messages准备就绪",
+    "key": "messages = copy.deepcopy(messages_bak)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "查询LLM获取Gurobi代码",
+    "start_state": "messages准备就绪",
+    "end_state": "Gurobi代码生成",
+    "key": "[{\"role\": \"system\", \"content\": \"You are a Python programming expert specializing in Gurobi optimization. \\nYour task is to generate complete, executable Python code for optimization problems.\"}, {\"role\": \"user\", \"content\": \"Based on the following problem description, mathematical model, and solution plan, \\ngenerate complete Python code using Gurobi.\\n\\nProblem Description:\\n{user_question}\\n\\nMathematical Model:\\n{stage1_modeling}\\n\\nSolution Plan:\\n{stage2_design}\\n\\nRequirements:\\n1. Generate complete Python code including necessary imports (gurobipy, etc.).\\n2. The code must be standalone and output the optimal solution if exists, or indicate infeasibility.\\n3. Include comments explaining key steps.\\n4. Output ONLY the code within ```python ``` code blocks.\\n\\nPlease output ONLY the code, no other explanations.\"}]"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "Gurobi代码生成",
+    "end_state": "代码保存完成",
+    "key": "save_generated_code(grobi_code, prefix=\"agent\")"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "设置text变量",
+    "start_state": "代码保存完成",
+    "end_state": "text设置完成",
+    "key": "text = f\"{gurobi_code}\""
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "提取并执行Python代码",
+    "start_state": "text设置完成",
+    "end_state": "代码执行结果",
+    "key": "extract_and_execute_python_code(text)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查执行结果并更新消息返回成功",
+    "start_state": "代码执行结果",
+    "end_state": "代码生成完成",
+    "key": "if success:\n    messages_bak.append({\"role\": \"assistant\", \"content\": gurobi_code})\n    return True, error_msg, messages_bak"
+  }
+]

@@ -1,0 +1,178 @@
+[
+  {
+    "phase": "问题分析与建模",
+    "type": "prompt",
+    "action": "分析优化问题并构建数学模型",
+    "start_state": "优化智能体开始搭建",
+    "end_state": "问题分析与建模完成",
+    "key": "Analyze this optimization problem:\n\n{question}\n\nProvide a complete mathematical model with:\n1. Decision variables (clearly define each variable and its type)\n2. Objective function (maximize/minimize)\n3. All constraints (linear, integer, binary, etc.)\n4. Variable domains and any special conditions\n\nOutput format:\nDecision variables:\nObjective:\nConstraints:\nModel type (LP, MIP, etc.):"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "设计Gurobi实现策略",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "Problem: {question}\n\nMathematical model:\n{stage1_output}\n\n{error_context}\nDesign a Gurobi implementation strategy:\n\n1. Required imports (gurobipy, etc.)\n2. How to create and set up the model\n3. Variable definition strategy (names, types, bounds)\n4. Objective function implementation\n5. Constraint addition method\n6. Model solving and result extraction\n7. Error handling considerations\n\nProvide a clear implementation plan."
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "生成Python/Gurobi代码",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成完成",
+    "key": "Generate Python code for this problem:\n\nProblem: {question}\n\nMathematical Model:\n{stage1_output}\n\nImplementation Plan:\n{stage2_output}\n\n{error_guidance}\nRequirements:\n- Use gurobipy library\n- Include proper exception handling\n- Model must be properly named and configured\n- Print the optimal objective value if solution exists\n- Print appropriate messages for infeasible/unbounded cases\n- Code must be standalone and executable\n- Add comments for key steps\n\nGenerate ONLY the Python code within ```python ``` markers."
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码保存完成",
+    "key": "save_generated_code(text_content, prefix)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行Python代码并提取结果",
+    "start_state": "代码保存完成",
+    "end_state": "执行完成",
+    "key": "extract_and_execute_python_code(text_content, previous_error)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查执行结果，如果成功则返回，否则设置错误",
+    "start_state": "执行完成",
+    "end_state": "问题分析与建模完成",
+    "key": "if success:\n    return True, result\nlast_error = result"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "设计Gurobi实现策略",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "Problem: {question}\n\nMathematical model:\n{stage1_output}\n\n{error_context}\nDesign a Gurobi implementation strategy:\n\n1. Required imports (gurobipy, etc.)\n2. How to create and set up the model\n3. Variable definition strategy (names, types, bounds)\n4. Objective function implementation\n5. Constraint addition method\n6. Model solving and result extraction\n7. Error handling considerations\n\nProvide a clear implementation plan."
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "生成Python/Gurobi代码",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成完成",
+    "key": "Generate Python code for this problem:\n\nProblem: {question}\n\nMathematical Model:\n{stage1_output}\n\nImplementation Plan:\n{stage2_output}\n\n{error_guidance}\nRequirements:\n- Use gurobipy library\n- Include proper exception handling\n- Model must be properly named and configured\n- Print the optimal objective value if solution exists\n- Print appropriate messages for infeasible/unbounded cases\n- Code must be standalone and executable\n- Add comments for key steps\n\nGenerate ONLY the Python code within ```python ``` markers."
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码保存完成",
+    "key": "save_generated_code(text_content, prefix)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行Python代码并提取结果",
+    "start_state": "代码保存完成",
+    "end_state": "执行完成",
+    "key": "extract_and_execute_python_code(text_content, previous_error)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查执行结果，如果成功则返回，否则设置错误",
+    "start_state": "执行完成",
+    "end_state": "问题分析与建模完成",
+    "key": "if success:\n    return True, result\nlast_error = result"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "设计Gurobi实现策略",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "Problem: {question}\n\nMathematical model:\n{stage1_output}\n\n{error_context}\nDesign a Gurobi implementation strategy:\n\n1. Required imports (gurobipy, etc.)\n2. How to create and set up the model\n3. Variable definition strategy (names, types, bounds)\n4. Objective function implementation\n5. Constraint addition method\n6. Model solving and result extraction\n7. Error handling considerations\n\nProvide a clear implementation plan."
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "生成Python/Gurobi代码",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成完成",
+    "key": "Generate Python code for this problem:\n\nProblem: {question}\n\nMathematical Model:\n{stage1_output}\n\nImplementation Plan:\n{stage2_output}\n\n{error_guidance}\nRequirements:\n- Use gurobipy library\n- Include proper exception handling\n- Model must be properly named and configured\n- Print the optimal objective value if solution exists\n- Print appropriate messages for infeasible/unbounded cases\n- Code must be standalone and executable\n- Add comments for key steps\n\nGenerate ONLY the Python code within ```python ``` markers."
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码保存完成",
+    "key": "save_generated_code(text_content, prefix)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行Python代码并提取结果",
+    "start_state": "代码保存完成",
+    "end_state": "执行完成",
+    "key": "extract_and_execute_python_code(text_content, previous_error)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查执行结果，如果成功则返回，否则设置错误",
+    "start_state": "执行完成",
+    "end_state": "问题分析与建模完成",
+    "key": "if success:\n    return True, result\nlast_error = result"
+  },
+  {
+    "phase": "Gurobi算法设计",
+    "type": "prompt",
+    "action": "设计Gurobi实现策略",
+    "start_state": "问题分析与建模完成",
+    "end_state": "Gurobi算法设计完成",
+    "key": "Problem: {question}\n\nMathematical model:\n{stage1_output}\n\n{error_context}\nDesign a Gurobi implementation strategy:\n\n1. Required imports (gurobipy, etc.)\n2. How to create and set up the model\n3. Variable definition strategy (names, types, bounds)\n4. Objective function implementation\n5. Constraint addition method\n6. Model solving and result extraction\n7. Error handling considerations\n\nProvide a clear implementation plan."
+  },
+  {
+    "phase": "代码生成",
+    "type": "prompt",
+    "action": "生成Python/Gurobi代码",
+    "start_state": "Gurobi算法设计完成",
+    "end_state": "代码生成完成",
+    "key": "Generate Python code for this problem:\n\nProblem: {question}\n\nMathematical Model:\n{stage1_output}\n\nImplementation Plan:\n{stage2_output}\n\n{error_guidance}\nRequirements:\n- Use gurobipy library\n- Include proper exception handling\n- Model must be properly named and configured\n- Print the optimal objective value if solution exists\n- Print appropriate messages for infeasible/unbounded cases\n- Code must be standalone and executable\n- Add comments for key steps\n\nGenerate ONLY the Python code within ```python ``` markers."
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "保存生成的代码",
+    "start_state": "代码生成完成",
+    "end_state": "代码保存完成",
+    "key": "save_generated_code(text_content, prefix)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "tool",
+    "action": "执行Python代码并提取结果",
+    "start_state": "代码保存完成",
+    "end_state": "执行完成",
+    "key": "extract_and_execute_python_code(text_content, previous_error)"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "检查执行结果，如果成功则返回，否则设置错误",
+    "start_state": "执行完成",
+    "end_state": "问题分析与建模完成",
+    "key": "if success:\n    return True, result\nlast_error = result"
+  },
+  {
+    "phase": "代码生成",
+    "type": "code",
+    "action": "返回失败结果",
+    "start_state": "问题分析与建模完成",
+    "end_state": "工作流结束",
+    "key": "return False, f'Failed after {self.max_retries} attempts. Last error: {last_error}'"
+  }
+]
