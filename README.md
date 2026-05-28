@@ -48,11 +48,6 @@ Architecture graph evolution. Individual OR agents are first abstracted into AOE
 
 Overview of reasoning trajectory evolution on the current architecture graph. An LLM-agent-based experience acquisition workflow retrieves relevant papers and code repositories, and organizes reusable OR practices into a domain-specific knowledge base. The knowledge base supports initialization and semantic mutation. During each generation, path-conditioned recombination samples new reasoning trajectories from the current graph, semantic mutation revises selected individuals at different granularities, and multi-source selection forms the next population.
 
-
-#### Figure 4 Result Comparison
-![Figure 4 Placeholder](picture/1.jpg)
-Comparison of accuracy performance on NL4OPT, MAMO (ComplexLP/EasyLP), IndustryOR, and BWOR benchmarks. Results report the mean and standard deviation ($\pm$ SD) over ten independent runs.
-
 ## 3. Directory Structure
 
 ```text
